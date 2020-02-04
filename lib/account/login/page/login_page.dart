@@ -1,3 +1,4 @@
+import 'package:adactin_hotel_app/api/repo/user_repo.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -137,6 +138,13 @@ class _LoginState extends State<Login> {
       child: RaisedButton(
         onPressed: () {
           _formKey.currentState.validate();
+          if (_emailTextFieldController.text.isNotEmpty &&
+              _passwordTextFieldController.text.isNotEmpty) {
+            UserRepository().authenticate(
+              email: _emailTextFieldController.text,
+              password: _passwordTextFieldController.text,
+            );
+          }
         },
         child: Text(
           'Login',
