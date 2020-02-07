@@ -65,7 +65,6 @@ class _LoginState extends State<Login> {
   Widget _getUsernameFormField() {
     return Semantics(
       label: 'username_textformfield',
-      textField: true,
       enabled: true,
       child: TextFormField(
         controller: _usernameTextFieldController,
@@ -100,7 +99,6 @@ class _LoginState extends State<Login> {
   Widget _getPasswordFormField() {
     return Semantics(
       label: 'password_textformfield',
-      textField: true,
       enabled: true,
       child: TextFormField(
         controller: _passwordTextFieldController,
@@ -135,7 +133,6 @@ class _LoginState extends State<Login> {
   Widget _getLoginButton() {
     return Semantics(
       label: 'login_button',
-      button: true,
       enabled: true,
       child: RaisedButton(
         onPressed: () {
