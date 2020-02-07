@@ -3,10 +3,10 @@ import 'package:adactin_hotel_app/crypto/md5.dart';
 import 'package:dio/dio.dart';
 
 class UserRepository {
-  Future<void> authenticate({String email, String password}) async {
+  Future<void> authenticate({String username, String password}) async {
     try {
       String logInUrl = Constants.baseURL + Constants.loginURL;
-      logInUrl = logInUrl.replaceAll(Constants.usernameKey, email);
+      logInUrl = logInUrl.replaceAll(Constants.usernameKey, username);
       logInUrl =
           logInUrl.replaceAll(Constants.passwordKey, generateMD5(password));
       print('Calling $logInUrl');
