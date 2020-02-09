@@ -1,3 +1,5 @@
+import 'package:adactin_hotel_app/account/login/constants/login_content.dart';
+import 'package:adactin_hotel_app/account/login/constants/login_semantic_keys.dart';
 import 'package:adactin_hotel_app/api/repo/user_repo.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +66,7 @@ class _LoginState extends State<Login> {
 
   Widget _getUsernameFormField() {
     return Semantics(
-      label: 'username_textformfield',
+      label: LoginSemanticKeys.userName,
       enabled: true,
       child: TextFormField(
         controller: _usernameTextFieldController,
@@ -79,7 +81,7 @@ class _LoginState extends State<Login> {
             horizontal: 12,
             vertical: 22,
           ),
-          hintText: 'Username',
+          hintText: LoginContent.userNameHint,
           hintStyle: TextStyle(fontSize: 18),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -87,10 +89,9 @@ class _LoginState extends State<Login> {
           ),
         ),
         validator: (String value) {
-          if (value == null || value.isEmpty) {
-            return 'Enter a valid username';
-          }
-          return null;
+          return (value == null || value.isEmpty)
+              ? LoginContent.userNameEmptyError
+              : null;
         },
       ),
     );
@@ -98,7 +99,7 @@ class _LoginState extends State<Login> {
 
   Widget _getPasswordFormField() {
     return Semantics(
-      label: 'password_textformfield',
+      label: LoginSemanticKeys.password,
       enabled: true,
       child: TextFormField(
         controller: _passwordTextFieldController,
@@ -113,7 +114,7 @@ class _LoginState extends State<Login> {
             horizontal: 12,
             vertical: 22,
           ),
-          hintText: 'Password',
+          hintText: LoginContent.passwordHint,
           hintStyle: TextStyle(fontSize: 18),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -121,10 +122,9 @@ class _LoginState extends State<Login> {
           ),
         ),
         validator: (String value) {
-          if (value == null || value.isEmpty) {
-            return 'Enter a valid password';
-          }
-          return null;
+          return (value == null || value.isEmpty)
+              ? LoginContent.passwordEmptyError
+              : null;
         },
       ),
     );
@@ -132,7 +132,7 @@ class _LoginState extends State<Login> {
 
   Widget _getLoginButton() {
     return Semantics(
-      label: 'login_button',
+      label: LoginSemanticKeys.loginButton,
       enabled: true,
       child: RaisedButton(
         onPressed: () {
@@ -146,7 +146,7 @@ class _LoginState extends State<Login> {
           }
         },
         child: Text(
-          'Login',
+          LoginContent.login,
           style: TextStyle(fontSize: 18, color: Colors.white),
         ),
         padding: const EdgeInsets.symmetric(
@@ -161,14 +161,14 @@ class _LoginState extends State<Login> {
 
   Widget _getForgetPassword() {
     return Semantics(
-      label: 'forgetpassword_tapdetector',
+      label: LoginSemanticKeys.forgotPassword,
       enabled: true,
       child: GestureDetector(
         onTap: () {},
         child: Container(
           padding: const EdgeInsets.only(left: 8, right: 8),
           child: Text(
-            'Forgot password',
+            LoginContent.forgotPassword,
             style: TextStyle(fontSize: 18, color: Colors.grey),
             textAlign: TextAlign.right,
           ),
