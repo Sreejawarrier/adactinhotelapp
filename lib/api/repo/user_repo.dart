@@ -9,11 +9,10 @@ class UserRepository {
       logInUrl = logInUrl.replaceAll(Constants.usernameKey, username);
       logInUrl =
           logInUrl.replaceAll(Constants.passwordKey, generateMD5(password));
-      print('Calling $logInUrl');
       Response response = await Dio().get(logInUrl);
       print(response);
     } catch (error) {
-      print(error);
+      throw error;
     }
   }
 }

@@ -1,7 +1,6 @@
 import 'package:adactin_hotel_app/account/login/page/login_page.dart';
 import 'package:adactin_hotel_app/app/constants/app_content.dart';
 import 'package:adactin_hotel_app/app/constants/app_semantic_keys.dart';
-import 'package:adactin_hotel_app/book/page/book.dart';
 import 'package:adactin_hotel_app/home/page/home.dart';
 import 'package:adactin_hotel_app/search/page/search.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
@@ -70,7 +69,7 @@ class _AppState extends State<App> {
     return [
       Home(),
       Search(),
-      Book(),
+//      Book(),
       Login(),
     ];
   }
@@ -88,11 +87,11 @@ class _AppState extends State<App> {
         label: AppContent.search,
         animationDuration: _bottomNavBarDuration,
       ),
-      FFNavigationBarItem(
-        iconData: Icons.error,
-        label: AppContent.book,
-        animationDuration: _bottomNavBarDuration,
-      ),
+//      FFNavigationBarItem(
+//        iconData: Icons.error,
+//        label: AppContent.book,
+//        animationDuration: _bottomNavBarDuration,
+//      ),
       FFNavigationBarItem(
         iconData: Icons.account_circle,
         label: AppContent.account,
