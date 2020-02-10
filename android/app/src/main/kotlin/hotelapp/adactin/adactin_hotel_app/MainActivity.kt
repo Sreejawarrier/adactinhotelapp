@@ -1,4 +1,4 @@
-package hotelapp.adactin.adactin_hotel_app
+package com.adactin.hotelapp
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
