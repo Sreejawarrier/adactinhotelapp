@@ -1,8 +1,10 @@
 import 'package:adactin_hotel_app/account/login/constants/login_content.dart';
 import 'package:adactin_hotel_app/account/login/constants/login_semantic_keys.dart';
 import 'package:adactin_hotel_app/api/repo/user_repo.dart';
+import 'package:adactin_hotel_app/theme/images.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -43,7 +45,7 @@ class _LoginState extends State<Login> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   _getLogo(),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 8),
                   _getUsernameFormField(),
                   const SizedBox(height: 20),
                   _getPasswordFormField(),
@@ -61,7 +63,15 @@ class _LoginState extends State<Login> {
   }
 
   Widget _getLogo() {
-    return const SizedBox();
+    return Semantics(
+      label: LoginSemanticKeys.logo,
+      enabled: true,
+      child: SvgPicture.asset(
+        Images.logoSVG,
+        width: 180,
+        height: 180,
+      ),
+    );
   }
 
   Widget _getUsernameFormField() {
