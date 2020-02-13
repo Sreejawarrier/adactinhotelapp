@@ -7,4 +7,8 @@ class Constants {
   static const String passwordKey = "{password}";
   static const String loginURL = "checkLogin&username=$usernameKey&"
       "password=$passwordKey";
+
+  // For logout
+  static const String userTokenKey = "{userToken}";
+  static const String logoutURL = "logout&userToken=$userTokenKey";
 }

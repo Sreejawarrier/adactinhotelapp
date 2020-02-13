@@ -5,4 +5,5 @@ class LoginContent {
   static const String passwordEmptyError = 'Enter a valid password';
   static const String login = 'Login';
   static const String forgotPassword = 'Forgot password';
+  static const String logout = 'Logout';
 }
