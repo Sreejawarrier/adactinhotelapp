@@ -1,23 +1,25 @@
-import 'package:adactin_hotel_app/app/page/app.dart';
-import 'package:adactin_hotel_app/theme/palette.dart';
+import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
+import 'package:adactin_hotel_app/app/bloc/app_tab_bloc.dart';
+import 'package:adactin_hotel_app/app/page/adactin_hotel_app.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(MyApp());
+void main() => startApp();
 
-class MyApp extends StatelessWidget {
-  static const String mainTitle = 'Adactin Hotel App';
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: mainTitle,
-      theme: ThemeData(
-        primaryColor: Palette.primaryColor,
-        primaryColorBrightness: Brightness.dark,
-        cursorColor: Palette.primaryColor,
-      ),
-      home: App(),
-    );
-  }
+void startApp() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    SharedPreferences.getInstance().then((preferences) {
+      runApp(
+        AdactinHotelApp(
+          appBloc: AppBloc(
+            preferences: preferences,
+          ),
+          appTabBloc: AppTabBloc(),
+        ),
+      );
+    });
+  });
 }
