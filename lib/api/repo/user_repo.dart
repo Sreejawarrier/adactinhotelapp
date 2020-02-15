@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:adactin_hotel_app/api/constants/constants.dart';
 import 'package:adactin_hotel_app/api/models/user_details.dart';
 import 'package:adactin_hotel_app/crypto/md5.dart';
+import 'package:adactin_hotel_app/global/constants.dart' as globalConstants;
 import 'package:dio/dio.dart';
 
 class UserRepository {
@@ -26,6 +27,8 @@ class UserRepository {
           throw data[Constants.errorStatusKey];
         } else if (data.containsKey(Constants.errorResponseKey)) {
           throw data[Constants.errorResponseKey];
+        } else {
+          throw globalConstants.Constants.unknownError;
         }
       }
     } catch (error) {
