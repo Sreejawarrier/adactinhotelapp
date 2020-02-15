@@ -6,4 +6,6 @@ class LoginSemanticKeys {
   static const String forgotPassword = 'forgetpassword_tapdetector';
   static const String user = 'user_textfield';
   static const String logoutButton = 'logout_button';
+  static const String failureAlert = 'failure_alert';
+  static const String failureAlertButton = 'failure_alert_button';
 }

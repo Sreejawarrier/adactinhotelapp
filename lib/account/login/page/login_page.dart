@@ -13,7 +13,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 class Login extends StatefulWidget {
   final AppBloc appBloc;
 
-  Login({Key key, this.appBloc}) : super(key: key);
+  Login({Key key, @required this.appBloc})
+      : assert(appBloc != null),
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LoginState();
@@ -29,6 +31,15 @@ class _LoginState extends State<Login> {
       TextEditingController();
   final FocusNode _usernameTextFieldFocusNode = FocusNode();
   final FocusNode _passwordTextFieldFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.appBloc.userDetails != null) {
+      _userTextFieldController.text = widget.appBloc.userDetails.username;
+    }
+  }
 
   @override
   void dispose() {
@@ -52,7 +63,38 @@ class _LoginState extends State<Login> {
         },
         child: SafeArea(
           child: BlocListener<LoginBloc, LoginState>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              if (state is LoginSuccess) {
+                widget.appBloc
+                    .add(AppUserChange(userDetails: state.userDetails));
+              } else if (state is LogoutSuccess) {
+                widget.appBloc.add(AppUserChange());
+              } else if (state is LoginFailure) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      semanticLabel: LoginSemanticKeys.failureAlert,
+                      title: Text(LoginContent.alertFailureTitle),
+                      content: Text(state.error),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Semantics(
+                            enabled: true,
+                            label: LoginSemanticKeys.failureAlertButton,
+                            child: Text(LoginContent.alertButtonOk),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                  barrierDismissible: false,
+                );
+              }
+            },
             child: BlocBuilder<LoginBloc, LoginState>(
               builder: (context, state) {
                 return Stack(
@@ -60,7 +102,7 @@ class _LoginState extends State<Login> {
                     Container(
                       color: Colors.white,
                       child: Center(
-                        child: state is LoginInitial
+                        child: (widget.appBloc.userDetails == null)
                             ? _getLoginForm(context)
                             : _getLoggedInForm(context),
                       ),
@@ -273,7 +315,7 @@ class _LoginState extends State<Login> {
       child: RaisedButton(
         onPressed: () {
           BlocProvider.of<LoginBloc>(context).add(
-            LogoutAction(),
+            LogoutAction(token: widget.appBloc.userDetails.token),
           );
         },
         child: Text(

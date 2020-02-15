@@ -6,4 +6,6 @@ class LoginContent {
   static const String login = 'Login';
   static const String forgotPassword = 'Forgot password';
   static const String logout = 'Logout';
+  static const String alertFailureTitle = 'Failure';
+  static const String alertButtonOk = 'OK';
 }

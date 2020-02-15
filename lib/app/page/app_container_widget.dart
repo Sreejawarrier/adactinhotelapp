@@ -27,62 +27,85 @@ class _AppContainerWidgetState extends State<AppContainerWidget> {
   Widget build(BuildContext context) {
     _ffNavBarItemList = _getFFNavBarItems();
 
-    return BlocBuilder(
+    return BlocListener(
       bloc: BlocProvider.of<AppBloc>(context),
-      builder: (BuildContext context, AppState state) {
-        if (state is AppLoading) {
-          return Container(
-            color: Palette.primaryColor,
-            child: Spinner(spinnerColor: Colors.white),
-          );
+      listener: (BuildContext context, AppState state) {
+        if (state is AppUserChanged) {
+          BlocProvider.of<AppTabBloc>(context)
+              .add(AppTabSelect(tab: AppTab.home));
         }
+      },
+      child: BlocBuilder(
+        bloc: BlocProvider.of<AppBloc>(context),
+        builder: (BuildContext context, AppState state) {
+          if (state is AppLoading) {
+            return Container(
+              color: Palette.primaryColor,
+              child: Spinner(spinnerColor: Colors.white),
+            );
+          }
 
-        return BlocBuilder(
-          bloc: BlocProvider.of<AppTabBloc>(context),
-          builder: (BuildContext context, AppTabState state) {
-            _selectedTabIndex = _getAppTabIndex(state);
+          return BlocBuilder(
+            bloc: BlocProvider.of<AppTabBloc>(context),
+            builder: (BuildContext context, AppTabState state) {
+              _selectedTabIndex = _getAppTabIndex(state);
 
-            return DefaultTabController(
-              length: _ffNavBarItemList.length,
-              initialIndex: 0,
-              child: Scaffold(
-                body: SafeArea(
-                  child: Builder(
-                    builder: (BuildContext context) {
-                      return TabBarView(
-                        children: _getTabViews(context),
-                        physics: NeverScrollableScrollPhysics(),
-                      );
-                    },
-                  ),
-                ),
-                bottomNavigationBar: Builder(
-                  builder: (BuildContext context) => Semantics(
-                    enabled: true,
-                    label: AppSemanticKeys.bottomNavigationBar,
-                    child: FFNavigationBar(
-                      theme: FFNavigationBarTheme(
-                        barBackgroundColor: Colors.white,
-                        selectedItemBorderColor: Colors.white,
-                        selectedItemBackgroundColor: Palette.primaryColor,
-                        selectedItemIconColor: Colors.white,
-                        selectedItemLabelColor: Colors.black,
-                      ),
-                      selectedIndex: _selectedTabIndex,
-                      items: _ffNavBarItemList,
-                      onSelectTab: (index) {
-                        DefaultTabController.of(context).index = index;
-                        BlocProvider.of<AppTabBloc>(context)
-                            .add(AppTabSelect(tab: _getAppTab(index)));
+              return DefaultTabController(
+                length: _ffNavBarItemList.length,
+                initialIndex: 0,
+                child: Scaffold(
+                  body: SafeArea(
+                    child: Builder(
+                      builder: (BuildContext context) {
+                        /// Below check is when we try to move automatically from
+                        /// one screen tab to another screen tab via bloc call
+                        /// of the apptabbloc. Ex: On successful login we move to
+                        /// home screen at that time we pass user change app bloc
+                        /// event then we try to move to home tab via bloc call.
+                        /// So at that time if we see that the default tab controller
+                        /// index is not equal to the needed one we animate to it.
+                        final int curIndex =
+                            DefaultTabController.of(context).index;
+                        if (curIndex != _selectedTabIndex) {
+                          DefaultTabController.of(context)
+                              .animateTo(_selectedTabIndex);
+                        }
+
+                        return TabBarView(
+                          children: _getTabViews(context),
+                          physics: NeverScrollableScrollPhysics(),
+                        );
                       },
                     ),
                   ),
+                  bottomNavigationBar: Builder(
+                    builder: (BuildContext context) => Semantics(
+                      enabled: true,
+                      label: AppSemanticKeys.bottomNavigationBar,
+                      child: FFNavigationBar(
+                        theme: FFNavigationBarTheme(
+                          barBackgroundColor: Colors.white,
+                          selectedItemBorderColor: Colors.white,
+                          selectedItemBackgroundColor: Palette.primaryColor,
+                          selectedItemIconColor: Colors.white,
+                          selectedItemLabelColor: Colors.black,
+                        ),
+                        selectedIndex: _selectedTabIndex,
+                        items: _ffNavBarItemList,
+                        onSelectTab: (index) {
+                          DefaultTabController.of(context).index = index;
+                          BlocProvider.of<AppTabBloc>(context)
+                              .add(AppTabSelect(tab: _getAppTab(index)));
+                        },
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            );
-          },
-        );
-      },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -120,7 +143,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget> {
       Home(),
       Search(),
 //      Book(),
-      Login(),
+      Login(appBloc: BlocProvider.of<AppBloc>(context)),
     ];
   }
 

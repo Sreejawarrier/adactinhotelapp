@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 UserDetails userDetailsFromJson(String str) =>
@@ -8,13 +9,16 @@ UserDetails userDetailsFromJson(String str) =>
 String userDetailsToJson(UserDetails userDetails) =>
     json.encode(userDetails.toJson());
 
-class UserDetails {
+class UserDetails extends Equatable {
   static const String _loggedUser = "Loggeduser";
 
-  String username;
-  String token;
+  final String username;
+  final String token;
 
   UserDetails({this.username, this.token});
+
+  @override
+  List<Object> get props => [username, token];
 
   factory UserDetails.fromSharedPreferences(SharedPreferences preferences) {
     final String savedData = preferences.getString(_loggedUser);
@@ -29,7 +33,8 @@ class UserDetails {
     await preferences.setString(_loggedUser, json.encode(toJson()));
   }
 
-  static Future<void> removeFromPreferences(SharedPreferences preferences) async {
+  static Future<void> removeFromPreferences(
+      SharedPreferences preferences) async {
     await preferences.remove(_loggedUser);
   }
 
@@ -42,4 +47,9 @@ class UserDetails {
         "username": username,
         "token": token,
       };
+
+  @override
+  String toString() {
+    return 'UserDetails { $username, $token }';
+  }
 }

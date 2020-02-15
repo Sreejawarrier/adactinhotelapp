@@ -1,7 +1,7 @@
+import 'package:adactin_hotel_app/api/models/user_details.dart';
 import 'package:adactin_hotel_app/api/repo/user_repo.dart';
-import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
+import 'package:adactin_hotel_app/global/constants.dart' as globalConstants;
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -30,10 +30,12 @@ class LoginAction extends LoginEvent {
 }
 
 class LogoutAction extends LoginEvent {
-  const LogoutAction();
+  final String token;
+
+  const LogoutAction({@required this.token});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [token];
 }
 
 /// ------------ State
@@ -52,16 +54,16 @@ class LoggedInInitial extends LoginState {}
 class LoginLoading extends LoginState {}
 
 class LoginSuccess extends LoginState {
-  final String token;
+  final UserDetails userDetails;
 
-  const LoginSuccess({@required this.token});
+  const LoginSuccess({@required this.userDetails});
 
   @override
-  List<Object> get props => [token];
+  List<Object> get props => [userDetails];
 
   @override
   String toString() {
-    return 'LoginSuccess { token: $token }';
+    return 'LoginSuccess { userDetails: $userDetails }';
   }
 }
 
@@ -87,14 +89,11 @@ class LoginFailure extends LoginState {
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final UserRepository userRepository;
-  final AppBloc appBloc;
 
   LoginBloc({
     @required this.userRepository,
-    @required this.appBloc,
   }) : assert(
           userRepository != null,
-          appBloc != null,
         );
 
   @override
@@ -106,12 +105,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield LoginLoading();
 
       try {
-        final Response response = await userRepository.authenticate(
-          username: event.username,
-          password: event.password,
+        yield LoginSuccess(
+          userDetails: await userRepository.authenticate(
+            username: event.username,
+            password: event.password,
+          ),
         );
-
-        yield LoginSuccess(token: response.toString());
       } catch (error) {
         yield LoginFailure(error: error.toString());
       }
@@ -119,11 +118,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield LoginLoading();
 
       try {
-        final Response response = await userRepository.logout(
-          token: '',
-        );
-
-        yield LogoutSuccess();
+        final bool success = await userRepository.logout(token: event.token);
+        if (success) {
+          yield LogoutSuccess();
+        } else {
+          yield LoginFailure(error: globalConstants.Constants.unknownError);
+        }
       } catch (error) {
         yield LoginFailure(error: error.toString());
       }

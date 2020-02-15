@@ -17,6 +17,15 @@ class AppStart extends AppEvent {
   List<Object> get props => [];
 }
 
+class AppUserChange extends AppEvent {
+  final UserDetails userDetails;
+
+  AppUserChange({this.userDetails});
+
+  @override
+  List<Object> get props => [userDetails];
+}
+
 /// ------------ State
 
 abstract class AppState extends Equatable {
@@ -31,6 +40,20 @@ class AppNotStarted extends AppState {}
 class AppLoading extends AppState {}
 
 class AppStarted extends AppState {}
+
+class AppUserChanged extends AppState {
+  final UserDetails userDetails;
+
+  AppUserChanged({this.userDetails});
+
+  @override
+  List<Object> get props => [userDetails];
+
+  @override
+  String toString() {
+    return 'AppUserChanged { $userDetails }';
+  }
+}
 
 /// ------------ Bloc
 
@@ -52,6 +75,16 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       userDetails = UserDetails.fromSharedPreferences(preferences);
 
       yield AppStarted();
+    } else if (event is AppUserChange) {
+      if (event.userDetails == null) {
+        await UserDetails.removeFromPreferences(preferences);
+        userDetails = null;
+      } else {
+        userDetails = event.userDetails;
+        await event.userDetails.toPreferences(preferences);
+      }
+
+      yield AppUserChanged(userDetails: event.userDetails);
     }
   }
 }
