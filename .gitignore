@@ -6,8 +6,6 @@
 .flutter-plugins
 .flutter-plugins-dependencies
 build/
-ios/Runner.xcodeproj/xcshareddata/
-ios/Runner.xcworkspace/xcshareddata/
 
 # If you're building an application, you may want to check-in your pubspec.lock
 pubspec.lock
