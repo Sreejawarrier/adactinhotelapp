@@ -242,6 +242,7 @@ class _LoginState extends State<Login> {
       enabled: true,
       child: RaisedButton(
         onPressed: () {
+          _removeFocus();
           _formKey.currentState.validate();
           if (_usernameTextFieldController.text.isNotEmpty &&
               _passwordTextFieldController.text.isNotEmpty) {
@@ -272,7 +273,9 @@ class _LoginState extends State<Login> {
       label: LoginSemanticKeys.forgotPassword,
       enabled: true,
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          _removeFocus();
+        },
         child: Container(
           padding: const EdgeInsets.only(left: 8, right: 8),
           child: Text(
@@ -330,5 +333,10 @@ class _LoginState extends State<Login> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
+  }
+
+  /// Will remove focus from the current Focus node
+  void _removeFocus() {
+    FocusScope.of(context).requestFocus(FocusNode());
   }
 }
