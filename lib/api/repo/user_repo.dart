@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:adactin_hotel_app/api/constants/constants.dart';
 import 'package:adactin_hotel_app/api/models/user_details.dart';
-import 'package:adactin_hotel_app/crypto/md5.dart';
 import 'package:adactin_hotel_app/global/constants.dart' as globalConstants;
 import 'package:dio/dio.dart';
 
@@ -11,8 +10,7 @@ class UserRepository {
     try {
       String logInUrl = Constants.baseURL + Constants.loginURL;
       logInUrl = logInUrl.replaceAll(Constants.usernameKey, username);
-      logInUrl =
-          logInUrl.replaceAll(Constants.passwordKey, generateMD5(password));
+      logInUrl = logInUrl.replaceAll(Constants.passwordKey, password);
 
       final Response response = await Dio().get(logInUrl);
       final Map<String, dynamic> data = json.decode(response.toString());
