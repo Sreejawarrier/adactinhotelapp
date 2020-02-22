@@ -3,7 +3,6 @@ import 'package:adactin_hotel_app/account/login/constants/login_content.dart';
 import 'package:adactin_hotel_app/account/login/constants/login_semantic_keys.dart';
 import 'package:adactin_hotel_app/api/repo/user_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
-import 'package:adactin_hotel_app/base/spinner/spinner.dart';
 import 'package:adactin_hotel_app/theme/images.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:flutter/material.dart';
@@ -101,13 +100,13 @@ class _LoginState extends State<Login> {
             child: BlocBuilder<LoginBloc, LoginState>(
               builder: (context, state) {
                 return Container(
-                      color: Colors.white,
-                      child: Center(
-                        child: (widget.appBloc.userDetails == null)
-                            ? _getLoginForm(context)
-                            : _getLoggedInForm(context),
-                      ),
-                    );
+                  color: Colors.white,
+                  child: Center(
+                    child: (widget.appBloc.userDetails == null)
+                        ? _getLoginForm(context)
+                        : _getLoggedInForm(context),
+                  ),
+                );
               },
             ),
           ),

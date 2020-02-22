@@ -7,7 +7,6 @@ import 'package:adactin_hotel_app/app/constants/app_content.dart';
 import 'package:adactin_hotel_app/app/constants/app_semantic_keys.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
 import 'package:adactin_hotel_app/home/page/home.dart';
-import 'package:adactin_hotel_app/search/page/search.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -212,10 +211,8 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
   int _getAppTabIndex(AppTabState state) {
     if (state is AppTabChosen) {
       switch (state.tab) {
-        case AppTab.search:
-          return 1;
         case AppTab.account:
-          return 2;
+          return 1;
         default:
           return 0;
       }
@@ -228,8 +225,6 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
   AppTab _getAppTab(int index) {
     switch (index) {
       case 1:
-        return AppTab.search;
-      case 2:
         return AppTab.account;
       default:
         return AppTab.home;
@@ -240,8 +235,6 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
   List<Widget> _getTabViews(BuildContext context) {
     return [
       Home(),
-      Search(),
-//      Book(),
       Login(appBloc: BlocProvider.of<AppBloc>(context)),
     ];
   }
@@ -254,16 +247,6 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
         label: AppContent.home,
         animationDuration: _bottomNavBarDuration,
       ),
-      FFNavigationBarItem(
-        iconData: Icons.search,
-        label: AppContent.search,
-        animationDuration: _bottomNavBarDuration,
-      ),
-//      FFNavigationBarItem(
-//        iconData: Icons.error,
-//        label: AppContent.book,
-//        animationDuration: _bottomNavBarDuration,
-//      ),
       FFNavigationBarItem(
         iconData: Icons.account_circle,
         label: AppContent.account,

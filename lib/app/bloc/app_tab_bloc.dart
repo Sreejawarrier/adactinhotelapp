@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// ------------ Data
 
-enum AppTab { home, search, account }
+enum AppTab { home, account }
 
 /// ------------ Event
 
