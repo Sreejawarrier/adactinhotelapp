@@ -18,6 +18,13 @@ class AppStart extends AppEvent {
   List<Object> get props => [];
 }
 
+class AppUserChangeInProcess extends AppEvent {
+  const AppUserChangeInProcess();
+
+  @override
+  List<Object> get props => [];
+}
+
 class AppUserChange extends AppEvent {
   final UserDetails userDetails;
 
@@ -41,6 +48,8 @@ class AppNotStarted extends AppState {}
 class AppLoading extends AppState {}
 
 class AppStarted extends AppState {}
+
+class AppUserChangeProcessing extends AppState {}
 
 class AppUserChanged extends AppState {
   final UserDetails userDetails;
@@ -76,6 +85,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       userDetails = UserDetails.fromSharedPreferences(preferences);
       if (userDetails != null) {
         await UserRepository().logout(token: userDetails.token);
+        userDetails = null;
       }
 
       yield AppStarted();
@@ -89,6 +99,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       }
 
       yield AppUserChanged(userDetails: event.userDetails);
+    } else if (event is AppUserChangeInProcess) {
+      yield AppUserChangeProcessing();
     }
   }
 }

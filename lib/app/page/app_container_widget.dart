@@ -30,7 +30,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget> {
     return BlocListener(
       bloc: BlocProvider.of<AppBloc>(context),
       listener: (BuildContext context, AppState state) {
-        if (state is AppUserChanged) {
+        if (state is AppUserChanged && state.userDetails != null) {
           BlocProvider.of<AppTabBloc>(context)
               .add(AppTabSelect(tab: AppTab.home));
         } else if (state is AppStarted) {
@@ -42,9 +42,11 @@ class _AppContainerWidgetState extends State<AppContainerWidget> {
         bloc: BlocProvider.of<AppBloc>(context),
         builder: (BuildContext context, AppState state) {
           if (state is AppLoading) {
-            return Container(
-              color: Palette.primaryColor,
-              child: Spinner(spinnerColor: Colors.white),
+            return Stack(
+              children: <Widget>[
+                Container(color: Palette.primaryColor),
+                Spinner(spinnerColor: Colors.white),
+              ],
             );
           }
 
@@ -175,6 +177,11 @@ class _AppContainerWidgetState extends State<AppContainerWidget> {
           selectedIndex: _selectedTabIndex,
           items: _ffNavBarItemList,
           onSelectTab: (index) {
+            if (BlocProvider.of<AppBloc>(context).state
+                is AppUserChangeProcessing) {
+              return;
+            }
+
             if (BlocProvider.of<AppBloc>(context).userDetails != null) {
               DefaultTabController.of(context).index = index;
               BlocProvider.of<AppTabBloc>(context)

@@ -258,6 +258,7 @@ class _LoginState extends State<Login> {
             _formKey.currentState.validate();
             if (_usernameTextFieldController.text.isNotEmpty &&
                 _passwordTextFieldController.text.isNotEmpty) {
+              widget.appBloc.add(AppUserChangeInProcess());
               BlocProvider.of<LoginBloc>(context).add(
                 LoginAction(
                   username: _usernameTextFieldController.text,
@@ -375,6 +376,7 @@ class _LoginState extends State<Login> {
       child: ExcludeSemantics(
         child: RaisedButton(
           onPressed: () {
+            widget.appBloc.add(AppUserChangeInProcess());
             BlocProvider.of<LoginBloc>(context).add(
               LogoutAction(token: widget.appBloc.userDetails.token),
             );
