@@ -100,19 +100,14 @@ class _LoginState extends State<Login> {
             },
             child: BlocBuilder<LoginBloc, LoginState>(
               builder: (context, state) {
-                return Stack(
-                  children: <Widget>[
-                    Container(
+                return Container(
                       color: Colors.white,
                       child: Center(
                         child: (widget.appBloc.userDetails == null)
                             ? _getLoginForm(context)
                             : _getLoggedInForm(context),
                       ),
-                    ),
-                    state is LoginLoading ? Spinner() : const SizedBox.shrink(),
-                  ],
-                );
+                    );
               },
             ),
           ),

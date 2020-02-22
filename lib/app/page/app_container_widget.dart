@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:adactin_hotel_app/account/login/page/login_page.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/bloc/app_tab_bloc.dart';
@@ -10,6 +12,7 @@ import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quiver/async.dart';
 
 class AppContainerWidget extends StatefulWidget {
   @override
@@ -18,10 +21,13 @@ class AppContainerWidget extends StatefulWidget {
 
 class _AppContainerWidgetState extends State<AppContainerWidget> {
   final Duration _bottomNavBarDuration = const Duration(milliseconds: 200);
+  final int _userSessionTimerMaxInSeconds = 1800;
 
   int _selectedTabIndex = 0;
-
   List<FFNavigationBarItem> _ffNavBarItemList = List();
+
+  CountdownTimer _userSessionTimer;
+  StreamSubscription<CountdownTimer> _sessionTimerListener;
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +36,27 @@ class _AppContainerWidgetState extends State<AppContainerWidget> {
     return BlocListener(
       bloc: BlocProvider.of<AppBloc>(context),
       listener: (BuildContext context, AppState state) {
-        if (state is AppUserChanged && state.userDetails != null) {
-          BlocProvider.of<AppTabBloc>(context)
-              .add(AppTabSelect(tab: AppTab.home));
+        if (state is AppUserChanged) {
+          if (state.userDetails != null) {
+            _userSessionTimer?.cancel();
+            _userSessionTimer = CountdownTimer(
+              Duration(seconds: _userSessionTimerMaxInSeconds),
+              Duration(seconds: 1),
+            );
+            _sessionTimerListener = _userSessionTimer.listen(null);
+            _sessionTimerListener.onDone(() {
+              _sessionTimerListener.cancel();
+              BlocProvider.of<AppTabBloc>(context)
+                  .add(AppTabSelect(tab: AppTab.account));
+              BlocProvider.of<AppBloc>(context).add(AppSessionExpired());
+            });
+
+            BlocProvider.of<AppTabBloc>(context)
+                .add(AppTabSelect(tab: AppTab.home));
+          } else {
+            _userSessionTimer?.cancel();
+            _userSessionTimer = null;
+          }
         } else if (state is AppStarted) {
           BlocProvider.of<AppTabBloc>(context)
               .add(AppTabSelect(tab: AppTab.account));
@@ -40,59 +64,83 @@ class _AppContainerWidgetState extends State<AppContainerWidget> {
       },
       child: BlocBuilder(
         bloc: BlocProvider.of<AppBloc>(context),
-        builder: (BuildContext context, AppState state) {
-          if (state is AppLoading) {
-            return Stack(
-              children: <Widget>[
-                Container(color: Palette.primaryColor),
-                Spinner(spinnerColor: Colors.white),
-              ],
-            );
+        builder: (BuildContext context, AppState appState) {
+          if (appState is AppLoading) {
+            return _appLoadingWidget();
           }
 
           return BlocBuilder(
             bloc: BlocProvider.of<AppTabBloc>(context),
-            builder: (BuildContext context, AppTabState state) {
-              _selectedTabIndex = _getAppTabIndex(state);
+            builder: (BuildContext context, AppTabState appTabState) {
+              _selectedTabIndex = _getAppTabIndex(appTabState);
 
-              return DefaultTabController(
-                length: _ffNavBarItemList.length,
-                initialIndex: 0,
-                child: Scaffold(
-                  body: SafeArea(
-                    child: Builder(
-                      builder: (BuildContext context) {
-                        /// Below check is when we try to move automatically from
-                        /// one screen tab to another screen tab via bloc call
-                        /// of the apptabbloc. Ex: On successful login we move to
-                        /// home screen at that time we pass user change app bloc
-                        /// event then we try to move to home tab via bloc call.
-                        /// So at that time if we see that the default tab controller
-                        /// index is not equal to the needed one we animate to it.
-                        final int curIndex =
-                            DefaultTabController.of(context).index;
-                        if (curIndex != _selectedTabIndex) {
-                          DefaultTabController.of(context)
-                              .animateTo(_selectedTabIndex);
-                        }
+              return Stack(
+                children: <Widget>[
+                  DefaultTabController(
+                    length: _ffNavBarItemList.length,
+                    initialIndex: 0,
+                    child: Scaffold(
+                      body: SafeArea(
+                        child: Builder(
+                          builder: (BuildContext context) {
+                            /// Below check is when we try to move automatically from
+                            /// one screen tab to another screen tab via bloc call
+                            /// of the apptabbloc. Ex: On successful login we move to
+                            /// home screen at that time we pass user change app bloc
+                            /// event then we try to move to home tab via bloc call.
+                            /// So at that time if we see that the default tab controller
+                            /// index is not equal to the needed one we animate to it.
+                            final int curIndex =
+                                DefaultTabController.of(context).index;
+                            if (curIndex != _selectedTabIndex) {
+                              DefaultTabController.of(context)
+                                  .animateTo(_selectedTabIndex);
+                            }
+                            if (appState is AppUserChanged &&
+                                appState.sessionExpired) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                _displaySnackBar(
+                                  context,
+                                  AppSemanticKeys.sessionExpired,
+                                  AppContent.sessionExpired,
+                                );
+                              });
+                            }
 
-                        return TabBarView(
-                          children: _getTabViews(context),
-                          physics: NeverScrollableScrollPhysics(),
-                        );
-                      },
+                            return TabBarView(
+                              children: _getTabViews(context),
+                              physics: NeverScrollableScrollPhysics(),
+                            );
+                          },
+                        ),
+                      ),
+                      bottomNavigationBar: Builder(
+                        builder: (BuildContext context) =>
+                            _getBottomNavBar(context),
+                      ),
                     ),
                   ),
-                  bottomNavigationBar: Builder(
-                    builder: (BuildContext context) =>
-                        _getBottomNavBar(context),
-                  ),
-                ),
+                  appState is AppUserChangeProcessing
+                      ? Spinner()
+                      : const SizedBox.shrink(),
+                ],
               );
             },
           );
         },
       ),
+    );
+  }
+
+  Stack _appLoadingWidget() {
+    return Stack(
+      children: <Widget>[
+        Spinner(
+          spinnerColor: Colors.white,
+          backgroundColor: Palette.primaryColor,
+          backgroundOpacity: 1,
+        ),
+      ],
     );
   }
 
@@ -177,32 +225,35 @@ class _AppContainerWidgetState extends State<AppContainerWidget> {
           selectedIndex: _selectedTabIndex,
           items: _ffNavBarItemList,
           onSelectTab: (index) {
-            if (BlocProvider.of<AppBloc>(context).state
-                is AppUserChangeProcessing) {
-              return;
-            }
-
             if (BlocProvider.of<AppBloc>(context).userDetails != null) {
               DefaultTabController.of(context).index = index;
               BlocProvider.of<AppTabBloc>(context)
                   .add(AppTabSelect(tab: _getAppTab(index)));
             } else if (index != 2) {
-              Scaffold.of(context).hideCurrentSnackBar();
-              final SnackBar snackBar = SnackBar(
-                duration: Duration(milliseconds: 1000),
-                content: Semantics(
-                  label: AppSemanticKeys.snackBarNeedLogIn,
-                  enabled: true,
-                  child: ExcludeSemantics(
-                    child: Text(AppContent.needLogIn),
-                  ),
-                ),
+              _displaySnackBar(
+                context,
+                AppSemanticKeys.snackBarNeedLogIn,
+                AppContent.needLogIn,
               );
-              Scaffold.of(context).showSnackBar(snackBar);
             }
           },
         ),
       ),
     );
+  }
+
+  void _displaySnackBar(BuildContext context, String semanticKey, String info) {
+    Scaffold.of(context).hideCurrentSnackBar();
+    final SnackBar snackBar = SnackBar(
+      duration: Duration(milliseconds: 2000),
+      content: Semantics(
+        label: semanticKey,
+        enabled: true,
+        child: ExcludeSemantics(
+          child: Text(info),
+        ),
+      ),
+    );
+    Scaffold.of(context).showSnackBar(snackBar);
   }
 }

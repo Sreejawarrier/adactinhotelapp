@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:adactin_hotel_app/api/models/user_details.dart';
 import 'package:adactin_hotel_app/api/repo/user_repo.dart';
 import 'package:bloc/bloc.dart';
@@ -27,11 +29,19 @@ class AppUserChangeInProcess extends AppEvent {
 
 class AppUserChange extends AppEvent {
   final UserDetails userDetails;
+  final bool isSessionExpired;
 
-  AppUserChange({this.userDetails});
+  AppUserChange({this.userDetails, this.isSessionExpired = false});
 
   @override
   List<Object> get props => [userDetails];
+}
+
+class AppSessionExpired extends AppEvent {
+  const AppSessionExpired();
+
+  @override
+  List<Object> get props => [];
 }
 
 /// ------------ State
@@ -53,8 +63,9 @@ class AppUserChangeProcessing extends AppState {}
 
 class AppUserChanged extends AppState {
   final UserDetails userDetails;
+  final bool sessionExpired;
 
-  AppUserChanged({this.userDetails});
+  AppUserChanged({this.userDetails, this.sessionExpired = false});
 
   @override
   List<Object> get props => [userDetails];
@@ -84,9 +95,9 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
       userDetails = UserDetails.fromSharedPreferences(preferences);
       if (userDetails != null) {
-        await UserRepository().logout(token: userDetails.token);
-        userDetails = null;
+        await _logOutUser();
       }
+      userDetails = null;
 
       yield AppStarted();
     } else if (event is AppUserChange) {
@@ -98,9 +109,23 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         await event.userDetails.toPreferences(preferences);
       }
 
-      yield AppUserChanged(userDetails: event.userDetails);
+      yield AppUserChanged(
+        userDetails: event.userDetails,
+        sessionExpired: event.isSessionExpired,
+      );
     } else if (event is AppUserChangeInProcess) {
       yield AppUserChangeProcessing();
+    } else if (event is AppSessionExpired) {
+      if (userDetails != null) {
+        yield AppUserChangeProcessing();
+
+        await _logOutUser();
+        add(AppUserChange(isSessionExpired: true));
+      }
     }
+  }
+
+  Future _logOutUser() async {
+    await UserRepository().logout(token: userDetails.token);
   }
 }

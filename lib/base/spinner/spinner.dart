@@ -4,10 +4,14 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Spinner extends StatelessWidget {
   final Color spinnerColor;
+  final Color backgroundColor;
+  final double backgroundOpacity;
 
   Spinner({
     Key key,
     this.spinnerColor = Palette.primaryColor,
+    this.backgroundColor = Colors.grey,
+    this.backgroundOpacity = 0.5,
   }) : super(key: key);
 
   static const String spinner_semantics = 'Spinner_Semantics';
@@ -23,7 +27,7 @@ class Spinner extends StatelessWidget {
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              color: Colors.grey.withOpacity(0.5),
+              color: backgroundColor.withOpacity(backgroundOpacity),
               child: SpinKitWanderingCubes(
                 color: spinnerColor,
                 size: 60,
