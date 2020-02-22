@@ -33,6 +33,9 @@ class _AppContainerWidgetState extends State<AppContainerWidget> {
         if (state is AppUserChanged) {
           BlocProvider.of<AppTabBloc>(context)
               .add(AppTabSelect(tab: AppTab.home));
+        } else if (state is AppStarted) {
+          BlocProvider.of<AppTabBloc>(context)
+              .add(AppTabSelect(tab: AppTab.account));
         }
       },
       child: BlocBuilder(
@@ -79,26 +82,8 @@ class _AppContainerWidgetState extends State<AppContainerWidget> {
                     ),
                   ),
                   bottomNavigationBar: Builder(
-                    builder: (BuildContext context) => Semantics(
-                      enabled: true,
-                      label: AppSemanticKeys.bottomNavigationBar,
-                      child: FFNavigationBar(
-                        theme: FFNavigationBarTheme(
-                          barBackgroundColor: Colors.white,
-                          selectedItemBorderColor: Colors.white,
-                          selectedItemBackgroundColor: Palette.primaryColor,
-                          selectedItemIconColor: Colors.white,
-                          selectedItemLabelColor: Colors.black,
-                        ),
-                        selectedIndex: _selectedTabIndex,
-                        items: _ffNavBarItemList,
-                        onSelectTab: (index) {
-                          DefaultTabController.of(context).index = index;
-                          BlocProvider.of<AppTabBloc>(context)
-                              .add(AppTabSelect(tab: _getAppTab(index)));
-                        },
-                      ),
-                    ),
+                    builder: (BuildContext context) =>
+                        _getBottomNavBar(context),
                   ),
                 ),
               );
@@ -171,5 +156,46 @@ class _AppContainerWidgetState extends State<AppContainerWidget> {
         animationDuration: _bottomNavBarDuration,
       ),
     ];
+  }
+
+  /// Constructs bottom navigation bar
+  Widget _getBottomNavBar(BuildContext context) {
+    return Semantics(
+      enabled: true,
+      label: AppSemanticKeys.bottomNavigationBar,
+      child: ExcludeSemantics(
+        child: FFNavigationBar(
+          theme: FFNavigationBarTheme(
+            barBackgroundColor: Colors.white,
+            selectedItemBorderColor: Colors.white,
+            selectedItemBackgroundColor: Palette.primaryColor,
+            selectedItemIconColor: Colors.white,
+            selectedItemLabelColor: Colors.black,
+          ),
+          selectedIndex: _selectedTabIndex,
+          items: _ffNavBarItemList,
+          onSelectTab: (index) {
+            if (BlocProvider.of<AppBloc>(context).userDetails != null) {
+              DefaultTabController.of(context).index = index;
+              BlocProvider.of<AppTabBloc>(context)
+                  .add(AppTabSelect(tab: _getAppTab(index)));
+            } else if (index != 2) {
+              Scaffold.of(context).hideCurrentSnackBar();
+              final SnackBar snackBar = SnackBar(
+                duration: Duration(milliseconds: 1000),
+                content: Semantics(
+                  label: AppSemanticKeys.snackBarNeedLogIn,
+                  enabled: true,
+                  child: ExcludeSemantics(
+                    child: Text(AppContent.needLogIn),
+                  ),
+                ),
+              );
+              Scaffold.of(context).showSnackBar(snackBar);
+            }
+          },
+        ),
+      ),
+    );
   }
 }

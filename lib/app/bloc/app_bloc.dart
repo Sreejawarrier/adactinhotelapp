@@ -1,4 +1,5 @@
 import 'package:adactin_hotel_app/api/models/user_details.dart';
+import 'package:adactin_hotel_app/api/repo/user_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -73,6 +74,9 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       yield AppLoading();
 
       userDetails = UserDetails.fromSharedPreferences(preferences);
+      if (userDetails != null) {
+        await UserRepository().logout(token: userDetails.token);
+      }
 
       yield AppStarted();
     } else if (event is AppUserChange) {
