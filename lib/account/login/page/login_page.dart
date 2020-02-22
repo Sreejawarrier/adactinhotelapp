@@ -7,6 +7,7 @@ import 'package:adactin_hotel_app/theme/images.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -54,6 +55,9 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    FlutterStatusbarcolor.setStatusBarColor(Colors.white);
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+
     return Scaffold(
       body: BlocProvider(
         create: (context) {
@@ -189,6 +193,8 @@ class _LoginState extends State<Login> {
               horizontal: 12,
               vertical: 22,
             ),
+            labelText: LoginContent.userNameHint,
+            labelStyle: TextStyle(fontSize: 18),
             hintText: LoginContent.userNameHint,
             hintStyle: TextStyle(fontSize: 18),
             border: OutlineInputBorder(
@@ -224,6 +230,8 @@ class _LoginState extends State<Login> {
               horizontal: 12,
               vertical: 22,
             ),
+            labelText: LoginContent.passwordHint,
+            labelStyle: TextStyle(fontSize: 18),
             hintText: LoginContent.passwordHint,
             hintStyle: TextStyle(fontSize: 18),
             border: OutlineInputBorder(
@@ -270,8 +278,9 @@ class _LoginState extends State<Login> {
             vertical: 22,
           ),
           color: Palette.primaryColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       ),
     );
