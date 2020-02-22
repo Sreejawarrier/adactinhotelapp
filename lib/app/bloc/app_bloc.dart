@@ -44,6 +44,15 @@ class AppSessionExpired extends AppEvent {
   List<Object> get props => [];
 }
 
+class CheckSessionExpiry extends AppEvent {
+  final DateTime sessionStartTime;
+
+  CheckSessionExpiry({@required this.sessionStartTime});
+
+  @override
+  List<Object> get props => [sessionStartTime];
+}
+
 /// ------------ State
 
 abstract class AppState extends Equatable {
@@ -68,11 +77,27 @@ class AppUserChanged extends AppState {
   AppUserChanged({this.userDetails, this.sessionExpired = false});
 
   @override
-  List<Object> get props => [userDetails];
+  List<Object> get props => [userDetails, sessionExpired];
 
   @override
   String toString() {
-    return 'AppUserChanged { $userDetails }';
+    return 'AppUserChanged { $userDetails, $sessionExpired }';
+  }
+}
+
+class AppSessionCheckProcessing extends AppState {}
+
+class AppSessionCheckProcessed extends AppState {
+  final int remainingDuration;
+
+  AppSessionCheckProcessed({@required this.remainingDuration});
+
+  @override
+  List<Object> get props => [remainingDuration];
+
+  @override
+  String toString() {
+    return 'AppSessionCheckProcessed { $remainingDuration }';
   }
 }
 
@@ -80,6 +105,7 @@ class AppUserChanged extends AppState {
 
 class AppBloc extends Bloc<AppEvent, AppState> {
   final SharedPreferences preferences;
+  final int userSessionTimerMaxInSeconds = 1800;
 
   UserDetails userDetails;
 
@@ -121,6 +147,20 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
         await _logOutUser();
         add(AppUserChange(isSessionExpired: true));
+      }
+    } else if (event is CheckSessionExpiry) {
+      yield AppSessionCheckProcessing();
+
+      final Duration timeDifference =
+          DateTime.now().difference(event.sessionStartTime);
+      if (timeDifference.inSeconds > userSessionTimerMaxInSeconds) {
+        await _logOutUser();
+        add(AppUserChange(isSessionExpired: true));
+      } else {
+        yield AppSessionCheckProcessed(
+          remainingDuration:
+              (userSessionTimerMaxInSeconds - timeDifference.inSeconds),
+        );
       }
     }
   }

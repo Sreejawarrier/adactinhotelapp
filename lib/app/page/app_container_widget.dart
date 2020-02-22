@@ -19,15 +19,47 @@ class AppContainerWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _AppContainerWidgetState();
 }
 
-class _AppContainerWidgetState extends State<AppContainerWidget> {
+class _AppContainerWidgetState extends State<AppContainerWidget>
+    with WidgetsBindingObserver {
   final Duration _bottomNavBarDuration = const Duration(milliseconds: 200);
-  final int _userSessionTimerMaxInSeconds = 1800;
 
   int _selectedTabIndex = 0;
   List<FFNavigationBarItem> _ffNavBarItemList = List();
 
   CountdownTimer _userSessionTimer;
+  DateTime _userSessionStartTime;
   StreamSubscription<CountdownTimer> _sessionTimerListener;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _sessionTimerListener?.cancel();
+    _userSessionTimer?.cancel();
+
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed &&
+        BlocProvider.of<AppBloc>(context)?.userDetails != null) {
+      BlocProvider.of<AppBloc>(context).add(
+        CheckSessionExpiry(sessionStartTime: _userSessionStartTime),
+      );
+    } else if (_userSessionTimer?.isRunning == true) {
+      _sessionTimerListener.cancel();
+      _userSessionTimer.cancel();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,28 +70,34 @@ class _AppContainerWidgetState extends State<AppContainerWidget> {
       listener: (BuildContext context, AppState state) {
         if (state is AppUserChanged) {
           if (state.userDetails != null) {
-            _userSessionTimer?.cancel();
-            _userSessionTimer = CountdownTimer(
-              Duration(seconds: _userSessionTimerMaxInSeconds),
-              Duration(seconds: 1),
+            _userSessionStartTime = DateTime.now();
+
+            /// Creation of session timer
+            _createSessionCountdown(
+              context,
+              BlocProvider.of<AppBloc>(context).userSessionTimerMaxInSeconds,
             );
-            _sessionTimerListener = _userSessionTimer.listen(null);
-            _sessionTimerListener.onDone(() {
-              _sessionTimerListener.cancel();
-              BlocProvider.of<AppTabBloc>(context)
-                  .add(AppTabSelect(tab: AppTab.account));
-              BlocProvider.of<AppBloc>(context).add(AppSessionExpired());
-            });
 
             BlocProvider.of<AppTabBloc>(context)
                 .add(AppTabSelect(tab: AppTab.home));
           } else {
+            _sessionTimerListener?.cancel();
             _userSessionTimer?.cancel();
+            _sessionTimerListener = null;
             _userSessionTimer = null;
+
+            BlocProvider.of<AppTabBloc>(context)
+                .add(AppTabSelect(tab: AppTab.account));
           }
         } else if (state is AppStarted) {
           BlocProvider.of<AppTabBloc>(context)
               .add(AppTabSelect(tab: AppTab.account));
+        } else if (state is AppSessionCheckProcessed) {
+          /// Creation of session timer
+          _createSessionCountdown(
+            context,
+            state.remainingDuration,
+          );
         }
       },
       child: BlocBuilder(
@@ -120,7 +158,8 @@ class _AppContainerWidgetState extends State<AppContainerWidget> {
                       ),
                     ),
                   ),
-                  appState is AppUserChangeProcessing
+                  (appState is AppUserChangeProcessing ||
+                          appState is AppSessionCheckProcessing)
                       ? Spinner()
                       : const SizedBox.shrink(),
                 ],
@@ -132,6 +171,26 @@ class _AppContainerWidgetState extends State<AppContainerWidget> {
     );
   }
 
+  /// Creates  a session timer count down once the user is logged in
+  void _createSessionCountdown(BuildContext context, int totalSessionSeconds) {
+    _sessionTimerListener?.cancel();
+    _userSessionTimer?.cancel();
+    _userSessionTimer = CountdownTimer(
+      Duration(seconds: totalSessionSeconds),
+      Duration(seconds: 1),
+    );
+
+    /// Session timer listener
+    _sessionTimerListener = _userSessionTimer.listen(null);
+    _sessionTimerListener.onDone(() {
+      _sessionTimerListener.cancel();
+      BlocProvider.of<AppTabBloc>(context)
+          .add(AppTabSelect(tab: AppTab.account));
+      BlocProvider.of<AppBloc>(context).add(AppSessionExpired());
+    });
+  }
+
+  /// App first time launch loading widget
   Stack _appLoadingWidget() {
     return Stack(
       children: <Widget>[
@@ -242,6 +301,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget> {
     );
   }
 
+  /// Displays a snackBar with given semantic key and information to display.
   void _displaySnackBar(BuildContext context, String semanticKey, String info) {
     Scaffold.of(context).hideCurrentSnackBar();
     final SnackBar snackBar = SnackBar(
