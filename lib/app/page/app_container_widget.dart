@@ -29,6 +29,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
   CountdownTimer _userSessionTimer;
   DateTime _userSessionStartTime;
   StreamSubscription<CountdownTimer> _sessionTimerListener;
+  AppLifecycleState _appLifecycleState;
 
   @override
   void initState() {
@@ -50,6 +51,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
+    _appLifecycleState = state;
     if (state == AppLifecycleState.resumed &&
         BlocProvider.of<AppBloc>(context)?.userDetails != null) {
       BlocProvider.of<AppBloc>(context).add(
@@ -72,14 +74,17 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
           if (state.userDetails != null) {
             _userSessionStartTime = DateTime.now();
 
-            /// Creation of session timer
-            _createSessionCountdown(
-              context,
-              BlocProvider.of<AppBloc>(context).userSessionTimerMaxInSeconds,
-            );
+            if (_appLifecycleState == null ||
+                _appLifecycleState == AppLifecycleState.resumed) {
+              /// Creation of session timer
+              _createSessionCountdown(
+                context,
+                BlocProvider.of<AppBloc>(context).userSessionTimerMaxInSeconds,
+              );
 
-            BlocProvider.of<AppTabBloc>(context)
-                .add(AppTabSelect(tab: AppTab.home));
+              BlocProvider.of<AppTabBloc>(context)
+                  .add(AppTabSelect(tab: AppTab.home));
+            }
           } else {
             _sessionTimerListener?.cancel();
             _userSessionTimer?.cancel();
