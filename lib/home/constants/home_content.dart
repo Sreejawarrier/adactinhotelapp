@@ -24,6 +24,8 @@ class HomeContent {
   static const String search = 'Search';
   static const String reset = 'Reset';
   static const String cancel = 'Cancel';
+  static const String alertFailureTitle = 'Failure';
+  static const String alertButtonOk = 'OK';
 
   List<String> locationValues() => [
         'Sydney',

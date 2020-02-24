@@ -121,7 +121,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
       userDetails = UserDetails.fromSharedPreferences(preferences);
       if (userDetails != null) {
-        await _logOutUser();
+        await UserDetails.removeFromPreferences(preferences);
       }
       userDetails = null;
 

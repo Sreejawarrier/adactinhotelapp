@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:adactin_hotel_app/account/login/page/login_page.dart';
+import 'package:adactin_hotel_app/account/login/page/login.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/bloc/app_tab_bloc.dart';
 import 'package:adactin_hotel_app/app/constants/app_content.dart';
@@ -234,7 +234,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
   /// Returns the list of widgets which we will be showing for a tab bar
   List<Widget> _getTabViews(BuildContext context) {
     return [
-      Home(),
+      Home(appBloc: BlocProvider.of<AppBloc>(context)),
       Login(appBloc: BlocProvider.of<AppBloc>(context)),
     ];
   }

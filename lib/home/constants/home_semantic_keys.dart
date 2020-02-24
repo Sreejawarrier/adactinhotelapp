@@ -16,4 +16,6 @@ class HomeSemanticKeys {
   static const String bottomOptionTitle = 'bottom_option_title_';
   static const String bottomSheetCancel = 'bottom_sheet_cancel_button';
   static const String bottomSheetOptionsColumn = 'bottom_sheet_options_column';
+  static const String failureAlert = 'failure_alert';
+  static const String failureAlertButton = 'failure_alert_button';
 }

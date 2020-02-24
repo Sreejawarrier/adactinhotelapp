@@ -1,15 +1,26 @@
-import 'package:intl/intl.dart';
-
+import 'package:adactin_hotel_app/api/models/hotel_search.dart';
+import 'package:adactin_hotel_app/api/repo/hotel_search_repo.dart';
+import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
+import 'package:adactin_hotel_app/base/spinner/spinner.dart';
+import 'package:adactin_hotel_app/home/bloc/home_bloc.dart';
 import 'package:adactin_hotel_app/home/constants/home_content.dart';
 import 'package:adactin_hotel_app/home/constants/home_semantic_keys.dart';
 import 'package:adactin_hotel_app/theme/images.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
+  final AppBloc appBloc;
+
+  Home({Key key, @required this.appBloc})
+      : assert(appBloc != null),
+        super(key: key);
+
   @override
   State<StatefulWidget> createState() => _HomeState();
 }
@@ -98,13 +109,64 @@ class _HomeState extends State<Home> {
 
     return Scaffold(
       appBar: _getAppBar(),
-      body: SafeArea(
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => _removeFocus(),
-          child: Container(
-            color: Colors.white,
-            child: _getHotelSearchForm(context),
+      body: BlocProvider(
+        create: (context) {
+          return HomeBloc(
+            hotelSearchRepository: HotelSearchRepository(),
+          );
+        },
+        child: SafeArea(
+          child: BlocListener<HomeBloc, HomeState>(
+            listener: (context, state) {
+              if (state is HotelSearchSuccess) {
+                print(state.data);
+              } else if (state is HotelSearchFailure) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      semanticLabel: HomeSemanticKeys.failureAlert,
+                      title: Text(HomeContent.alertFailureTitle),
+                      content: Text(state.error),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Semantics(
+                            enabled: true,
+                            label: HomeSemanticKeys.failureAlertButton,
+                            child: ExcludeSemantics(
+                              child: Text(HomeContent.alertButtonOk),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                  barrierDismissible: false,
+                );
+              }
+            },
+            child: BlocBuilder<HomeBloc, HomeState>(
+              builder: (context, state) {
+                return Stack(
+                  children: <Widget>[
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => _removeFocus(),
+                      child: Container(
+                        color: Colors.white,
+                        child: _getHotelSearchForm(context),
+                      ),
+                    ),
+                    state is SearchInProcess
+                        ? Spinner()
+                        : const SizedBox.shrink(),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -716,7 +778,7 @@ class _HomeState extends State<Home> {
             HomeContent.search,
             Palette.primaryColor,
             () {
-              _searchHotels();
+              _searchHotels(context);
             },
           ),
         ),
@@ -765,11 +827,25 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void _searchHotels() {
+  void _searchHotels(BuildContext context) {
     _removeFocus();
 
     if (_isValidFormContent()) {
-      // _performSearch();
+      BlocProvider.of<HomeBloc>(context).add(
+        HotelSearchAction(
+          appBloc: widget.appBloc,
+          hotelSearch: HotelSearch(
+            location: _locationTextFieldController.text,
+            hotels: _hotelsTextFieldController.text,
+            roomType: _roomTypeTextFieldController.text,
+            numberOfRooms: _numberOfRoomsTextFieldController.text,
+            checkInDate: _checkInDateTextFieldController.text,
+            checkOutDate: _checkOutDateTextFieldController.text,
+            adultsPerRoom: _adultsPerRoomTextFieldController.text,
+            childrenPerRoom: _childrenPerRoomTextFieldController.text,
+          ),
+        ),
+      );
     }
   }
 

@@ -12,7 +12,8 @@ class UserRepository {
       logInUrl = logInUrl.replaceAll(Constants.usernameKey, username);
       logInUrl = logInUrl.replaceAll(Constants.passwordKey, password);
 
-      final Response response = await Dio().get(logInUrl);
+      final String encodedUrl = Uri.encodeFull(logInUrl);
+      final Response response = await Dio().get(encodedUrl);
       final Map<String, dynamic> data = json.decode(response.toString());
 
       if (data.containsKey(Constants.loginSuccessTokenKey) == true) {
@@ -39,7 +40,8 @@ class UserRepository {
       String logoutUrl = Constants.baseURL + Constants.logoutURL;
       logoutUrl = logoutUrl.replaceAll(Constants.userTokenKey, token);
 
-      final Response response = await Dio().get(logoutUrl);
+      final String encodedUrl = Uri.encodeFull(logoutUrl);
+      final Response response = await Dio().get(encodedUrl);
       final Map<String, dynamic> data = json.decode(response.toString());
 
       return ((data[Constants.logOutSuccessKey] ==
