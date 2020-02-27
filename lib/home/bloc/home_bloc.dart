@@ -1,4 +1,5 @@
 import 'package:adactin_hotel_app/api/models/hotel_search.dart';
+import 'package:adactin_hotel_app/api/models/hotel_searech_result.dart';
 import 'package:adactin_hotel_app/api/repo/hotel_search_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:bloc/bloc.dart';
@@ -44,16 +45,16 @@ class HomeInitial extends HomeState {}
 class SearchInProcess extends HomeState {}
 
 class HotelSearchSuccess extends HomeState {
-  final dynamic data;
+  final List<HotelSearchResult> hotelSearchResultList;
 
-  const HotelSearchSuccess({@required this.data});
+  const HotelSearchSuccess({@required this.hotelSearchResultList});
 
   @override
-  List<Object> get props => [data];
+  List<Object> get props => [hotelSearchResultList];
 
   @override
   String toString() {
-    return 'HotelSearchSuccess { data: $data }';
+    return 'HotelSearchSuccess { hotelSearchResultList: $hotelSearchResultList }';
   }
 }
 
@@ -90,7 +91,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       try {
         yield HotelSearchSuccess(
-          data: await hotelSearchRepository.searchForHotels(
+          hotelSearchResultList: await hotelSearchRepository.searchForHotels(
             token: event.appBloc.userDetails.token,
             hotelSearch: event.hotelSearch,
           ),

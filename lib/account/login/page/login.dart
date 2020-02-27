@@ -74,6 +74,7 @@ class _LoginState extends State<Login> {
               } else if (state is LogoutSuccess) {
                 widget.appBloc.add(AppUserChange());
               } else if (state is LoginFailure) {
+                widget.appBloc.add(AppUserChangeError());
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -295,7 +296,7 @@ class _LoginState extends State<Login> {
           behavior: HitTestBehavior.translucent,
           onTap: () {
             _removeFocus();
-            _launchWebURL();
+            _launchWebURL(LoginContent.forgotPasswordURL);
           },
           child: Padding(
             padding:
@@ -320,7 +321,7 @@ class _LoginState extends State<Login> {
           behavior: HitTestBehavior.translucent,
           onTap: () {
             _removeFocus();
-            _launchWebURL();
+            _launchWebURL(LoginContent.signUpURL);
           },
           child: Padding(
             padding: const EdgeInsets.only(left: 20, right: 8, bottom: 12),
@@ -405,9 +406,9 @@ class _LoginState extends State<Login> {
     FocusScope.of(context).requestFocus(FocusNode());
   }
 
-  Future _launchWebURL() async {
-    if (await canLaunch(LoginContent.adactinSiteURL)) {
-      await launch(LoginContent.adactinSiteURL);
+  Future _launchWebURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
     } else {
       showDialog(
         context: context,
@@ -415,8 +416,7 @@ class _LoginState extends State<Login> {
           return AlertDialog(
             semanticLabel: LoginSemanticKeys.failureAlert,
             title: Text(LoginContent.alertFailureTitle),
-            content: Text(
-                '${LoginContent.errorCouldntLaunchURL} ${LoginContent.adactinSiteURL}'),
+            content: Text('${LoginContent.errorCouldntLaunchURL} $url'),
             actions: <Widget>[
               FlatButton(
                 child: Semantics(

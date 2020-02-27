@@ -26,6 +26,8 @@ class HomeContent {
   static const String cancel = 'Cancel';
   static const String alertFailureTitle = 'Failure';
   static const String alertButtonOk = 'OK';
+  static const String hotelSearchSuccess = "Hotels Searched Successfully  !!!";
+  static const String hotelResultValueKey = "Result";
 
   List<String> locationValues() => [
         'Sydney',

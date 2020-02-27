@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:adactin_hotel_app/api/constants/constants.dart';
 import 'package:adactin_hotel_app/api/models/hotel_search.dart';
+import 'package:adactin_hotel_app/api/models/hotel_searech_result.dart';
 import 'package:adactin_hotel_app/global/constants.dart' as globalConstants;
+import 'package:adactin_hotel_app/home/constants/home_content.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 
 class HotelSearchRepository {
-  Future<String> searchForHotels({
+  Future<List<HotelSearchResult>> searchForHotels({
     @required String token,
     @required HotelSearch hotelSearch,
   }) async {
@@ -45,25 +47,38 @@ class HotelSearchRepository {
       final Response response = await Dio().get(encodedUrl);
       final Map<String, dynamic> data = json.decode(response.toString());
 
+      Map<String, dynamic> searchResponseMap;
       if (data?.values?.isNotEmpty == true) {
         data.values.forEach((result) {
-          print(result);
-          print(result is Map<String, dynamic>);
+          if (result is Map<String, dynamic>) {
+            searchResponseMap = result;
+          }
         });
       }
 
-      if (data.containsKey(Constants.hotelSearchSuccessKey) == true) {
-        return data.toString();
-      } else {
-        if (data.containsKey(Constants.errorFieldValidationsKey)) {
-          throw Constants.errorFieldValidationDescription;
-        } else if (data.containsKey(Constants.errorStatusKey)) {
-          throw data[Constants.errorStatusKey];
-        } else if (data.containsKey(Constants.errorResponseKey)) {
-          throw data[Constants.errorResponseKey];
-        } else {
-          throw globalConstants.Constants.unknownError;
+      if (searchResponseMap?.isNotEmpty == true) {
+        List<HotelSearchResult> resultDataList = [];
+        for (int i = 1; i <= searchResponseMap.length; i++) {
+          final String mapKey = "${HomeContent.hotelResultValueKey}$i";
+          if (searchResponseMap.containsKey(mapKey)) {
+            resultDataList.add(
+              HotelSearchResult.fromJson(
+                searchResponseMap[mapKey],
+              ),
+            );
+          }
         }
+        return resultDataList;
+      }
+
+      if (data.containsKey(Constants.errorFieldValidationsKey)) {
+        throw data[Constants.errorFieldValidationsKey];
+      } else if (data.containsKey(Constants.errorStatusKey)) {
+        throw data[Constants.errorStatusKey];
+      } else if (data.containsKey(Constants.errorResponseKey)) {
+        throw data[Constants.errorResponseKey];
+      } else {
+        throw globalConstants.Constants.unknownError;
       }
     } catch (error) {
       throw error;

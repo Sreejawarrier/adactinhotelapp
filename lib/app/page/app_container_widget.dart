@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:adactin_hotel_app/account/login/page/login.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
+import 'package:adactin_hotel_app/app/bloc/app_bottom_nav_bloc.dart';
 import 'package:adactin_hotel_app/app/bloc/app_tab_bloc.dart';
 import 'package:adactin_hotel_app/app/constants/app_content.dart';
 import 'package:adactin_hotel_app/app/constants/app_semantic_keys.dart';
@@ -25,6 +26,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
   int _selectedTabIndex = 0;
   List<FFNavigationBarItem> _ffNavBarItemList = List();
 
+  AppBottomNavTabBloc _appBottomNavTabBloc;
   CountdownTimer _userSessionTimer;
   DateTime _userSessionStartTime;
   StreamSubscription<CountdownTimer> _sessionTimerListener;
@@ -35,6 +37,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
     super.initState();
 
     WidgetsBinding.instance.addObserver(this);
+    _appBottomNavTabBloc = AppBottomNavTabBloc();
   }
 
   @override
@@ -42,6 +45,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
     WidgetsBinding.instance.removeObserver(this);
     _sessionTimerListener?.cancel();
     _userSessionTimer?.cancel();
+    _appBottomNavTabBloc.close();
 
     super.dispose();
   }
@@ -115,6 +119,12 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
             bloc: BlocProvider.of<AppTabBloc>(context),
             builder: (BuildContext context, AppTabState appTabState) {
               _selectedTabIndex = _getAppTabIndex(appTabState);
+              _appBottomNavTabBloc.add(
+                BottomNavTabDisplay(
+                  appBloc: BlocProvider.of<AppBloc>(context),
+                  currentTabIndex: _selectedTabIndex,
+                ),
+              );
 
               return Stack(
                 children: <Widget>[
@@ -140,13 +150,15 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
                             }
                             if (appState is AppUserChanged &&
                                 appState.sessionExpired) {
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                _displaySnackBar(
-                                  context,
-                                  AppSemanticKeys.sessionExpired,
-                                  AppContent.sessionExpired,
-                                );
-                              });
+                              WidgetsBinding.instance.addPostFrameCallback(
+                                (_) {
+                                  _displaySnackBar(
+                                    context,
+                                    AppSemanticKeys.sessionExpired,
+                                    AppContent.sessionExpired,
+                                  );
+                                },
+                              );
                             }
 
                             return TabBarView(
@@ -156,9 +168,22 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
                           },
                         ),
                       ),
-                      bottomNavigationBar: Builder(
-                        builder: (BuildContext context) =>
-                            _getBottomNavBar(context),
+                      bottomNavigationBar: BlocBuilder(
+                        bloc: _appBottomNavTabBloc,
+                        builder: (
+                          BuildContext context,
+                          AppBottomNavTabState state,
+                        ) {
+                          if (state is BottomNavTabDisplayStatus &&
+                              state.hide) {
+                            return const SizedBox.shrink();
+                          }
+
+                          return Builder(
+                            builder: (BuildContext context) =>
+                                _getBottomNavBar(context),
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -188,6 +213,9 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
     _sessionTimerListener = _userSessionTimer.listen(null);
     _sessionTimerListener.onDone(() {
       _sessionTimerListener.cancel();
+      Navigator.of(context).popUntil((route) {
+        return (route.settings.name == Navigator.defaultRouteName);
+      });
       BlocProvider.of<AppTabBloc>(context)
           .add(AppTabSelect(tab: AppTab.account));
       BlocProvider.of<AppBloc>(context).add(AppSessionExpired());

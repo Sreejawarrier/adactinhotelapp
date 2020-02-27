@@ -37,6 +37,13 @@ class AppUserChange extends AppEvent {
   List<Object> get props => [userDetails];
 }
 
+class AppUserChangeError extends AppEvent {
+  const AppUserChangeError();
+
+  @override
+  List<Object> get props => [];
+}
+
 class AppSessionExpired extends AppEvent {
   const AppSessionExpired();
 
@@ -84,6 +91,8 @@ class AppUserChanged extends AppState {
     return 'AppUserChanged { $userDetails, $sessionExpired }';
   }
 }
+
+class AppUserChangeFailed extends AppState {}
 
 class AppSessionCheckProcessing extends AppState {}
 
@@ -141,6 +150,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       );
     } else if (event is AppUserChangeInProcess) {
       yield AppUserChangeProcessing();
+    } else if (event is AppUserChangeError) {
+      yield AppUserChangeFailed();
     } else if (event is AppSessionExpired) {
       if (userDetails != null) {
         yield AppUserChangeProcessing();

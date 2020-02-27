@@ -1,6 +1,7 @@
 import 'package:adactin_hotel_app/api/models/hotel_search.dart';
 import 'package:adactin_hotel_app/api/repo/hotel_search_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
+import 'package:adactin_hotel_app/app/routes/app_routes.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
 import 'package:adactin_hotel_app/home/bloc/home_bloc.dart';
 import 'package:adactin_hotel_app/home/constants/home_content.dart';
@@ -119,7 +120,10 @@ class _HomeState extends State<Home> {
           child: BlocListener<HomeBloc, HomeState>(
             listener: (context, state) {
               if (state is HotelSearchSuccess) {
-                print(state.data);
+                Navigator.of(context).pushNamed(
+                  AppRoutes.SELECT_HOTEL,
+                  arguments: state.hotelSearchResultList,
+                );
               } else if (state is HotelSearchFailure) {
                 showDialog(
                   context: context,
