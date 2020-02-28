@@ -1,6 +1,7 @@
 import 'package:adactin_hotel_app/api/models/user_details.dart';
 import 'package:adactin_hotel_app/api/repo/user_repo.dart';
-import 'package:adactin_hotel_app/global/constants.dart' as globalConstants;
+import 'package:adactin_hotel_app/global/global_constants.dart'
+    as globalConstants;
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -122,7 +123,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         if (success) {
           yield LogoutSuccess();
         } else {
-          yield LoginFailure(error: globalConstants.Constants.unknownError);
+          yield LoginFailure(
+              error: globalConstants.GlobalConstants.unknownError);
         }
       } catch (error) {
         yield LoginFailure(error: error.toString());

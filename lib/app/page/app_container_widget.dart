@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:adactin_hotel_app/account/login/page/login.dart';
+import 'package:adactin_hotel_app/account/login/page/login_page.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bottom_nav_bloc.dart';
 import 'package:adactin_hotel_app/app/bloc/app_tab_bloc.dart';
 import 'package:adactin_hotel_app/app/constants/app_content.dart';
 import 'package:adactin_hotel_app/app/constants/app_semantic_keys.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
-import 'package:adactin_hotel_app/home/page/home.dart';
+import 'package:adactin_hotel_app/home/page/home_page.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -262,8 +262,8 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
   /// Returns the list of widgets which we will be showing for a tab bar
   List<Widget> _getTabViews(BuildContext context) {
     return [
-      Home(appBloc: BlocProvider.of<AppBloc>(context)),
-      Login(appBloc: BlocProvider.of<AppBloc>(context)),
+      HomePage(appBloc: BlocProvider.of<AppBloc>(context)),
+      LoginPage(appBloc: BlocProvider.of<AppBloc>(context)),
     ];
   }
 

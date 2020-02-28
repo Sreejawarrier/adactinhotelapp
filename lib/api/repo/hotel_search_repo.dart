@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:adactin_hotel_app/api/constants/constants.dart';
 import 'package:adactin_hotel_app/api/models/hotel_search.dart';
 import 'package:adactin_hotel_app/api/models/hotel_searech_result.dart';
-import 'package:adactin_hotel_app/global/constants.dart' as globalConstants;
+import 'package:adactin_hotel_app/global/global_constants.dart'
+    as globalConstants;
 import 'package:adactin_hotel_app/home/constants/home_content.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
@@ -78,7 +79,7 @@ class HotelSearchRepository {
       } else if (data.containsKey(Constants.errorResponseKey)) {
         throw data[Constants.errorResponseKey];
       } else {
-        throw globalConstants.Constants.unknownError;
+        throw globalConstants.GlobalConstants.unknownError;
       }
     } catch (error) {
       throw error;

@@ -15,18 +15,18 @@ import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
-class Home extends StatefulWidget {
+class HomePage extends StatefulWidget {
   final AppBloc appBloc;
 
-  Home({Key key, @required this.appBloc})
+  HomePage({Key key, @required this.appBloc})
       : assert(appBloc != null),
         super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _HomeState();
+  State<StatefulWidget> createState() => _HomePageState();
 }
 
-class _HomeState extends State<Home> {
+class _HomePageState extends State<HomePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   static const double appBarContentHeight = 140;

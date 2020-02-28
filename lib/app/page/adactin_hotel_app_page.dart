@@ -3,22 +3,22 @@ import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/bloc/app_tab_bloc.dart';
 import 'package:adactin_hotel_app/app/page/app_container_widget.dart';
 import 'package:adactin_hotel_app/app/routes/app_routes.dart';
-import 'package:adactin_hotel_app/hotels_search_list/page/hotels_list_page.dart';
+import 'package:adactin_hotel_app/hotels_search_list/page/hotels_search_list_page.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AdactinHotelApp extends StatefulWidget {
+class AdactinHotelAppPage extends StatefulWidget {
   final AppBloc appBloc;
   final AppTabBloc appTabBloc;
 
-  AdactinHotelApp({@required this.appBloc, @required this.appTabBloc});
+  AdactinHotelAppPage({@required this.appBloc, @required this.appTabBloc});
 
   @override
-  State<StatefulWidget> createState() => _AdactinHotelAppState();
+  State<StatefulWidget> createState() => _AdactinHotelAppPageState();
 }
 
-class _AdactinHotelAppState extends State<AdactinHotelApp> {
+class _AdactinHotelAppPageState extends State<AdactinHotelAppPage> {
   static const String mainTitle = 'Adactin Hotel App';
 
   @override
@@ -69,6 +69,6 @@ class _AdactinHotelAppState extends State<AdactinHotelApp> {
   }
 
   Widget _getHotelSearchList({List<HotelSearchResult> hotels}) {
-    return HotelsListPage(hotels: hotels);
+    return HotelsSearchListPage(hotels: hotels);
   }
 }

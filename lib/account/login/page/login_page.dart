@@ -11,18 +11,18 @@ import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class Login extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   final AppBloc appBloc;
 
-  Login({Key key, @required this.appBloc})
+  LoginPage({Key key, @required this.appBloc})
       : assert(appBloc != null),
         super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _LoginState();
+  State<StatefulWidget> createState() => _LoginPageState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameTextFieldController =
       TextEditingController();

@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:adactin_hotel_app/api/constants/constants.dart';
 import 'package:adactin_hotel_app/api/models/user_details.dart';
-import 'package:adactin_hotel_app/global/constants.dart' as globalConstants;
+import 'package:adactin_hotel_app/global/global_constants.dart'
+    as globalConstants;
 import 'package:dio/dio.dart';
 
 class UserRepository {
@@ -27,7 +28,7 @@ class UserRepository {
         } else if (data.containsKey(Constants.errorResponseKey)) {
           throw data[Constants.errorResponseKey];
         } else {
-          throw globalConstants.Constants.unknownError;
+          throw globalConstants.GlobalConstants.unknownError;
         }
       }
     } catch (error) {
