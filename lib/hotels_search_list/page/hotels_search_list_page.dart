@@ -19,7 +19,10 @@ class _HotelsSearchListPageState extends State<HotelsSearchListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(HotelsSearchListPageContent.pageTitle),
+        title: Text(
+          HotelsSearchListPageContent.pageTitle,
+          semanticsLabel: HotelsSearchListPageContent.pageTitle,
+        ),
       ),
       body: Container(
         color: Colors.grey.withOpacity(0.4),
@@ -40,6 +43,7 @@ class _HotelsSearchListPageState extends State<HotelsSearchListPage> {
                       '${HotelsSearchListPageSemantics.list_container}$index',
                   child: HotelOverviewContainer(
                     hotelData: HotelOverviewData(
+                      hotelSearchResult: widget.hotels[index],
                       name: widget.hotels[index].hotelName,
                       location: widget.hotels[index].location,
                       fromDate: widget.hotels[index].arrivalDate,

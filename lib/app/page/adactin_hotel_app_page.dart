@@ -3,6 +3,7 @@ import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/bloc/app_tab_bloc.dart';
 import 'package:adactin_hotel_app/app/page/app_container_widget.dart';
 import 'package:adactin_hotel_app/app/routes/app_routes.dart';
+import 'package:adactin_hotel_app/hotel_detail/page/hotel_detail_page.dart';
 import 'package:adactin_hotel_app/hotels_search_list/page/hotels_search_list_page.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +55,11 @@ class _AdactinHotelAppPageState extends State<AdactinHotelAppPage> {
                 screen = _getHotelSearchList(hotels: args);
               }
               break;
+            case AppRoutes.HOTEL_DETAIL:
+              if (args is HotelSearchResult) {
+                screen = _getHotelDetail(hotel: args);
+              }
+              break;
           }
 
           if (screen != null) {
@@ -70,5 +76,9 @@ class _AdactinHotelAppPageState extends State<AdactinHotelAppPage> {
 
   Widget _getHotelSearchList({List<HotelSearchResult> hotels}) {
     return HotelsSearchListPage(hotels: hotels);
+  }
+
+  Widget _getHotelDetail({HotelSearchResult hotel}) {
+    return HotelDetailPage(hotel: hotel);
   }
 }

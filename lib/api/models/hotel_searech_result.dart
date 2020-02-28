@@ -1,11 +1,15 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
 
 HotelSearchResult userDetailsFromJson(String str) =>
     HotelSearchResult.fromJson(json.decode(str));
 
 class HotelSearchResult extends Equatable {
+  final DateFormat _displayDateFormat = DateFormat('dd/MM/yyyy');
+  final DateFormat _responseDateFormat = DateFormat('dd-MM-yyyy');
+
   final String hotelName;
   final String location;
   final String rooms;
@@ -60,5 +64,22 @@ class HotelSearchResult extends Equatable {
         '$rooms, arrivalDate: $arrivalDate, departureDate: $departureDate, '
         'noOfDays: $noOfDays, roomsType: $roomsType, '
         'pricePerNight: $pricePerNight, totalPrice: $totalPrice }';
+  }
+
+  String getNoOfRooms() {
+    final List<String> splitList = rooms.split(' ');
+    return splitList.first;
+  }
+
+  String getFormattedArrivalDate() {
+    final DateTime responseDate = _responseDateFormat.parse(arrivalDate);
+
+    return '${_displayDateFormat.format(responseDate)}';
+  }
+
+  String getFormattedDepartureDate() {
+    final DateTime responseDate = _responseDateFormat.parse(departureDate);
+
+    return '${_displayDateFormat.format(responseDate)}';
   }
 }

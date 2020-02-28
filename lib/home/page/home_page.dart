@@ -656,10 +656,10 @@ class _HomePageState extends State<HomePage> {
     if (title.isNotEmpty) {
       return Padding(
         padding: const EdgeInsets.only(
-          left: 20.0,
-          right: 20.0,
-          top: 20.0,
-          bottom: 8.0,
+          left: 20,
+          right: 20,
+          top: 20,
+          bottom: 8,
         ),
         child: Text(
           title,
