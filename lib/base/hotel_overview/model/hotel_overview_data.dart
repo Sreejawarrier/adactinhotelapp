@@ -1,4 +1,4 @@
-import 'package:adactin_hotel_app/api/models/hotel_searech_result.dart';
+import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 

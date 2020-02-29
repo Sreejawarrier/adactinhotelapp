@@ -1,4 +1,4 @@
-import 'package:adactin_hotel_app/api/models/hotel_searech_result.dart';
+import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
 import 'package:adactin_hotel_app/base/hotel_overview/container/hotel_overview_container.dart';
 import 'package:adactin_hotel_app/base/hotel_overview/model/hotel_overview_data.dart';
 import 'package:adactin_hotel_app/hotels_search_list/constants/hotels_search_list_page_content.dart';

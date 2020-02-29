@@ -1,4 +1,5 @@
-import 'package:adactin_hotel_app/api/models/hotel_searech_result.dart';
+import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
+import 'package:adactin_hotel_app/app/routes/app_routes.dart';
 import 'package:adactin_hotel_app/hotel_detail/constants/hotel_detail_content.dart';
 import 'package:adactin_hotel_app/hotel_detail/constants/hotel_detail_semantics.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
@@ -184,23 +185,24 @@ class _HotelDetailPage extends State<HotelDetailPage> {
     return Semantics(
       label: HotelDetailSemantics.continueButton,
       enabled: true,
-      child: ExcludeSemantics(
-        child: RaisedButton(
-          onPressed: () {
-            // TODO: action
-          },
-          child: Text(
-            HotelDetailContent.continueTxt,
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 22,
-          ),
-          color: Palette.primaryColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+      child: RaisedButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(
+            AppRoutes.BOOK_HOTEL,
+            arguments: widget.hotel,
+          );
+        },
+        child: Text(
+          HotelDetailContent.selectTxt,
+          style: TextStyle(fontSize: 18, color: Colors.white),
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 22,
+        ),
+        color: Palette.primaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
     );

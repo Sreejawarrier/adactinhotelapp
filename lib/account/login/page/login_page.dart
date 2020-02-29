@@ -87,9 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: Semantics(
                             enabled: true,
                             label: LoginSemanticKeys.failureAlertButton,
-                            child: ExcludeSemantics(
-                              child: Text(LoginContent.alertButtonOk),
-                            ),
+                            child: Text(LoginContent.alertButtonOk),
                           ),
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -166,12 +164,10 @@ class _LoginPageState extends State<LoginPage> {
     return Semantics(
       label: LoginSemanticKeys.logo,
       enabled: true,
-      child: ExcludeSemantics(
-        child: SvgPicture.asset(
-          Images.logoSVG,
-          width: 180,
-          height: 180,
-        ),
+      child: SvgPicture.asset(
+        Images.logoSVG,
+        width: 180,
+        height: 180,
       ),
     );
   }
@@ -180,35 +176,33 @@ class _LoginPageState extends State<LoginPage> {
     return Semantics(
       label: LoginSemanticKeys.userName,
       enabled: true,
-      child: ExcludeSemantics(
-        child: TextFormField(
-          controller: _usernameTextFieldController,
-          focusNode: _usernameTextFieldFocusNode,
-          keyboardType: TextInputType.text,
-          textInputAction: TextInputAction.next,
-          onFieldSubmitted: (value) {
-            FocusScope.of(context).requestFocus(_passwordTextFieldFocusNode);
-          },
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 22,
-            ),
-            labelText: LoginContent.userNameHint,
-            labelStyle: TextStyle(fontSize: 18),
-            hintText: LoginContent.userNameHint,
-            hintStyle: TextStyle(fontSize: 18),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey),
-            ),
+      child: TextFormField(
+        controller: _usernameTextFieldController,
+        focusNode: _usernameTextFieldFocusNode,
+        keyboardType: TextInputType.text,
+        textInputAction: TextInputAction.next,
+        onFieldSubmitted: (value) {
+          FocusScope.of(context).requestFocus(_passwordTextFieldFocusNode);
+        },
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 22,
           ),
-          validator: (String value) {
-            return (value == null || value.isEmpty)
-                ? LoginContent.userNameEmptyError
-                : null;
-          },
+          labelText: LoginContent.userNameHint,
+          labelStyle: TextStyle(fontSize: 18),
+          hintText: LoginContent.userNameHint,
+          hintStyle: TextStyle(fontSize: 18),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
         ),
+        validator: (String value) {
+          return (value == null || value.isEmpty)
+              ? LoginContent.userNameEmptyError
+              : null;
+        },
       ),
     );
   }
@@ -217,35 +211,33 @@ class _LoginPageState extends State<LoginPage> {
     return Semantics(
       label: LoginSemanticKeys.password,
       enabled: true,
-      child: ExcludeSemantics(
-        child: TextFormField(
-          controller: _passwordTextFieldController,
-          focusNode: _passwordTextFieldFocusNode,
-          obscureText: true,
-          textInputAction: TextInputAction.done,
-          onFieldSubmitted: (value) {
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 22,
-            ),
-            labelText: LoginContent.passwordHint,
-            labelStyle: TextStyle(fontSize: 18),
-            hintText: LoginContent.passwordHint,
-            hintStyle: TextStyle(fontSize: 18),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey),
-            ),
+      child: TextFormField(
+        controller: _passwordTextFieldController,
+        focusNode: _passwordTextFieldFocusNode,
+        obscureText: true,
+        textInputAction: TextInputAction.done,
+        onFieldSubmitted: (value) {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 22,
           ),
-          validator: (String value) {
-            return (value == null || value.isEmpty)
-                ? LoginContent.passwordEmptyError
-                : null;
-          },
+          labelText: LoginContent.passwordHint,
+          labelStyle: TextStyle(fontSize: 18),
+          hintText: LoginContent.passwordHint,
+          hintStyle: TextStyle(fontSize: 18),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
         ),
+        validator: (String value) {
+          return (value == null || value.isEmpty)
+              ? LoginContent.passwordEmptyError
+              : null;
+        },
       ),
     );
   }
@@ -254,34 +246,32 @@ class _LoginPageState extends State<LoginPage> {
     return Semantics(
       label: LoginSemanticKeys.loginButton,
       enabled: true,
-      child: ExcludeSemantics(
-        child: RaisedButton(
-          onPressed: () {
-            _removeFocus();
-            _formKey.currentState.validate();
-            if (_usernameTextFieldController.text.isNotEmpty &&
-                _passwordTextFieldController.text.isNotEmpty) {
-              widget.appBloc.add(AppUserChangeInProcess());
-              BlocProvider.of<LoginBloc>(context).add(
-                LoginAction(
-                  username: _usernameTextFieldController.text,
-                  password: _passwordTextFieldController.text,
-                ),
-              );
-            }
-          },
-          child: Text(
-            LoginContent.login,
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 22,
-          ),
-          color: Palette.primaryColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+      child: RaisedButton(
+        onPressed: () {
+          _removeFocus();
+          _formKey.currentState.validate();
+          if (_usernameTextFieldController.text.isNotEmpty &&
+              _passwordTextFieldController.text.isNotEmpty) {
+            widget.appBloc.add(AppUserChangeInProcess());
+            BlocProvider.of<LoginBloc>(context).add(
+              LoginAction(
+                username: _usernameTextFieldController.text,
+                password: _passwordTextFieldController.text,
+              ),
+            );
+          }
+        },
+        child: Text(
+          LoginContent.login,
+          style: TextStyle(fontSize: 18, color: Colors.white),
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 22,
+        ),
+        color: Palette.primaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
     );
@@ -291,21 +281,18 @@ class _LoginPageState extends State<LoginPage> {
     return Semantics(
       label: LoginSemanticKeys.forgotPassword,
       enabled: true,
-      child: ExcludeSemantics(
-        child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () {
-            _removeFocus();
-            _launchWebURL(LoginContent.forgotPasswordURL);
-          },
-          child: Padding(
-            padding:
-                const EdgeInsets.only(left: 20, right: 8, top: 8, bottom: 4),
-            child: Text(
-              LoginContent.forgotPassword,
-              style: TextStyle(fontSize: 18, color: Colors.grey),
-              textAlign: TextAlign.right,
-            ),
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          _removeFocus();
+          _launchWebURL(LoginContent.forgotPasswordURL);
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 8, top: 8, bottom: 4),
+          child: Text(
+            LoginContent.forgotPassword,
+            style: TextStyle(fontSize: 18, color: Colors.grey),
+            textAlign: TextAlign.right,
           ),
         ),
       ),
@@ -316,31 +303,29 @@ class _LoginPageState extends State<LoginPage> {
     return Semantics(
       label: LoginSemanticKeys.signUp,
       enabled: true,
-      child: ExcludeSemantics(
-        child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () {
-            _removeFocus();
-            _launchWebURL(LoginContent.signUpURL);
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 8, bottom: 12),
-            child: RichText(
-              textAlign: TextAlign.right,
-              text: TextSpan(
-                text: LoginContent.notAMember,
-                style: TextStyle(fontSize: 18, color: Colors.grey),
-                children: [
-                  TextSpan(
-                    text: LoginContent.signUp,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
-                    ),
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          _removeFocus();
+          _launchWebURL(LoginContent.signUpURL);
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 8, bottom: 12),
+          child: RichText(
+            textAlign: TextAlign.right,
+            text: TextSpan(
+              text: LoginContent.notAMember,
+              style: TextStyle(fontSize: 18, color: Colors.grey),
+              children: [
+                TextSpan(
+                  text: LoginContent.signUp,
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey,
+                    decoration: TextDecoration.underline,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -352,21 +337,21 @@ class _LoginPageState extends State<LoginPage> {
     return Semantics(
       label: LoginSemanticKeys.user,
       enabled: true,
-      child: ExcludeSemantics(
-        child: TextField(
-          enabled: false,
-          controller: _userTextFieldController,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 22,
-            ),
-            labelText: LoginContent.userNameHint,
-            labelStyle: TextStyle(fontSize: 18),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey),
-            ),
+      child: TextField(
+        enabled: false,
+        controller: _userTextFieldController,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 22,
+          ),
+          labelText: LoginContent.userNameHint,
+          labelStyle: TextStyle(fontSize: 18),
+          fillColor: Colors.grey.withOpacity(0.1),
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey),
           ),
         ),
       ),
@@ -377,26 +362,23 @@ class _LoginPageState extends State<LoginPage> {
     return Semantics(
       label: LoginSemanticKeys.logoutButton,
       enabled: true,
-      child: ExcludeSemantics(
-        child: RaisedButton(
-          onPressed: () {
-            widget.appBloc.add(AppUserChangeInProcess());
-            BlocProvider.of<LoginBloc>(context).add(
-              LogoutAction(token: widget.appBloc.userDetails.token),
-            );
-          },
-          child: Text(
-            LoginContent.logout,
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 22,
-          ),
-          color: Palette.primaryColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: RaisedButton(
+        onPressed: () {
+          widget.appBloc.add(AppUserChangeInProcess());
+          BlocProvider.of<LoginBloc>(context).add(
+            LogoutAction(token: widget.appBloc.userDetails.token),
+          );
+        },
+        child: Text(
+          LoginContent.logout,
+          style: TextStyle(fontSize: 18, color: Colors.white),
         ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 22,
+        ),
+        color: Palette.primaryColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -422,9 +404,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Semantics(
                   enabled: true,
                   label: LoginSemanticKeys.failureAlertButton,
-                  child: ExcludeSemantics(
-                    child: Text(LoginContent.alertButtonOk),
-                  ),
+                  child: Text(LoginContent.alertButtonOk),
                 ),
                 onPressed: () {
                   Navigator.of(context).pop();

@@ -288,31 +288,29 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
     return Semantics(
       enabled: true,
       label: AppSemanticKeys.bottomNavigationBar,
-      child: ExcludeSemantics(
-        child: FFNavigationBar(
-          theme: FFNavigationBarTheme(
-            barBackgroundColor: Colors.white,
-            selectedItemBorderColor: Colors.white,
-            selectedItemBackgroundColor: Palette.primaryColor,
-            selectedItemIconColor: Colors.white,
-            selectedItemLabelColor: Colors.black,
-          ),
-          selectedIndex: _selectedTabIndex,
-          items: _ffNavBarItemList,
-          onSelectTab: (index) {
-            if (BlocProvider.of<AppBloc>(context).userDetails != null) {
-              DefaultTabController.of(context).index = index;
-              BlocProvider.of<AppTabBloc>(context)
-                  .add(AppTabSelect(tab: _getAppTab(index)));
-            } else if (index != 2) {
-              _displaySnackBar(
-                context,
-                AppSemanticKeys.snackBarNeedLogIn,
-                AppContent.needLogIn,
-              );
-            }
-          },
+      child: FFNavigationBar(
+        theme: FFNavigationBarTheme(
+          barBackgroundColor: Colors.white,
+          selectedItemBorderColor: Colors.white,
+          selectedItemBackgroundColor: Palette.primaryColor,
+          selectedItemIconColor: Colors.white,
+          selectedItemLabelColor: Colors.black,
         ),
+        selectedIndex: _selectedTabIndex,
+        items: _ffNavBarItemList,
+        onSelectTab: (index) {
+          if (BlocProvider.of<AppBloc>(context).userDetails != null) {
+            DefaultTabController.of(context).index = index;
+            BlocProvider.of<AppTabBloc>(context)
+                .add(AppTabSelect(tab: _getAppTab(index)));
+          } else if (index != 2) {
+            _displaySnackBar(
+              context,
+              AppSemanticKeys.snackBarNeedLogIn,
+              AppContent.needLogIn,
+            );
+          }
+        },
       ),
     );
   }
@@ -325,9 +323,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
       content: Semantics(
         label: semanticKey,
         enabled: true,
-        child: ExcludeSemantics(
-          child: Text(info),
-        ),
+        child: Text(info),
       ),
     );
     Scaffold.of(context).showSnackBar(snackBar);

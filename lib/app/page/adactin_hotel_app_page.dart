@@ -1,8 +1,9 @@
-import 'package:adactin_hotel_app/api/models/hotel_searech_result.dart';
+import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/bloc/app_tab_bloc.dart';
 import 'package:adactin_hotel_app/app/page/app_container_widget.dart';
 import 'package:adactin_hotel_app/app/routes/app_routes.dart';
+import 'package:adactin_hotel_app/book_hotel/page/book_hotel_page.dart';
 import 'package:adactin_hotel_app/hotel_detail/page/hotel_detail_page.dart';
 import 'package:adactin_hotel_app/hotels_search_list/page/hotels_search_list_page.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
@@ -60,6 +61,11 @@ class _AdactinHotelAppPageState extends State<AdactinHotelAppPage> {
                 screen = _getHotelDetail(hotel: args);
               }
               break;
+            case AppRoutes.BOOK_HOTEL:
+              if (args is HotelSearchResult) {
+                screen = _getBookHotel(hotel: args);
+              }
+              break;
           }
 
           if (screen != null) {
@@ -80,5 +86,9 @@ class _AdactinHotelAppPageState extends State<AdactinHotelAppPage> {
 
   Widget _getHotelDetail({HotelSearchResult hotel}) {
     return HotelDetailPage(hotel: hotel);
+  }
+
+  Widget _getBookHotel({HotelSearchResult hotel}) {
+    return BookHotelPage(hotelSearchResult: hotel);
   }
 }

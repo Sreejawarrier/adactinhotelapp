@@ -22,16 +22,14 @@ class Spinner extends StatelessWidget {
       child: Semantics(
         label: spinner_semantics,
         enabled: true,
-        child: ExcludeSemantics(
-          child: Center(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              color: backgroundColor.withOpacity(backgroundOpacity),
-              child: SpinKitWanderingCubes(
-                color: spinnerColor,
-                size: 60,
-              ),
+        child: Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            color: backgroundColor.withOpacity(backgroundOpacity),
+            child: SpinKitWanderingCubes(
+              color: spinnerColor,
+              size: 60,
             ),
           ),
         ),

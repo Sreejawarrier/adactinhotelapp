@@ -137,9 +137,7 @@ class _HomePageState extends State<HomePage> {
                           child: Semantics(
                             enabled: true,
                             label: HomeSemanticKeys.failureAlertButton,
-                            child: ExcludeSemantics(
-                              child: Text(HomeContent.alertButtonOk),
-                            ),
+                            child: Text(HomeContent.alertButtonOk),
                           ),
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -187,12 +185,10 @@ class _HomePageState extends State<HomePage> {
         flexibleSpace: Semantics(
           label: HomeSemanticKeys.logo,
           enabled: true,
-          child: ExcludeSemantics(
-            child: SvgPicture.asset(
-              Images.logoSVGWhite,
-              width: appBarContentHeight,
-              height: appBarContentHeight,
-            ),
+          child: SvgPicture.asset(
+            Images.logoSVGWhite,
+            width: appBarContentHeight,
+            height: appBarContentHeight,
           ),
         ),
       ),
@@ -212,7 +208,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             _getFormTitle(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 18),
             _getLocationLabel(context),
             const SizedBox(height: 6),
             _getLocationFormField(context),
@@ -224,19 +220,19 @@ class _HomePageState extends State<HomePage> {
             _getRoomTypeLabel(context),
             const SizedBox(height: 6),
             _getRoomTypeFormField(context),
-            const SizedBox(height: 20),
+            const SizedBox(height: 18),
             _getNumberOfRoomsLabel(context),
             const SizedBox(height: 6),
             _getNumberOfRoomsFormField(context),
-            const SizedBox(height: 20),
+            const SizedBox(height: 18),
             _getCheckInDateLabel(context),
             const SizedBox(height: 6),
             _getCheckInDateFormField(context),
-            const SizedBox(height: 20),
+            const SizedBox(height: 18),
             _getCheckOutDateLabel(context),
             const SizedBox(height: 6),
             _getCheckOutDateFormField(context),
-            const SizedBox(height: 20),
+            const SizedBox(height: 18),
             _getAdultsPerRoomLabel(context),
             const SizedBox(height: 6),
             _getAdultsPerRoomFormField(context),
@@ -246,6 +242,8 @@ class _HomePageState extends State<HomePage> {
             _getChildrenPerRoomFormField(context),
             const SizedBox(height: 20),
             _getButtons(context),
+            const SizedBox(height: 10),
+            _getMandatoryMessage(context),
             const SizedBox(height: 40),
           ],
         ),
@@ -269,10 +267,7 @@ class _HomePageState extends State<HomePage> {
   /// --- --- --- Location --- --- ---
 
   Widget _getLocationLabel(BuildContext context) {
-    return _getLabel(
-      context,
-      HomeContent.location,
-    );
+    return _getLabel(context, HomeContent.location, isRequiredField: true);
   }
 
   Widget _getLocationFormField(BuildContext context) {
@@ -358,10 +353,7 @@ class _HomePageState extends State<HomePage> {
   /// --- --- --- Number of Rooms --- --- ---
 
   Widget _getNumberOfRoomsLabel(BuildContext context) {
-    return _getLabel(
-      context,
-      HomeContent.numberOfRooms,
-    );
+    return _getLabel(context, HomeContent.numberOfRooms, isRequiredField: true);
   }
 
   Widget _getNumberOfRoomsFormField(BuildContext context) {
@@ -391,10 +383,7 @@ class _HomePageState extends State<HomePage> {
   /// --- --- --- Check-in Date --- --- ---
 
   Widget _getCheckInDateLabel(BuildContext context) {
-    return _getLabel(
-      context,
-      HomeContent.checkInDate,
-    );
+    return _getLabel(context, HomeContent.checkInDate, isRequiredField: true);
   }
 
   Widget _getCheckInDateFormField(BuildContext context) {
@@ -436,10 +425,7 @@ class _HomePageState extends State<HomePage> {
   /// --- --- --- Check-out Date --- --- ---
 
   Widget _getCheckOutDateLabel(BuildContext context) {
-    return _getLabel(
-      context,
-      HomeContent.checkOutDate,
-    );
+    return _getLabel(context, HomeContent.checkOutDate, isRequiredField: true);
   }
 
   Widget _getCheckOutDateFormField(BuildContext context) {
@@ -473,10 +459,7 @@ class _HomePageState extends State<HomePage> {
   /// --- --- --- Adults per Room --- --- ---
 
   Widget _getAdultsPerRoomLabel(BuildContext context) {
-    return _getLabel(
-      context,
-      HomeContent.adultsPerRoom,
-    );
+    return _getLabel(context, HomeContent.adultsPerRoom, isRequiredField: true);
   }
 
   Widget _getAdultsPerRoomFormField(BuildContext context) {
@@ -533,20 +516,36 @@ class _HomePageState extends State<HomePage> {
 
   /// --- --- --- Label --- --- ---
 
-  Widget _getLabel(BuildContext context, String label) {
+  Widget _getLabel(
+    BuildContext context,
+    String label, {
+    bool isRequiredField = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(left: 10),
       child: Semantics(
         enabled: true,
         label: label,
-        child: ExcludeSemantics(
-          child: Text(
-            label,
+        child: RichText(
+          text: TextSpan(
+            text: label,
             style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
               color: Palette.primaryColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
             ),
+            children: isRequiredField
+                ? [
+                    TextSpan(
+                      text: HomeContent.asterisk,
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    )
+                  ]
+                : [],
           ),
         ),
       ),
@@ -566,24 +565,22 @@ class _HomePageState extends State<HomePage> {
     return Semantics(
       label: semanticLabel,
       enabled: true,
-      child: ExcludeSemantics(
-        child: TextFormField(
-          controller: textEditingController,
-          focusNode: textFocusNode,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 22,
-            ),
-            hintText: hintText,
-            hintStyle: TextStyle(fontSize: 16),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey),
-            ),
+      child: TextFormField(
+        controller: textEditingController,
+        focusNode: textFocusNode,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 22,
           ),
-          validator: validator,
+          hintText: hintText,
+          hintStyle: TextStyle(fontSize: 16),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
         ),
+        validator: validator,
       ),
     );
   }
@@ -608,23 +605,21 @@ class _HomePageState extends State<HomePage> {
         return Semantics(
           enabled: true,
           label: HomeSemanticKeys.bottomSheet,
-          child: ExcludeSemantics(
-            child: Container(
-              color: Color(0xFF737373),
-              child: Wrap(
-                children: <Widget>[
-                  Container(
-                    child: modalSheet,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).canvasColor,
-                      borderRadius: BorderRadius.only(
-                        topLeft: const Radius.circular(30),
-                        topRight: const Radius.circular(30),
-                      ),
+          child: Container(
+            color: Color(0xFF737373),
+            child: Wrap(
+              children: <Widget>[
+                Container(
+                  child: modalSheet,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).canvasColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(30),
+                      topRight: const Radius.circular(30),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );
@@ -640,14 +635,12 @@ class _HomePageState extends State<HomePage> {
     return Semantics(
       enabled: true,
       label: HomeSemanticKeys.bottomSheetOptionsColumn,
-      child: ExcludeSemantics(
-        child: Column(
-          children: <Widget>[
-            _getTitleOfSheet(title),
-            _getBottomSheetOptions(values, textEditingController),
-            _getBottomModalSheetButton(),
-          ],
-        ),
+      child: Column(
+        children: <Widget>[
+          _getTitleOfSheet(title),
+          _getBottomSheetOptions(values, textEditingController),
+          _getBottomModalSheetButton(),
+        ],
       ),
     );
   }
@@ -682,17 +675,15 @@ class _HomePageState extends State<HomePage> {
             (value) => Semantics(
               enabled: true,
               label: '${HomeSemanticKeys.bottomOption}$value',
-              child: ExcludeSemantics(
-                child: ListTile(
-                  title: Text(
-                    value,
-                    textAlign: TextAlign.center,
-                  ),
-                  onTap: () {
-                    textEditingController.text = value;
-                    Navigator.of(context).pop();
-                  },
+              child: ListTile(
+                title: Text(
+                  value,
+                  textAlign: TextAlign.center,
                 ),
+                onTap: () {
+                  textEditingController.text = value;
+                  Navigator.of(context).pop();
+                },
               ),
             ),
           )
@@ -717,20 +708,18 @@ class _HomePageState extends State<HomePage> {
       child: Semantics(
         enabled: true,
         label: HomeSemanticKeys.bottomSheetCancel,
-        child: ExcludeSemantics(
-          child: Container(
-            width: double.infinity,
-            height: 55.0,
-            child: FlatButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              color: Palette.primaryColor,
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                HomeContent.cancel,
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
+        child: Container(
+          width: double.infinity,
+          height: 55.0,
+          child: FlatButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            color: Palette.primaryColor,
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              HomeContent.cancel,
+              style: TextStyle(color: Colors.white, fontSize: 18),
             ),
           ),
         ),
@@ -812,21 +801,18 @@ class _HomePageState extends State<HomePage> {
     return Semantics(
       label: semanticKey,
       enabled: true,
-      child: ExcludeSemantics(
-        child: RaisedButton(
-          onPressed: onTap,
-          child: Text(
-            title,
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 22,
-          ),
-          color: color,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: RaisedButton(
+        onPressed: onTap,
+        child: Text(
+          title,
+          style: TextStyle(fontSize: 18, color: Colors.white),
         ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 22,
+        ),
+        color: color,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -888,5 +874,45 @@ class _HomePageState extends State<HomePage> {
     _adultsPerRoomTextFieldController.text =
         HomeContent().personsPerRoomValues().first;
     _childrenPerRoomTextFieldController.text = '';
+  }
+
+  /// --- --- --- Mandatory message --- --- ---
+
+  Widget _getMandatoryMessage(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10),
+      child: Semantics(
+        enabled: true,
+        label: HomeSemanticKeys.mandatoryFieldsMessage,
+        child: RichText(
+          text: TextSpan(
+            text: HomeContent.allFields,
+            style: TextStyle(
+              color: Colors.black54,
+              fontWeight: FontWeight.normal,
+              fontSize: 12,
+            ),
+            children: [
+              TextSpan(
+                text: HomeContent.asterisk,
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+              TextSpan(
+                text: HomeContent.mandatory,
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 12,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

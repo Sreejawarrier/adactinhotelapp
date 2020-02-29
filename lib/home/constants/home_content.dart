@@ -28,6 +28,9 @@ class HomeContent {
   static const String alertButtonOk = 'OK';
   static const String hotelSearchSuccess = "Hotels Searched Successfully  !!!";
   static const String hotelResultValueKey = "Result";
+  static const String allFields = 'All (';
+  static const String asterisk = '*';
+  static const String mandatory = ') are mandatory fields.';
 
   List<String> locationValues() => [
         'Sydney',

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:adactin_hotel_app/api/constants/constants.dart';
 import 'package:adactin_hotel_app/api/models/hotel_search.dart';
-import 'package:adactin_hotel_app/api/models/hotel_searech_result.dart';
+import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
 import 'package:adactin_hotel_app/global/global_constants.dart'
     as globalConstants;
 import 'package:adactin_hotel_app/home/constants/home_content.dart';

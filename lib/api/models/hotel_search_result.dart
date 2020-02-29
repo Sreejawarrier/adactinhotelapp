@@ -9,6 +9,7 @@ HotelSearchResult userDetailsFromJson(String str) =>
 class HotelSearchResult extends Equatable {
   final DateFormat _displayDateFormat = DateFormat('dd/MM/yyyy');
   final DateFormat _responseDateFormat = DateFormat('dd-MM-yyyy');
+  final String audPriceFormat = "AUD \$";
 
   final String hotelName;
   final String location;
@@ -81,5 +82,35 @@ class HotelSearchResult extends Equatable {
     final DateTime responseDate = _responseDateFormat.parse(departureDate);
 
     return '${_displayDateFormat.format(responseDate)}';
+  }
+
+  String getGSTPrice() {
+    final String totalPriceForGST = totalPrice.replaceAll(audPriceFormat, '');
+    final int convertedTotalPrice = int.parse(totalPriceForGST);
+    final String gstCharged = (convertedTotalPrice * 0.1).toString();
+    final List<String> gstValueSplit = gstCharged.split('.');
+    final int change = int.parse(gstValueSplit.last);
+
+    if (change > 0) {
+      return audPriceFormat + gstCharged;
+    } else {
+      return audPriceFormat + gstValueSplit.first;
+    }
+  }
+
+  String getBillingPrice() {
+    final String totalPriceForGST = totalPrice.replaceAll(audPriceFormat, '');
+    final int convertedTotalPrice = int.parse(totalPriceForGST);
+    final double gstValue = (convertedTotalPrice * 0.1);
+    final String billingPrice =
+        (gstValue + convertedTotalPrice.toDouble()).toString();
+    final List<String> billingValueSplit = billingPrice.split('.');
+    final int change = int.parse(billingValueSplit.last);
+
+    if (change > 0) {
+      return audPriceFormat + billingPrice;
+    } else {
+      return audPriceFormat + billingValueSplit.first;
+    }
   }
 }

@@ -1,5 +1,5 @@
 import 'package:adactin_hotel_app/api/models/hotel_search.dart';
-import 'package:adactin_hotel_app/api/models/hotel_searech_result.dart';
+import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
 import 'package:adactin_hotel_app/api/repo/hotel_search_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:bloc/bloc.dart';

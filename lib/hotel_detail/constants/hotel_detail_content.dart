@@ -1,6 +1,6 @@
 class HotelDetailContent {
   static const String pageTitle = 'Hotel Details';
-  static const String continueTxt = 'Continue';
+  static const String selectTxt = 'Select';
   static const String hotelName = 'Hotel Name';
   static const String location = 'Location';
   static const String rooms = 'Rooms';
