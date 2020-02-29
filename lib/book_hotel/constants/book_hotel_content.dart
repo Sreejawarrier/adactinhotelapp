@@ -33,9 +33,7 @@ class BookHotelContent {
   static const String errorCreditCardType =
       'Please select your credit card type';
   static const String errorExpiryDate =
-      'Please Enter valid Expiry Month of your Credit Card (From January - '
-      'December) !!!\nPlease Enter a valid Expiry Year of your Credit Card and '
-      'Format is \'YYYY\' !!!';
+      'Please select valid Expiry Month & Year of your Card';
   static const String errorCVV = 'Please enter your CVV mumber';
   static const String errorCVVLength =
       'CVV Number should be less than 5 digits !!!';
