@@ -41,6 +41,11 @@ class BookHotelContent {
   static const String allFields = 'All (';
   static const String asterisk = '*';
   static const String mandatory = ') are mandatory fields.';
+  static const String errorMissingData = 'Missing Data';
+  static const String errorRequireData =
+      'Please provide data for following fields -';
+  static const String alertButtonOk = 'OK';
+  static const String alertFailureTitle = 'Failure';
 
   List<String> creditCardTypeValues() => [
         'American Express',

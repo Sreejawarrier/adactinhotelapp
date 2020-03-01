@@ -2,6 +2,7 @@ import 'package:adactin_hotel_app/api/models/hotel_search.dart';
 import 'package:adactin_hotel_app/api/repo/hotel_search_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/routes/app_routes.dart';
+import 'package:adactin_hotel_app/base/ensure_visible_when_focused/ensure_visible_when_focused.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
 import 'package:adactin_hotel_app/home/bloc/home_bloc.dart';
 import 'package:adactin_hotel_app/home/constants/home_content.dart';
@@ -85,20 +86,33 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     _locationTextFieldController.dispose();
     _locationTextFieldFocusNode.dispose();
+    _locationTextFieldFocusNode.removeListener(_locationFieldInputDisplay);
     _hotelsTextFieldController.dispose();
     _hotelsTextFieldFocusNode.dispose();
+    _hotelsTextFieldFocusNode.removeListener(_hotelsFieldInputDisplay);
     _roomTypeTextFieldController.dispose();
     _roomTypeTextFieldFocusNode.dispose();
+    _roomTypeTextFieldFocusNode.removeListener(_roomTypeFieldInputDisplay);
     _numberOfRoomsTextFieldController.dispose();
     _numberOfRoomsTextFieldFocusNode.dispose();
+    _numberOfRoomsTextFieldFocusNode
+        .removeListener(_numberOfRoomsFieldInputDisplay);
     _checkInDateTextFieldController.dispose();
     _checkInDateTextFieldFocusNode.dispose();
+    _checkInDateTextFieldFocusNode
+        .removeListener(_checkInDateFieldInputDisplay);
     _checkOutDateTextFieldController.dispose();
     _checkOutDateTextFieldFocusNode.dispose();
+    _checkOutDateTextFieldFocusNode
+        .removeListener(_checkOutDateFieldInputDisplay);
     _adultsPerRoomTextFieldController.dispose();
     _adultsPerRoomTextFieldFocusNode.dispose();
+    _adultsPerRoomTextFieldFocusNode
+        .removeListener(_adultsPerRoomFieldInputDisplay);
     _childrenPerRoomTextFieldController.dispose();
     _childrenPerRoomTextFieldFocusNode.dispose();
+    _childrenPerRoomTextFieldFocusNode
+        .removeListener(_childrenPerRoomFieldInputDisplay);
 
     super.dispose();
   }
@@ -565,22 +579,25 @@ class _HomePageState extends State<HomePage> {
     return Semantics(
       label: semanticLabel,
       enabled: true,
-      child: TextFormField(
-        controller: textEditingController,
+      child: EnsureVisibleWhenFocused(
         focusNode: textFocusNode,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 22,
+        child: TextFormField(
+          controller: textEditingController,
+          focusNode: textFocusNode,
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 22,
+            ),
+            hintText: hintText,
+            hintStyle: TextStyle(fontSize: 16),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey),
+            ),
           ),
-          hintText: hintText,
-          hintStyle: TextStyle(fontSize: 16),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.grey),
-          ),
+          validator: validator,
         ),
-        validator: validator,
       ),
     );
   }
@@ -820,7 +837,7 @@ class _HomePageState extends State<HomePage> {
   void _searchHotels(BuildContext context) {
     _removeFocus();
 
-    if (_isValidFormContent()) {
+    if (_isValidFormContent(context)) {
       BlocProvider.of<HomeBloc>(context).add(
         HotelSearchAction(
           appBloc: widget.appBloc,
@@ -839,27 +856,63 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  bool _isValidFormContent() {
+  bool _isValidFormContent(BuildContext context) {
     _formKey.currentState.validate();
-
+    bool isValid = true;
+    String fieldsRequiredData = '';
     if (_locationTextFieldController.text.isEmpty) {
-      FocusScope.of(context).requestFocus(_locationTextFieldFocusNode);
-      return false;
+      fieldsRequiredData = HomeContent.location;
+      isValid = false;
     } else if (_numberOfRoomsTextFieldController.text.isEmpty) {
-      FocusScope.of(context).requestFocus(_numberOfRoomsTextFieldFocusNode);
-      return false;
+      fieldsRequiredData.isEmpty
+          ? fieldsRequiredData = HomeContent.numberOfRooms
+          : fieldsRequiredData = ', ${HomeContent.numberOfRooms}';
+      isValid = false;
     } else if (_checkInDateTextFieldController.text.isEmpty) {
-      FocusScope.of(context).requestFocus(_checkInDateTextFieldFocusNode);
-      return false;
+      fieldsRequiredData.isEmpty
+          ? fieldsRequiredData = HomeContent.checkInDate
+          : fieldsRequiredData = ', ${HomeContent.checkInDate}';
+      isValid = false;
     } else if (_checkOutDateTextFieldController.text.isEmpty) {
-      FocusScope.of(context).requestFocus(_checkOutDateTextFieldFocusNode);
-      return false;
+      fieldsRequiredData.isEmpty
+          ? fieldsRequiredData = HomeContent.checkOutDate
+          : fieldsRequiredData = ', ${HomeContent.checkOutDate}';
+      isValid = false;
     } else if (_adultsPerRoomTextFieldController.text.isEmpty) {
-      FocusScope.of(context).requestFocus(_adultsPerRoomTextFieldFocusNode);
-      return false;
+      fieldsRequiredData.isEmpty
+          ? fieldsRequiredData = HomeContent.adultsPerRoom
+          : fieldsRequiredData = ', ${HomeContent.adultsPerRoom}';
+      isValid = false;
     }
 
-    return true;
+    if (!isValid) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            semanticLabel: HomeSemanticKeys.failureAlert,
+            title: Text(HomeContent.errorMissingData),
+            content:
+                Text('${HomeContent.errorRequireData} $fieldsRequiredData'),
+            actions: <Widget>[
+              FlatButton(
+                child: Semantics(
+                  enabled: true,
+                  label: HomeSemanticKeys.failureAlertButton,
+                  child: Text(HomeContent.alertButtonOk),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+        barrierDismissible: false,
+      );
+    }
+
+    return isValid;
   }
 
   void _resetTextFields() {

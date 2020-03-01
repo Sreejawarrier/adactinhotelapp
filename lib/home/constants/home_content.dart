@@ -31,6 +31,9 @@ class HomeContent {
   static const String allFields = 'All (';
   static const String asterisk = '*';
   static const String mandatory = ') are mandatory fields.';
+  static const String errorMissingData = 'Missing Data';
+  static const String errorRequireData =
+      'Please provide data for following fields -';
 
   List<String> locationValues() => [
         'Sydney',

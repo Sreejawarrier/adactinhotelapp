@@ -3,13 +3,18 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 
-HotelSearchResult userDetailsFromJson(String str) =>
-    HotelSearchResult.fromJson(json.decode(str));
+HotelSearchResult userDetailsFromJson(
+  String str,
+  String adultNos,
+  String childNos,
+) =>
+    HotelSearchResult.fromJson(json.decode(str), adultNos, childNos);
 
 class HotelSearchResult extends Equatable {
+  static const String audPriceFormat = "AUD \$";
+
   final DateFormat _displayDateFormat = DateFormat('dd/MM/yyyy');
   final DateFormat _responseDateFormat = DateFormat('dd-MM-yyyy');
-  final String audPriceFormat = "AUD \$";
 
   final String hotelName;
   final String location;
@@ -20,6 +25,8 @@ class HotelSearchResult extends Equatable {
   final String roomsType;
   final String pricePerNight;
   final String totalPrice;
+  final String adultNos;
+  final String childNos;
 
   HotelSearchResult({
     this.hotelName,
@@ -31,6 +38,8 @@ class HotelSearchResult extends Equatable {
     this.roomsType,
     this.pricePerNight,
     this.totalPrice,
+    this.adultNos,
+    this.childNos,
   });
 
   @override
@@ -44,9 +53,15 @@ class HotelSearchResult extends Equatable {
         roomsType,
         pricePerNight,
         totalPrice,
+        adultNos,
+        childNos,
       ];
 
-  factory HotelSearchResult.fromJson(Map<String, dynamic> json) =>
+  factory HotelSearchResult.fromJson(
+    Map<String, dynamic> json,
+    String adultNos,
+    String childNos,
+  ) =>
       HotelSearchResult(
         hotelName: json["HotelName"],
         location: json["Location"],
@@ -57,6 +72,8 @@ class HotelSearchResult extends Equatable {
         roomsType: json["RoomsType"],
         pricePerNight: json["PricePerNight"],
         totalPrice: json["TotalPrice"],
+        adultNos: adultNos,
+        childNos: childNos,
       );
 
   @override
@@ -64,7 +81,8 @@ class HotelSearchResult extends Equatable {
     return 'HotelSearchResult { hotelName: $hotelName, location: $location, rooms: '
         '$rooms, arrivalDate: $arrivalDate, departureDate: $departureDate, '
         'noOfDays: $noOfDays, roomsType: $roomsType, '
-        'pricePerNight: $pricePerNight, totalPrice: $totalPrice }';
+        'pricePerNight: $pricePerNight, totalPrice: $totalPrice, '
+        'adultNos: $adultNos, childNos: $childNos }';
   }
 
   String getNoOfRooms() {

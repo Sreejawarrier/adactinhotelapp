@@ -65,6 +65,8 @@ class HotelSearchRepository {
             resultDataList.add(
               HotelSearchResult.fromJson(
                 searchResponseMap[mapKey],
+                hotelSearch.adultsPerRoom,
+                hotelSearch.childrenPerRoom,
               ),
             );
           }

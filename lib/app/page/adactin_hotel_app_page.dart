@@ -89,6 +89,6 @@ class _AdactinHotelAppPageState extends State<AdactinHotelAppPage> {
   }
 
   Widget _getBookHotel({HotelSearchResult hotel}) {
-    return BookHotelPage(hotelSearchResult: hotel);
+    return BookHotelPage(appBloc: widget.appBloc, hotelSearchResult: hotel);
   }
 }

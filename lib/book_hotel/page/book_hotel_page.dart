@@ -1,16 +1,28 @@
+import 'package:adactin_hotel_app/api/models/book_hotel.dart';
 import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
+import 'package:adactin_hotel_app/api/repo/book_hotel_repo.dart';
+import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
+import 'package:adactin_hotel_app/base/ensure_visible_when_focused/ensure_visible_when_focused.dart';
+import 'package:adactin_hotel_app/base/spinner/spinner.dart';
+import 'package:adactin_hotel_app/book_hotel/bloc/book_hotel_bloc.dart';
 import 'package:adactin_hotel_app/book_hotel/constants/book_hotel_constants.dart';
 import 'package:adactin_hotel_app/book_hotel/constants/book_hotel_content.dart';
 import 'package:adactin_hotel_app/book_hotel/constants/book_hotel_semantic_keys.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:intl/intl.dart';
 
 class BookHotelPage extends StatefulWidget {
+  final AppBloc appBloc;
   final HotelSearchResult hotelSearchResult;
 
-  BookHotelPage({Key key, @required this.hotelSearchResult}) : super(key: key);
+  BookHotelPage({
+    Key key,
+    @required this.appBloc,
+    @required this.hotelSearchResult,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _BookHotelPageState();
@@ -19,7 +31,7 @@ class BookHotelPage extends StatefulWidget {
 class _BookHotelPageState extends State<BookHotelPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final DateFormat _dateFormat =
+  final DateFormat _displayDateFormat =
       DateFormat(BookHotelConstants.displayDateFormat);
   final TextEditingController _firstNameTextFieldController =
       TextEditingController();
@@ -76,20 +88,61 @@ class _BookHotelPageState extends State<BookHotelPage> {
       appBar: AppBar(
         title: Text(BookHotelContent.pageTitle),
       ),
-      body: Stack(
-        children: <Widget>[
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () => _removeFocus(),
-            child: Container(
-              color: Colors.white,
-              child: _getBookHotelForm(context),
-            ),
+      body: BlocProvider(
+        create: (context) {
+          return BookHotelBloc(
+            bookHotelRepository: BookHotelRepository(),
+          );
+        },
+        child: BlocListener<BookHotelBloc, BookHotelState>(
+          listener: (context, state) {
+            if (state is BookingSuccessful) {
+            } else if (state is BookingFailure) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    semanticLabel: BookHotelSemanticKeys.failureAlert,
+                    title: Text(BookHotelContent.alertFailureTitle),
+                    content: Text(state.error),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Semantics(
+                          enabled: true,
+                          label: BookHotelSemanticKeys.failureAlertButton,
+                          child: Text(BookHotelContent.alertButtonOk),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+                barrierDismissible: false,
+              );
+            }
+          },
+          child: BlocBuilder<BookHotelBloc, BookHotelState>(
+            builder: (context, state) {
+              return Stack(
+                children: <Widget>[
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => _removeFocus(),
+                    child: Container(
+                      color: Colors.white,
+                      child: _getBookHotelForm(context),
+                    ),
+                  ),
+                  state is BookingInProcess
+                      ? Spinner()
+                      : const SizedBox.shrink(),
+                ],
+              );
+            },
           ),
-//          state is SearchInProcess
-//              ? Spinner()
-//              : const SizedBox.shrink(),
-        ],
+        ),
       ),
     );
   }
@@ -327,7 +380,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
         validator: (String value) {
           return (value == null || value.isEmpty)
               ? BookHotelContent.errorCVV
-              : (value.length > 5 ? BookHotelContent.errorCVVLength : null);
+              : (value.length > 4 ? BookHotelContent.errorCVVLength : null);
         },
       ),
       const SizedBox(height: 40),
@@ -344,8 +397,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
         BookHotelContent.bookNow,
         Palette.primaryColor,
         () {
-          _removeFocus();
-          _formKey.currentState.validate();
+          _bookHotel(context);
         },
       ),
       const SizedBox(height: 10),
@@ -469,47 +521,91 @@ class _BookHotelPageState extends State<BookHotelPage> {
     return Semantics(
       label: semanticLabel,
       enabled: true,
-      child: TextFormField(
-        enabled: enabled,
-        maxLines: maxLines,
-        controller: textEditingController,
-        focusNode: textFocusNode,
-        keyboardType: maxLines > 1 ? TextInputType.multiline : keyboardType,
-        textInputAction: maxLines > 1
-            ? TextInputAction.newline
-            : ((nextFocusNode != null)
-                ? TextInputAction.next
-                : TextInputAction.done),
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 22,
-          ),
-          hintText: hintText,
-          hintStyle: TextStyle(fontSize: 16),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.grey),
-          ),
-          fillColor: !enabled ? Colors.grey.withOpacity(0.1) : null,
-          filled: !enabled,
-          helperText: helperText,
+      child: textFocusNode != null
+          ? EnsureVisibleWhenFocused(
+              focusNode: textFocusNode,
+              child: _getFormField(
+                context: context,
+                semanticLabel: semanticLabel,
+                textEditingController: textEditingController,
+                textFocusNode: textFocusNode,
+                hintText: hintText,
+                validator: validator,
+                enabled: enabled,
+                nextFocusNode: nextFocusNode,
+                maxLines: maxLines,
+                keyboardType: keyboardType,
+                helperText: helperText,
+              ))
+          : _getFormField(
+              context: context,
+              semanticLabel: semanticLabel,
+              textEditingController: textEditingController,
+              textFocusNode: textFocusNode,
+              hintText: hintText,
+              validator: validator,
+              enabled: enabled,
+              nextFocusNode: nextFocusNode,
+              maxLines: maxLines,
+              keyboardType: keyboardType,
+              helperText: helperText,
+            ),
+    );
+  }
+
+  Widget _getFormField({
+    BuildContext context,
+    String semanticLabel,
+    TextEditingController textEditingController,
+    FocusNode textFocusNode,
+    String hintText,
+    FormFieldValidator<String> validator,
+    bool enabled,
+    FocusNode nextFocusNode,
+    int maxLines,
+    TextInputType keyboardType,
+    String helperText,
+  }) {
+    return TextFormField(
+      enabled: enabled,
+      maxLines: maxLines,
+      controller: textEditingController,
+      focusNode: textFocusNode,
+      keyboardType: maxLines > 1 ? TextInputType.multiline : keyboardType,
+      textInputAction: maxLines > 1
+          ? TextInputAction.newline
+          : ((nextFocusNode != null)
+              ? TextInputAction.next
+              : TextInputAction.done),
+      decoration: InputDecoration(
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 22,
         ),
-        validator: validator,
-        onFieldSubmitted: (value) {
-          if (nextFocusNode != null)
-            FocusScope.of(context).requestFocus(nextFocusNode);
-        },
-        onChanged: (value) {
-          if (maxLines > 1) {
-            /// For multi line textFormField removing unnecessary spaces or new lines
-            /// for an empty text entered
-            final String singleLine = value.replaceAll("\n", "");
-            final String noSpaces = singleLine.replaceAll(" ", "");
-            if (noSpaces.isEmpty) textEditingController.text = "";
-          }
-        },
+        hintText: hintText,
+        hintStyle: TextStyle(fontSize: 16),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        fillColor: !enabled ? Colors.grey.withOpacity(0.1) : null,
+        filled: !enabled,
+        helperText: helperText,
       ),
+      validator: validator,
+      onFieldSubmitted: (value) {
+        if (nextFocusNode != null)
+          FocusScope.of(context).requestFocus(nextFocusNode);
+      },
+      onChanged: (value) {
+        if (maxLines > 1) {
+          /// For multi line textFormField removing unnecessary spaces or new lines
+          /// for an empty text entered
+          final String singleLine = value.replaceAll("\n", "");
+          final String noSpaces = singleLine.replaceAll(" ", "");
+          if (noSpaces.isEmpty) textEditingController.text = "";
+        }
+      },
     );
   }
 
@@ -528,10 +624,15 @@ class _BookHotelPageState extends State<BookHotelPage> {
     _removeFocus();
     _showExpiryDatePicker(
       textEditingController: _expiryDateTextFieldController,
-      minDate: _dateFormat.parse(BookHotelConstants.cardExpiryDateStarting),
-      maxDate: _dateFormat.parse(BookHotelConstants.cardExpiryDateEnding),
+      initialDate: (_expiryDateTextFieldController.text?.isEmpty == true)
+          ? _displayDateFormat.parse(BookHotelConstants.cardExpiryDateStarting)
+          : _displayDateFormat.parse(_expiryDateTextFieldController.text),
+      minDate:
+          _displayDateFormat.parse(BookHotelConstants.cardExpiryDateStarting),
+      maxDate:
+          _displayDateFormat.parse(BookHotelConstants.cardExpiryDateEnding),
       onDatePickerConfirm: (DateTime date) {
-        _expiryDateTextFieldController.text = _dateFormat.format(date);
+        _expiryDateTextFieldController.text = _displayDateFormat.format(date);
       },
     );
   }
@@ -689,6 +790,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
 
   void _showExpiryDatePicker({
     @required TextEditingController textEditingController,
+    @required DateTime initialDate,
     @required DateTime minDate,
     @required DateTime maxDate,
     Function(DateTime) onDatePickerConfirm,
@@ -698,13 +800,110 @@ class _BookHotelPageState extends State<BookHotelPage> {
       minDateTime: minDate,
       maxDateTime: maxDate,
       dateFormat: BookHotelConstants.bottomSheetExpirySelectionFormat,
-      initialDateTime: minDate,
+      initialDateTime: initialDate,
       onConfirm: (date, _) {
-        textEditingController.text = _dateFormat.format(date);
+        textEditingController.text = _displayDateFormat.format(date);
         if (onDatePickerConfirm != null) {
           onDatePickerConfirm(date);
         }
       },
     );
+  }
+
+  /// --- --- --- Book Hotel --- --- ---
+
+  void _bookHotel(BuildContext context) {
+    _removeFocus();
+
+    if (_isValidFormContent(context)) {
+      BlocProvider.of<BookHotelBloc>(context).add(
+        BookHotelAction(
+          appBloc: widget.appBloc,
+          bookHotel: BookHotel(
+            hotelSearchResult: widget.hotelSearchResult,
+            firstName: _firstNameTextFieldController.text,
+            lastName: _lastNameTextFieldController.text,
+            address: _billingAddressTextFieldController.text,
+            cCardNo: _creditCardNoTextFieldController.text,
+            cCardType: _creditCardTypeTextFieldController.text,
+            expiryDate: _expiryDateTextFieldController.text,
+            cvvNum: _cvvTextFieldController.text,
+          ),
+        ),
+      );
+    }
+  }
+
+  bool _isValidFormContent(BuildContext context) {
+    _formKey.currentState.validate();
+    bool isValid = true;
+    String fieldsRequiredData = '';
+    if (_firstNameTextFieldController.text.isEmpty ||
+        _firstNameTextFieldController.text.length > 255) {
+      fieldsRequiredData = BookHotelContent.firstName;
+      isValid = false;
+    } else if (_lastNameTextFieldController.text.isEmpty ||
+        _lastNameTextFieldController.text.length > 255) {
+      fieldsRequiredData.isEmpty
+          ? fieldsRequiredData = BookHotelContent.lastName
+          : fieldsRequiredData = ', ${BookHotelContent.lastName}';
+      isValid = false;
+    } else if (_billingAddressTextFieldController.text.isEmpty) {
+      fieldsRequiredData.isEmpty
+          ? fieldsRequiredData = BookHotelContent.billingAddress
+          : fieldsRequiredData = ', ${BookHotelContent.billingAddress}';
+      isValid = false;
+    } else if (_creditCardNoTextFieldController.text.isEmpty ||
+        _creditCardNoTextFieldController.text.length > 16) {
+      fieldsRequiredData.isEmpty
+          ? fieldsRequiredData = BookHotelContent.creditCardNo
+          : fieldsRequiredData = ', ${BookHotelContent.creditCardNo}';
+      isValid = false;
+    } else if (_creditCardTypeTextFieldController.text.isEmpty) {
+      fieldsRequiredData.isEmpty
+          ? fieldsRequiredData = BookHotelContent.creditCardType
+          : fieldsRequiredData = ', ${BookHotelContent.creditCardType}';
+      isValid = false;
+    } else if (_expiryDateTextFieldController.text.isEmpty) {
+      fieldsRequiredData.isEmpty
+          ? fieldsRequiredData = BookHotelContent.expiryDate
+          : fieldsRequiredData = ', ${BookHotelContent.expiryDate}';
+      isValid = false;
+    } else if (_cvvTextFieldController.text.isEmpty ||
+        _cvvTextFieldController.text.length > 4) {
+      fieldsRequiredData.isEmpty
+          ? fieldsRequiredData = BookHotelContent.cvvNumber
+          : fieldsRequiredData = ', ${BookHotelContent.cvvNumber}';
+      isValid = false;
+    }
+
+    if (!isValid) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            semanticLabel: BookHotelSemanticKeys.failureAlert,
+            title: Text(BookHotelContent.errorMissingData),
+            content: Text(
+                '${BookHotelContent.errorRequireData} $fieldsRequiredData'),
+            actions: <Widget>[
+              FlatButton(
+                child: Semantics(
+                  enabled: true,
+                  label: BookHotelSemanticKeys.failureAlertButton,
+                  child: Text(BookHotelContent.alertButtonOk),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+        barrierDismissible: false,
+      );
+    }
+
+    return isValid;
   }
 }
