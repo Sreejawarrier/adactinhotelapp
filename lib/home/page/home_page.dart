@@ -85,34 +85,34 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     _locationTextFieldController.dispose();
-    _locationTextFieldFocusNode.dispose();
     _locationTextFieldFocusNode.removeListener(_locationFieldInputDisplay);
+    _locationTextFieldFocusNode.dispose();
     _hotelsTextFieldController.dispose();
-    _hotelsTextFieldFocusNode.dispose();
     _hotelsTextFieldFocusNode.removeListener(_hotelsFieldInputDisplay);
+    _hotelsTextFieldFocusNode.dispose();
     _roomTypeTextFieldController.dispose();
-    _roomTypeTextFieldFocusNode.dispose();
     _roomTypeTextFieldFocusNode.removeListener(_roomTypeFieldInputDisplay);
+    _roomTypeTextFieldFocusNode.dispose();
     _numberOfRoomsTextFieldController.dispose();
-    _numberOfRoomsTextFieldFocusNode.dispose();
     _numberOfRoomsTextFieldFocusNode
         .removeListener(_numberOfRoomsFieldInputDisplay);
+    _numberOfRoomsTextFieldFocusNode.dispose();
     _checkInDateTextFieldController.dispose();
-    _checkInDateTextFieldFocusNode.dispose();
     _checkInDateTextFieldFocusNode
         .removeListener(_checkInDateFieldInputDisplay);
+    _checkInDateTextFieldFocusNode.dispose();
     _checkOutDateTextFieldController.dispose();
-    _checkOutDateTextFieldFocusNode.dispose();
     _checkOutDateTextFieldFocusNode
         .removeListener(_checkOutDateFieldInputDisplay);
+    _checkOutDateTextFieldFocusNode.dispose();
     _adultsPerRoomTextFieldController.dispose();
-    _adultsPerRoomTextFieldFocusNode.dispose();
     _adultsPerRoomTextFieldFocusNode
         .removeListener(_adultsPerRoomFieldInputDisplay);
+    _adultsPerRoomTextFieldFocusNode.dispose();
     _childrenPerRoomTextFieldController.dispose();
-    _childrenPerRoomTextFieldFocusNode.dispose();
     _childrenPerRoomTextFieldFocusNode
         .removeListener(_childrenPerRoomFieldInputDisplay);
+    _childrenPerRoomTextFieldFocusNode.dispose();
 
     super.dispose();
   }
