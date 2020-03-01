@@ -1,4 +1,5 @@
 class HotelDetailSemantics {
+  static const String pageTitle = 'page_title';
   static const String continueButton = 'continue_button';
   static const String hotelDetailScroller = 'hotel_detail_scroller';
   static const String hotelName = 'hotel_name';

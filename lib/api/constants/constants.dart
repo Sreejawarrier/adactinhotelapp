@@ -47,7 +47,9 @@ class Constants {
   static const String hotelSearchRoomTypeUrl = "&room_type=$roomTypeKey";
   static const String hotelSearchChildRoomUrl = "&child_room=$childRoomKey";
 
-  static const String hotelSearchSuccessKey = "searchedResults";
+  static const String hotelSearchSuccessMessage =
+      "Hotels Searched Successfully  !!!";
+  static const String hotelResultValueKey = "Result";
 
   /// -------------- Book hotel
   static const String hotelNameKey = "{hotelName}";
@@ -77,4 +79,7 @@ class Constants {
       "cvvNum=$cvvNumKey&status=$statusKey";
 
   static const String bookHotelChildNoUrl = "&child_no=$childNoKey";
+
+  static const String bookingSuccessMessage = "Booking Confirmation !!!";
+  static const String bookingDetailsKey = "Booking Details";
 }

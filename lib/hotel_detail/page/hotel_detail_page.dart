@@ -22,7 +22,7 @@ class _HotelDetailPage extends State<HotelDetailPage> {
       appBar: AppBar(
         title: Text(
           HotelDetailContent.pageTitle,
-          semanticsLabel: HotelDetailContent.pageTitle,
+          semanticsLabel: HotelDetailSemantics.pageTitle,
         ),
       ),
       body: Container(
@@ -145,7 +145,7 @@ class _HotelDetailPage extends State<HotelDetailPage> {
     );
   }
 
-  /// --- --- --- Text form field --- --- ---
+  /// --- --- --- Text field --- --- ---
 
   Widget _getTextField(
     BuildContext context,

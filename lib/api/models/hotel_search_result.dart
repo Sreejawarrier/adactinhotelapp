@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 
-HotelSearchResult userDetailsFromJson(
+HotelSearchResult hotelSearchResultFromJson(
   String str,
   String adultNos,
   String childNos,

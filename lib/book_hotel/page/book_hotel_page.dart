@@ -2,6 +2,7 @@ import 'package:adactin_hotel_app/api/models/book_hotel.dart';
 import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
 import 'package:adactin_hotel_app/api/repo/book_hotel_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
+import 'package:adactin_hotel_app/app/routes/app_routes.dart';
 import 'package:adactin_hotel_app/base/ensure_visible_when_focused/ensure_visible_when_focused.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
 import 'package:adactin_hotel_app/book_hotel/bloc/book_hotel_bloc.dart';
@@ -86,7 +87,10 @@ class _BookHotelPageState extends State<BookHotelPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(BookHotelContent.pageTitle),
+        title: Text(
+          BookHotelContent.pageTitle,
+          semanticsLabel: BookHotelSemanticKeys.pageTitle,
+        ),
       ),
       body: BlocProvider(
         create: (context) {
@@ -97,6 +101,10 @@ class _BookHotelPageState extends State<BookHotelPage> {
         child: BlocListener<BookHotelBloc, BookHotelState>(
           listener: (context, state) {
             if (state is BookingSuccessful) {
+              Navigator.of(context).pushNamed(
+                AppRoutes.BOOKING_DETAILS,
+                arguments: state.bookingDetails,
+              );
             } else if (state is BookingFailure) {
               showDialog(
                 context: context,

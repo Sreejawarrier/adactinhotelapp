@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:adactin_hotel_app/api/constants/constants.dart';
 import 'package:adactin_hotel_app/api/models/book_hotel.dart';
+import 'package:adactin_hotel_app/api/models/booking_details.dart';
 import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
 import 'package:adactin_hotel_app/book_hotel/constants/book_hotel_constants.dart';
 import 'package:adactin_hotel_app/global/global_constants.dart'
@@ -18,7 +19,7 @@ class BookHotelRepository {
   final DateFormat _expiryYearFormat =
       DateFormat(BookHotelConstants.expiryYear);
 
-  Future<void> book({
+  Future<BookingDetails> book({
     @required String token,
     @required BookHotel bookHotel,
   }) async {
@@ -79,30 +80,26 @@ class BookHotelRepository {
       final Response response = await Dio().get(encodedUrl);
       final Map<String, dynamic> data = json.decode(response.toString());
 
-      print(data);
-//      Map<String, dynamic> searchResponseMap;
-//      if (data?.values?.isNotEmpty == true) {
-//        data.values.forEach((result) {
-//          if (result is Map<String, dynamic>) {
-//            searchResponseMap = result;
-//          }
-//        });
-//      }
-//
-//      if (searchResponseMap?.isNotEmpty == true) {
-//        List<HotelSearchResult> resultDataList = [];
-//        for (int i = 1; i <= searchResponseMap.length; i++) {
-//          final String mapKey = "${HomeContent.hotelResultValueKey}$i";
-//          if (searchResponseMap.containsKey(mapKey)) {
-//            resultDataList.add(
-//              HotelSearchResult.fromJson(
-//                searchResponseMap[mapKey],
-//              ),
-//            );
-//          }
-//        }
-//        return resultDataList;
-//      }
+      if (data?.values?.isNotEmpty == true) {
+        String responseMessage;
+        Map<String, dynamic> searchResponseMap;
+
+        data.values.forEach((result) {
+          if (result is String) {
+            responseMessage = result;
+          } else if (result is Map<String, dynamic>) {
+            searchResponseMap = result;
+          }
+        });
+
+        if (responseMessage == Constants.bookingSuccessMessage &&
+            searchResponseMap?.isNotEmpty == true &&
+            searchResponseMap.containsKey(Constants.bookingDetailsKey)) {
+          return BookingDetails.fromJson(
+            searchResponseMap[Constants.bookingDetailsKey],
+          );
+        }
+      }
 
       if (data.containsKey(Constants.errorFieldValidationsKey)) {
         throw data[Constants.errorFieldValidationsKey];

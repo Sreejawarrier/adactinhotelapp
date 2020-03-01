@@ -5,7 +5,6 @@ import 'package:adactin_hotel_app/api/models/hotel_search.dart';
 import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
 import 'package:adactin_hotel_app/global/global_constants.dart'
     as globalConstants;
-import 'package:adactin_hotel_app/home/constants/home_content.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 
@@ -48,30 +47,35 @@ class HotelSearchRepository {
       final Response response = await Dio().get(encodedUrl);
       final Map<String, dynamic> data = json.decode(response.toString());
 
-      Map<String, dynamic> searchResponseMap;
       if (data?.values?.isNotEmpty == true) {
+        String responseMessage;
+        Map<String, dynamic> searchResponseMap;
+
         data.values.forEach((result) {
-          if (result is Map<String, dynamic>) {
+          if (result is String) {
+            responseMessage = result;
+          } else if (result is Map<String, dynamic>) {
             searchResponseMap = result;
           }
         });
-      }
 
-      if (searchResponseMap?.isNotEmpty == true) {
-        List<HotelSearchResult> resultDataList = [];
-        for (int i = 1; i <= searchResponseMap.length; i++) {
-          final String mapKey = "${HomeContent.hotelResultValueKey}$i";
-          if (searchResponseMap.containsKey(mapKey)) {
-            resultDataList.add(
-              HotelSearchResult.fromJson(
-                searchResponseMap[mapKey],
-                hotelSearch.adultsPerRoom,
-                hotelSearch.childrenPerRoom,
-              ),
-            );
+        if (responseMessage == Constants.hotelSearchSuccessMessage &&
+            searchResponseMap?.isNotEmpty == true) {
+          List<HotelSearchResult> resultDataList = [];
+          for (int i = 1; i <= searchResponseMap.length; i++) {
+            final String mapKey = "${Constants.hotelResultValueKey}$i";
+            if (searchResponseMap.containsKey(mapKey)) {
+              resultDataList.add(
+                HotelSearchResult.fromJson(
+                  searchResponseMap[mapKey],
+                  hotelSearch.adultsPerRoom,
+                  hotelSearch.childrenPerRoom,
+                ),
+              );
+            }
           }
+          return resultDataList;
         }
-        return resultDataList;
       }
 
       if (data.containsKey(Constants.errorFieldValidationsKey)) {

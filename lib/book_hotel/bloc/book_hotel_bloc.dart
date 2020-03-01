@@ -1,4 +1,5 @@
 import 'package:adactin_hotel_app/api/models/book_hotel.dart';
+import 'package:adactin_hotel_app/api/models/booking_details.dart';
 import 'package:adactin_hotel_app/api/repo/book_hotel_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:bloc/bloc.dart';
@@ -44,14 +45,16 @@ class BookHotelInitial extends BookHotelState {}
 class BookingInProcess extends BookHotelState {}
 
 class BookingSuccessful extends BookHotelState {
-  const BookingSuccessful();
+  final BookingDetails bookingDetails;
+
+  const BookingSuccessful(this.bookingDetails);
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [bookingDetails];
 
   @override
   String toString() {
-    return 'BookingSuccessful { }';
+    return 'BookingSuccessful { bookingDetails: $bookingDetails }';
   }
 }
 
@@ -88,11 +91,12 @@ class BookHotelBloc extends Bloc<BookHotelEvent, BookHotelState> {
       yield BookingInProcess();
 
       try {
-        await bookHotelRepository.book(
-          token: event.appBloc.userDetails.token,
-          bookHotel: event.bookHotel,
+        yield BookingSuccessful(
+          await bookHotelRepository.book(
+            token: event.appBloc.userDetails.token,
+            bookHotel: event.bookHotel,
+          ),
         );
-        yield BookingSuccessful();
       } catch (error) {
         yield BookingFailure(error: error.toString());
       }

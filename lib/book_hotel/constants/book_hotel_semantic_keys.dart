@@ -1,4 +1,5 @@
 class BookHotelSemanticKeys {
+  static const String pageTitle = 'page_title';
   static const String hotelName = 'hotel_name';
   static const String location = 'hotel_location';
   static const String roomType = 'room_type';
