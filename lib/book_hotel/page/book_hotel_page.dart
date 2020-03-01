@@ -331,7 +331,9 @@ class _BookHotelPageState extends State<BookHotelPage> {
         validator: (String value) {
           return (value == null || value.isEmpty)
               ? BookHotelContent.errorCreditCardNo
-              : (value.length > 16 ? BookHotelContent.errorCreditCardNo : null);
+              : ((value.length > 16 || value.length < 16)
+                  ? BookHotelContent.errorCreditCardNo
+                  : null);
         },
         nextFocusNode: _creditCardTypeTextFieldFocusNode,
         helperText: BookHotelContent.creditCardNoHelper,
@@ -854,7 +856,8 @@ class _BookHotelPageState extends State<BookHotelPage> {
           : fieldsRequiredData = ', ${BookHotelContent.billingAddress}';
       isValid = false;
     } else if (_creditCardNoTextFieldController.text.isEmpty ||
-        _creditCardNoTextFieldController.text.length > 16) {
+        _creditCardNoTextFieldController.text.length > 16 ||
+        _creditCardNoTextFieldController.text.length < 16) {
       fieldsRequiredData.isEmpty
           ? fieldsRequiredData = BookHotelContent.creditCardNo
           : fieldsRequiredData = ', ${BookHotelContent.creditCardNo}';
