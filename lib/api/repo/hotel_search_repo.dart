@@ -43,8 +43,11 @@ class HotelSearchRepository {
       }
 
       final String encodedUrl = Uri.encodeFull(hotelSearchUrl);
+      print('HotelSearchRepository - searchForHotels - url - $encodedUrl');
 
       final Response response = await Dio().get(encodedUrl);
+      print('HotelSearchRepository - searchForHotels - response - $response');
+
       final Map<String, dynamic> data = json.decode(response.toString());
 
       if (data?.values?.isNotEmpty == true) {

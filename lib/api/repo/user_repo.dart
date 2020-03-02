@@ -14,7 +14,9 @@ class UserRepository {
       logInUrl = logInUrl.replaceAll(Constants.passwordKey, password);
 
       final String encodedUrl = Uri.encodeFull(logInUrl);
+      print('UserRepository - authenticate - url - $encodedUrl');
       final Response response = await Dio().get(encodedUrl);
+      print('UserRepository - authenticate - response - $response');
       final Map<String, dynamic> data = json.decode(response.toString());
 
       if (data.containsKey(Constants.loginSuccessTokenKey) == true) {
@@ -42,7 +44,9 @@ class UserRepository {
       logoutUrl = logoutUrl.replaceAll(Constants.userTokenKey, token);
 
       final String encodedUrl = Uri.encodeFull(logoutUrl);
+      print('UserRepository - logout - url - $encodedUrl');
       final Response response = await Dio().get(encodedUrl);
+      print('UserRepository - logout - response - $response');
       final Map<String, dynamic> data = json.decode(response.toString());
 
       return ((data[Constants.logOutSuccessKey] ==

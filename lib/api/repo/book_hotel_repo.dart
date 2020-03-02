@@ -76,8 +76,11 @@ class BookHotelRepository {
           Constants.statusKey, bookHotel.status.toString());
 
       final String encodedUrl = Uri.encodeFull(bookHotelUrl);
+      print('BookHotelRepository - book - url - $encodedUrl');
 
       final Response response = await Dio().get(encodedUrl);
+      print('BookHotelRepository - book - response - $response');
+
       final Map<String, dynamic> data = json.decode(response.toString());
 
       if (data?.values?.isNotEmpty == true) {
