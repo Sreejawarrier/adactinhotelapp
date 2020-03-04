@@ -19,9 +19,12 @@ class UserRepository {
       print('UserRepository - authenticate - response - $response');
       final Map<String, dynamic> data = json.decode(response.toString());
 
-      if (data.containsKey(Constants.loginSuccessTokenKey) == true) {
+      if (data.containsKey(Constants.loginSuccessTokenKey) &&
+          data[Constants.loginSuccessTokenKey] != null) {
         return UserDetails(
-            username: username, token: data[Constants.loginSuccessTokenKey]);
+          username: username,
+          token: data[Constants.loginSuccessTokenKey],
+        );
       } else {
         if (data.containsKey(Constants.errorFieldValidationsKey)) {
           throw Constants.errorFieldValidationDescription;

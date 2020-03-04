@@ -1,4 +1,5 @@
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
+import 'package:adactin_hotel_app/app/bloc/app_tab_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
@@ -11,20 +12,19 @@ abstract class AppBottomNavTabEvent extends Equatable {
 
 class BottomNavTabDisplay extends AppBottomNavTabEvent {
   final AppBloc appBloc;
-  final int currentTabIndex;
+  final AppTab currentTab;
 
   BottomNavTabDisplay({
     @required this.appBloc,
-    @required this.currentTabIndex,
+    @required this.currentTab,
   });
 
   @override
-  List<Object> get props => [appBloc, currentTabIndex];
+  List<Object> get props => [appBloc, currentTab];
 
   @override
   String toString() {
-    return 'BottomNavTabDisplay { appBloc: $appBloc, currentTabIndex: '
-        '$currentTabIndex }';
+    return 'BottomNavTabDisplay { appBloc: $appBloc, currentTab: $currentTab }';
   }
 }
 
@@ -64,7 +64,8 @@ class AppBottomNavTabBloc
       AppBottomNavTabEvent event) async* {
     if (event is BottomNavTabDisplay) {
       yield BottomNavTabDisplayStatus(
-        hide: (event.currentTabIndex == 1 && event.appBloc.userDetails == null),
+        hide: (event.currentTab == AppTab.account &&
+            event.appBloc.userDetails == null),
       );
     }
   }

@@ -7,11 +7,13 @@ import 'package:adactin_hotel_app/app/bloc/app_tab_bloc.dart';
 import 'package:adactin_hotel_app/app/constants/app_content.dart';
 import 'package:adactin_hotel_app/app/constants/app_semantic_keys.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
+import 'package:adactin_hotel_app/booked_itinerary/page/booked_itinerary_page.dart';
 import 'package:adactin_hotel_app/home/page/home_page.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:quiver/async.dart';
 
 class AppContainerWidget extends StatefulWidget {
@@ -122,7 +124,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
               _appBottomNavTabBloc.add(
                 BottomNavTabDisplay(
                   appBloc: BlocProvider.of<AppBloc>(context),
-                  currentTabIndex: _selectedTabIndex,
+                  currentTab: _getAppTab(_selectedTabIndex),
                 ),
               );
 
@@ -137,7 +139,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
                           builder: (BuildContext context) {
                             /// Below check is when we try to move automatically from
                             /// one screen tab to another screen tab via bloc call
-                            /// of the apptabbloc. Ex: On successful login we move to
+                            /// of the appTabBloc. Ex: On successful login we move to
                             /// home screen at that time we pass user change app bloc
                             /// event then we try to move to home tab via bloc call.
                             /// So at that time if we see that the default tab controller
@@ -239,8 +241,10 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
   int _getAppTabIndex(AppTabState state) {
     if (state is AppTabChosen) {
       switch (state.tab) {
-        case AppTab.account:
+        case AppTab.bookedItinerary:
           return 1;
+        case AppTab.account:
+          return 2;
         default:
           return 0;
       }
@@ -253,9 +257,26 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
   AppTab _getAppTab(int index) {
     switch (index) {
       case 1:
-        return AppTab.account;
+        {
+          FlutterStatusbarcolor.setStatusBarColor(Colors.grey.withOpacity(0.2));
+          FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+
+          return AppTab.bookedItinerary;
+        }
+      case 2:
+        {
+          FlutterStatusbarcolor.setStatusBarColor(Colors.white);
+          FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+
+          return AppTab.account;
+        }
       default:
-        return AppTab.home;
+        {
+          FlutterStatusbarcolor.setStatusBarColor(Palette.primaryColor);
+          FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+
+          return AppTab.home;
+        }
     }
   }
 
@@ -263,6 +284,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
   List<Widget> _getTabViews(BuildContext context) {
     return [
       HomePage(appBloc: BlocProvider.of<AppBloc>(context)),
+      BookedItineraryPage(appBloc: BlocProvider.of<AppBloc>(context)),
       LoginPage(appBloc: BlocProvider.of<AppBloc>(context)),
     ];
   }
@@ -273,6 +295,11 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
       FFNavigationBarItem(
         iconData: Icons.home,
         label: AppContent.home,
+        animationDuration: _bottomNavBarDuration,
+      ),
+      FFNavigationBarItem(
+        iconData: Icons.hotel,
+        label: AppContent.bookedItinerary,
         animationDuration: _bottomNavBarDuration,
       ),
       FFNavigationBarItem(

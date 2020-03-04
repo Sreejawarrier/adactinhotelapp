@@ -3,7 +3,6 @@ import 'package:adactin_hotel_app/app/routes/app_routes.dart';
 import 'package:adactin_hotel_app/hotel_detail/constants/hotel_detail_content.dart';
 import 'package:adactin_hotel_app/hotel_detail/constants/hotel_detail_semantics.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HotelDetailPage extends StatefulWidget {

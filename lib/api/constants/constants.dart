@@ -82,4 +82,7 @@ class Constants {
 
   static const String bookingSuccessMessage = "Booking Confirmation !!!";
   static const String bookingDetailsKey = "Booking Details";
+
+  /// -------------- Booked itinerary
+  static const String bookingsURL = "getBookings&userToken=$userTokenKey";
 }

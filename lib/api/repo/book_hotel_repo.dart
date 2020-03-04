@@ -96,11 +96,8 @@ class BookHotelRepository {
         });
 
         if (responseMessage == Constants.bookingSuccessMessage &&
-            searchResponseMap?.isNotEmpty == true &&
-            searchResponseMap.containsKey(Constants.bookingDetailsKey)) {
-          return BookingDetails.fromJson(
-            searchResponseMap[Constants.bookingDetailsKey],
-          );
+            searchResponseMap?.isNotEmpty == true) {
+          return BookingDetails.fromJson(searchResponseMap);
         }
       }
 

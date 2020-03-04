@@ -25,7 +25,7 @@ class _HotelsSearchListPageState extends State<HotelsSearchListPage> {
         ),
       ),
       body: Container(
-        color: Colors.grey.withOpacity(0.4),
+        color: Colors.grey.withOpacity(0.2),
         child: Semantics(
           enabled: true,
           label: HotelsSearchListPageSemantics.view_container,
