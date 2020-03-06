@@ -1,3 +1,5 @@
+import 'package:adactin_hotel_app/global/global_constants.dart'
+    as globalConstants;
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -30,6 +32,9 @@ class Spinner extends StatelessWidget {
             child: SpinKitWanderingCubes(
               color: spinnerColor,
               size: 60,
+              duration: Duration(
+                seconds: globalConstants.GlobalConstants.sessionTimeout,
+              ),
             ),
           ),
         ),

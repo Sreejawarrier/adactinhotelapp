@@ -124,7 +124,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           yield LogoutSuccess();
         } else {
           yield LoginFailure(
-              error: globalConstants.GlobalConstants.unknownError);
+              error: globalConstants.GlobalConstants.unknown_error);
         }
       } catch (error) {
         yield LoginFailure(error: error.toString());
