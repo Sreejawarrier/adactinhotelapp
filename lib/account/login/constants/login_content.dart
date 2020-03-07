@@ -10,7 +10,8 @@ class LoginContent {
   static const String logout = 'Logout';
   static const String alertFailureTitle = 'Failure';
   static const String alertButtonOk = 'OK';
-  static const String forgotPasswordURL = 'https://adactin.com/HotelApp/ForgotPassword.php';
+  static const String forgotPasswordURL =
+      'https://adactin.com/HotelApp/ForgotPassword.php';
   static const String signUpURL = 'https://adactin.com/HotelApp/Register.php';
-  static const String errorCouldntLaunchURL = 'Could not launch';
+  static const String errorCouldNotLaunchURL = 'Could not launch';
 }

@@ -88,4 +88,14 @@ class Constants {
       "getBookings&userToken=$userTokenKey";
   static const String bookedItinerarySearchSuccessKey = "SearchResults";
   static const String bookedItineraryResultValueKey = "Booking";
+
+  /// -------------- Cancel booking
+  static const String orderIdKey = "{orderId}";
+
+  static const String cancelBookingURL = "cancelBooking&"
+      "userToken=$userTokenKey&orderId=$orderIdKey";
+
+  static const String bookingCancelledKey = "CancelBookingMessage";
+  static const String bookingCancellationMessage =
+      "Cancellation Confirmed for Order ID";
 }

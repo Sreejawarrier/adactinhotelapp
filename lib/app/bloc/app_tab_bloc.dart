@@ -52,7 +52,7 @@ class AppTabChosen extends AppTabState {
 
 class AppTabBloc extends Bloc<AppTabEvent, AppTabState> {
   @override
-  AppTabState get initialState => AppTabChosen(tab: AppTab.home);
+  AppTabState get initialState => AppTabChosen(tab: AppTab.account);
 
   @override
   Stream<AppTabState> mapEventToState(AppTabEvent event) async* {

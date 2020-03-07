@@ -87,6 +87,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
                 BlocProvider.of<AppBloc>(context).userSessionTimerMaxInSeconds,
               );
 
+              _setStatusBarColor(0);
               BlocProvider.of<AppTabBloc>(context)
                   .add(AppTabSelect(tab: AppTab.home));
             }
@@ -96,10 +97,12 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
             _sessionTimerListener = null;
             _userSessionTimer = null;
 
+            _setStatusBarColor(2);
             BlocProvider.of<AppTabBloc>(context)
                 .add(AppTabSelect(tab: AppTab.account));
           }
         } else if (state is AppStarted) {
+          _setStatusBarColor(2);
           BlocProvider.of<AppTabBloc>(context)
               .add(AppTabSelect(tab: AppTab.account));
         } else if (state is AppSessionCheckProcessed) {
@@ -237,7 +240,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
     );
   }
 
-  /// Returns int value based on the apptab enum value
+  /// Returns int value based on the app Tab enum value
   int _getAppTabIndex(AppTabState state) {
     if (state is AppTabChosen) {
       switch (state.tab) {
@@ -258,23 +261,14 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
     switch (index) {
       case 1:
         {
-          FlutterStatusbarcolor.setStatusBarColor(Colors.grey.withOpacity(0.2));
-          FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
-
           return AppTab.bookedItinerary;
         }
       case 2:
         {
-          FlutterStatusbarcolor.setStatusBarColor(Colors.white);
-          FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
-
           return AppTab.account;
         }
       default:
         {
-          FlutterStatusbarcolor.setStatusBarColor(Palette.primaryColor);
-          FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
-
           return AppTab.home;
         }
     }
@@ -337,9 +331,33 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
               AppContent.needLogIn,
             );
           }
+          _setStatusBarColor(index);
         },
       ),
     );
+  }
+
+  void _setStatusBarColor(int index) {
+    switch (index) {
+      case 1:
+        {
+          FlutterStatusbarcolor.setStatusBarColor(Colors.grey.withOpacity(0.2));
+          FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+        }
+        break;
+      case 2:
+        {
+          FlutterStatusbarcolor.setStatusBarColor(Colors.white);
+          FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+        }
+        break;
+      default:
+        {
+          FlutterStatusbarcolor.setStatusBarColor(Palette.primaryColor);
+          FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+        }
+        break;
+    }
   }
 
   /// Displays a snackBar with given semantic key and information to display.

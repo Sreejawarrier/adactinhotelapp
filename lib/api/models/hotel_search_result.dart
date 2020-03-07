@@ -1,16 +1,7 @@
-import 'dart:convert';
-
 import 'package:adactin_hotel_app/global/global_constants.dart'
     as globalConstants;
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
-
-HotelSearchResult hotelSearchResultFromJson(
-  String str,
-  String adultNos,
-  String childNos,
-) =>
-    HotelSearchResult.fromJson(json.decode(str), adultNos, childNos);
 
 class HotelSearchResult extends Equatable {
   final DateFormat _displayDateFormat = DateFormat('dd/MM/yyyy');

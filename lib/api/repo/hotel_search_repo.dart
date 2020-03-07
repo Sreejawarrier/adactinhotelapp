@@ -75,7 +75,7 @@ class HotelSearchRepository {
               final String mapKey = "${Constants.hotelResultValueKey}$i";
               if (searchResponseMap.containsKey(mapKey)) {
                 resultDataList.add(
-                  hotelSearchResultFromJson(
+                  HotelSearchResult.fromJson(
                     searchResponseMap[mapKey],
                     hotelSearch.adultsPerRoom,
                     hotelSearch.childrenPerRoom,

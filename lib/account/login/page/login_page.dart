@@ -394,7 +394,7 @@ class _LoginPageState extends State<LoginPage> {
           return AlertDialog(
             semanticLabel: LoginSemanticKeys.failureAlert,
             title: Text(LoginContent.alertFailureTitle),
-            content: Text('${LoginContent.errorCouldntLaunchURL} $url'),
+            content: Text('${LoginContent.errorCouldNotLaunchURL} $url'),
             actions: <Widget>[
               FlatButton(
                 child: Semantics(

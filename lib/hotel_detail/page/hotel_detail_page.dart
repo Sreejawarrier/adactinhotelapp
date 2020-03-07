@@ -1,14 +1,25 @@
+import 'package:adactin_hotel_app/api/models/booked_itinerary.dart';
 import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
+import 'package:adactin_hotel_app/api/repo/cancel_booking_repo.dart';
+import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/routes/app_routes.dart';
+import 'package:adactin_hotel_app/base/spinner/spinner.dart';
+import 'package:adactin_hotel_app/global/global_constants.dart'
+    as globalConstants;
+import 'package:adactin_hotel_app/hotel_detail/bloc/hotel_detail_bloc.dart';
 import 'package:adactin_hotel_app/hotel_detail/constants/hotel_detail_content.dart';
 import 'package:adactin_hotel_app/hotel_detail/constants/hotel_detail_semantics.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
-class HotelDetailPage extends StatefulWidget {
-  final HotelSearchResult hotel;
+class HotelDetailPage<T> extends StatefulWidget {
+  final AppBloc appBloc;
+  final T hotel;
 
-  HotelDetailPage({Key key, @required this.hotel}) : super(key: key);
+  HotelDetailPage({Key key, @required this.appBloc, @required this.hotel})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _HotelDetailPage();
@@ -17,111 +28,318 @@ class HotelDetailPage extends StatefulWidget {
 class _HotelDetailPage extends State<HotelDetailPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          HotelDetailContent.pageTitle,
-          semanticsLabel: HotelDetailSemantics.pageTitle,
+    setStatusBarColor();
+
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            HotelDetailContent.pageTitle,
+            semanticsLabel: HotelDetailSemantics.pageTitle,
+          ),
         ),
-      ),
-      body: Container(
-        color: Colors.white,
-        child: Stack(
-          children: <Widget>[
-            _getHotelDetail(context),
-            _getBottomButton(context),
-          ],
+        body: BlocProvider(
+          create: (context) {
+            return HotelDetailBloc(
+              cancelBookingRepository: CancelBookingRepository(),
+            );
+          },
+          child: BlocListener<HotelDetailBloc, HotelDetailState>(
+            listener: (context, state) {
+              if (state is HotelCancellationSuccessful && state.success) {
+                _checkStatusColor();
+                Navigator.of(context).popUntil((route) {
+                  return (route.settings.name == Navigator.defaultRouteName);
+                });
+              } else if (state is HotelDetailFailure) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      semanticLabel: HotelDetailSemantics.failureAlert,
+                      title: Text(HotelDetailContent.alertFailureTitle),
+                      content: Text(state.error),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Semantics(
+                            enabled: true,
+                            label: HotelDetailSemantics.failureAlertButton,
+                            child: Text(HotelDetailContent.alertButtonOk),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                  barrierDismissible: false,
+                );
+              }
+            },
+            child: BlocBuilder<HotelDetailBloc, HotelDetailState>(
+              builder: (context, state) {
+                return Stack(
+                  children: <Widget>[
+                    Container(
+                      color: Colors.white,
+                      child: Stack(
+                        children: <Widget>[
+                          _getHotelDetail(context),
+                          _getBottomButton(context),
+                        ],
+                      ),
+                    ),
+                    state is CallInProgress
+                        ? Spinner()
+                        : const SizedBox.shrink(),
+                  ],
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
   }
 
+  void setStatusBarColor() {
+    FlutterStatusbarcolor.setStatusBarColor(Palette.primaryColor);
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+  }
+
+  Future<bool> _onBackPressed() {
+    _checkStatusColor();
+    return Future.value(true);
+  }
+
+  void _checkStatusColor() {
+    if (widget.hotel is HotelSearchResult) {
+      setStatusBarColor();
+    } else {
+      FlutterStatusbarcolor.setStatusBarColor(Colors.grey.withOpacity(0.2));
+      FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+    }
+  }
+
   /// --- --- --- Hotel Detail --- --- ---
 
   Widget _getHotelDetail(BuildContext context) {
+    final List<Widget> hotelDetailsColumnList = [];
+    if (widget.hotel is BookedItinerary) {
+      hotelDetailsColumnList.addAll(_getOrderIdDetails(context));
+    }
+    hotelDetailsColumnList.addAll(_getHotelNameDetails(context));
+    hotelDetailsColumnList.addAll(_getLocationDetails(context));
+    hotelDetailsColumnList.addAll(_getRoomsDetails(context));
+    if (widget.hotel is BookedItinerary) {
+      hotelDetailsColumnList.addAll(_getFirstNameDetails(context));
+      hotelDetailsColumnList.addAll(_getLastNameDetails(context));
+    }
+    hotelDetailsColumnList.addAll(_getArrivalDateDetails(context));
+    hotelDetailsColumnList.addAll(_getDepartureDateDetails(context));
+    hotelDetailsColumnList.addAll(_getNoOfDaysDetails(context));
+    hotelDetailsColumnList.addAll(_getRoomsTypeDetails(context));
+    hotelDetailsColumnList.addAll(_getPricePerNightDetails(context));
+    hotelDetailsColumnList.addAll(_getTotalPriceDetails(context));
+    hotelDetailsColumnList.add(const SizedBox(height: 128));
+
     return Semantics(
       enabled: true,
       child: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 24, right: 24),
         child: Column(
-          children: <Widget>[
-            const SizedBox(height: 20),
-            _getLabel(context, HotelDetailContent.hotelName),
-            const SizedBox(height: 4),
-            _getTextField(
-              context,
-              HotelDetailSemantics.hotelName,
-              widget.hotel.hotelName,
-            ),
-            const SizedBox(height: 20),
-            _getLabel(context, HotelDetailContent.location),
-            const SizedBox(height: 4),
-            _getTextField(
-              context,
-              HotelDetailSemantics.hotelLocation,
-              widget.hotel.location,
-            ),
-            const SizedBox(height: 20),
-            _getLabel(context, HotelDetailContent.rooms),
-            const SizedBox(height: 4),
-            _getTextField(
-              context,
-              HotelDetailSemantics.hotelRooms,
-              widget.hotel.getNoOfRooms(),
-            ),
-            const SizedBox(height: 20),
-            _getLabel(context, HotelDetailContent.arrivalDate),
-            const SizedBox(height: 4),
-            _getTextField(
-              context,
-              HotelDetailSemantics.hotelArrivalDate,
-              widget.hotel.getFormattedArrivalDate(),
-            ),
-            const SizedBox(height: 20),
-            _getLabel(context, HotelDetailContent.departureDate),
-            const SizedBox(height: 4),
-            _getTextField(
-              context,
-              HotelDetailSemantics.hotelDepartureDate,
-              widget.hotel.getFormattedDepartureDate(),
-            ),
-            const SizedBox(height: 20),
-            _getLabel(context, HotelDetailContent.noOfDays),
-            const SizedBox(height: 4),
-            _getTextField(
-              context,
-              HotelDetailSemantics.hotelNoOfDays,
-              widget.hotel.noOfDays.toString(),
-            ),
-            const SizedBox(height: 20),
-            _getLabel(context, HotelDetailContent.roomsType),
-            const SizedBox(height: 4),
-            _getTextField(
-              context,
-              HotelDetailSemantics.hotelRoomType,
-              widget.hotel.roomsType,
-            ),
-            const SizedBox(height: 20),
-            _getLabel(context, HotelDetailContent.pricePerNight),
-            const SizedBox(height: 4),
-            _getTextField(
-              context,
-              HotelDetailSemantics.hotelPricePerNight,
-              widget.hotel.pricePerNight,
-            ),
-            const SizedBox(height: 20),
-            _getLabel(context, HotelDetailContent.totalPrice),
-            const SizedBox(height: 4),
-            _getTextField(
-              context,
-              HotelDetailSemantics.hotelTotalPrice,
-              widget.hotel.totalPrice,
-            ),
-            const SizedBox(height: 128),
-          ],
+          children: hotelDetailsColumnList,
         ),
       ),
     );
+  }
+
+  List<Widget> _getOrderIdDetails(BuildContext context) {
+    return [
+      const SizedBox(height: 20),
+      _getLabel(context, HotelDetailContent.orderId),
+      const SizedBox(height: 4),
+      _getTextField(
+        context,
+        HotelDetailSemantics.orderId,
+        (widget.hotel as BookedItinerary)?.orderId ?? '',
+      ),
+    ];
+  }
+
+  List<Widget> _getHotelNameDetails(BuildContext context) {
+    return [
+      const SizedBox(height: 20),
+      _getLabel(context, HotelDetailContent.hotelName),
+      const SizedBox(height: 4),
+      _getTextField(
+        context,
+        HotelDetailSemantics.hotelName,
+        (widget.hotel is HotelSearchResult)
+            ? widget.hotel.hotelName
+            : (widget.hotel is BookedItinerary ? widget.hotel.hotelName : ''),
+      ),
+    ];
+  }
+
+  List<Widget> _getLocationDetails(BuildContext context) {
+    return [
+      const SizedBox(height: 20),
+      _getLabel(context, HotelDetailContent.location),
+      const SizedBox(height: 4),
+      _getTextField(
+        context,
+        HotelDetailSemantics.hotelLocation,
+        (widget.hotel is HotelSearchResult)
+            ? widget.hotel.location
+            : (widget.hotel is BookedItinerary ? widget.hotel.location : ''),
+      ),
+    ];
+  }
+
+  List<Widget> _getRoomsDetails(BuildContext context) {
+    return [
+      const SizedBox(height: 20),
+      _getLabel(context, HotelDetailContent.rooms),
+      const SizedBox(height: 4),
+      _getTextField(
+        context,
+        HotelDetailSemantics.hotelRooms,
+        (widget.hotel is HotelSearchResult)
+            ? widget.hotel.getNoOfRooms()
+            : (widget.hotel is BookedItinerary ? widget.hotel.rooms : ''),
+      ),
+    ];
+  }
+
+  List<Widget> _getFirstNameDetails(BuildContext context) {
+    return [
+      const SizedBox(height: 20),
+      _getLabel(context, HotelDetailContent.firstName),
+      const SizedBox(height: 4),
+      _getTextField(
+        context,
+        HotelDetailSemantics.fistName,
+        (widget.hotel as BookedItinerary)?.firstName ?? '',
+      ),
+    ];
+  }
+
+  List<Widget> _getLastNameDetails(BuildContext context) {
+    return [
+      const SizedBox(height: 20),
+      _getLabel(context, HotelDetailContent.lastName),
+      const SizedBox(height: 4),
+      _getTextField(
+        context,
+        HotelDetailSemantics.lastName,
+        (widget.hotel as BookedItinerary)?.lastName ?? '',
+      ),
+    ];
+  }
+
+  List<Widget> _getArrivalDateDetails(BuildContext context) {
+    return [
+      const SizedBox(height: 20),
+      _getLabel(context, HotelDetailContent.arrivalDate),
+      const SizedBox(height: 4),
+      _getTextField(
+        context,
+        HotelDetailSemantics.hotelArrivalDate,
+        (widget.hotel is HotelSearchResult)
+            ? widget.hotel.getFormattedArrivalDate()
+            : (widget.hotel is BookedItinerary ? widget.hotel.arrivalDate : ''),
+      ),
+    ];
+  }
+
+  List<Widget> _getDepartureDateDetails(BuildContext context) {
+    return [
+      const SizedBox(height: 20),
+      _getLabel(context, HotelDetailContent.departureDate),
+      const SizedBox(height: 4),
+      _getTextField(
+        context,
+        HotelDetailSemantics.hotelDepartureDate,
+        (widget.hotel is HotelSearchResult)
+            ? widget.hotel.getFormattedDepartureDate()
+            : (widget.hotel is BookedItinerary
+                ? widget.hotel.departureDate
+                : ''),
+      ),
+    ];
+  }
+
+  List<Widget> _getNoOfDaysDetails(BuildContext context) {
+    return [
+      const SizedBox(height: 20),
+      _getLabel(context, HotelDetailContent.noOfDays),
+      const SizedBox(height: 4),
+      _getTextField(
+        context,
+        HotelDetailSemantics.hotelNoOfDays,
+        (widget.hotel is HotelSearchResult)
+            ? widget.hotel.noOfDays.toString()
+            : (widget.hotel is BookedItinerary ? widget.hotel.noOfDays : ''),
+      ),
+    ];
+  }
+
+  List<Widget> _getRoomsTypeDetails(BuildContext context) {
+    return [
+      const SizedBox(height: 20),
+      _getLabel(context, HotelDetailContent.roomsType),
+      const SizedBox(height: 4),
+      _getTextField(
+        context,
+        HotelDetailSemantics.hotelRoomType,
+        (widget.hotel is HotelSearchResult)
+            ? widget.hotel.roomsType
+            : (widget.hotel is BookedItinerary ? widget.hotel.roomType : ''),
+      ),
+    ];
+  }
+
+  List<Widget> _getPricePerNightDetails(BuildContext context) {
+    return [
+      const SizedBox(height: 20),
+      _getLabel(context, HotelDetailContent.pricePerNight),
+      const SizedBox(height: 4),
+      _getTextField(
+        context,
+        HotelDetailSemantics.hotelPricePerNight,
+        (widget.hotel is HotelSearchResult)
+            ? widget.hotel.pricePerNight
+            : (widget.hotel is BookedItinerary
+                ? '${globalConstants.GlobalConstants.audPriceFormat}'
+                    '${(widget.hotel as BookedItinerary).pricePerNight}'
+                : ''),
+      ),
+    ];
+  }
+
+  List<Widget> _getTotalPriceDetails(BuildContext context) {
+    return [
+      const SizedBox(height: 20),
+      _getLabel(
+          context,
+          (widget.hotel is HotelSearchResult)
+              ? HotelDetailContent.totalPriceExclGST
+              : HotelDetailContent.totalPriceInclGST),
+      const SizedBox(height: 4),
+      _getTextField(
+        context,
+        HotelDetailSemantics.hotelTotalPrice,
+        (widget.hotel is HotelSearchResult)
+            ? widget.hotel.totalPrice
+            : (widget.hotel is BookedItinerary
+                ? '${globalConstants.GlobalConstants.audPriceFormat}'
+                    '${(widget.hotel as BookedItinerary).finalPrice}'
+                : ''),
+      ),
+    ];
   }
 
   /// --- --- --- Label --- --- ---
@@ -174,25 +392,38 @@ class _HotelDetailPage extends State<HotelDetailPage> {
         child: Container(
           color: Colors.transparent,
           width: MediaQuery.of(context).size.width,
-          child: _getContinueButton(context),
+          child: _getContinueOrCancelButton(context),
         ),
       ),
     );
   }
 
-  Widget _getContinueButton(BuildContext context) {
+  Widget _getContinueOrCancelButton(BuildContext context) {
     return Semantics(
-      label: HotelDetailSemantics.continueButton,
+      label: (widget.hotel is HotelSearchResult)
+          ? HotelDetailSemantics.continueButton
+          : HotelDetailSemantics.cancelButton,
       enabled: true,
       child: RaisedButton(
         onPressed: () {
-          Navigator.of(context).pushNamed(
-            AppRoutes.BOOK_HOTEL,
-            arguments: widget.hotel,
-          );
+          if (widget.hotel is HotelSearchResult) {
+            Navigator.of(context).pushNamed(
+              AppRoutes.BOOK_HOTEL,
+              arguments: widget.hotel,
+            );
+          } else {
+            BlocProvider.of<HotelDetailBloc>(context).add(
+              CancelHotelAction(
+                appBloc: widget.appBloc,
+                bookedItinerary: (widget.hotel as BookedItinerary),
+              ),
+            );
+          }
         },
         child: Text(
-          HotelDetailContent.selectTxt,
+          (widget.hotel is HotelSearchResult)
+              ? HotelDetailContent.selectTxt
+              : HotelDetailContent.cancelTxt,
           style: TextStyle(fontSize: 18, color: Colors.white),
         ),
         padding: const EdgeInsets.symmetric(

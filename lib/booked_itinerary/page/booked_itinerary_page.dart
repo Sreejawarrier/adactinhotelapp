@@ -1,6 +1,7 @@
 import 'package:adactin_hotel_app/api/models/booked_itinerary.dart';
 import 'package:adactin_hotel_app/api/repo/booked_itinerary_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
+import 'package:adactin_hotel_app/app/page/adactin_hotel_app_page.dart';
 import 'package:adactin_hotel_app/base/hotel_overview/container/hotel_overview_container.dart';
 import 'package:adactin_hotel_app/base/hotel_overview/model/hotel_overview_data.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
@@ -24,7 +25,8 @@ class BookedItineraryPage extends StatefulWidget {
   State<StatefulWidget> createState() => _BookedItineraryPageState();
 }
 
-class _BookedItineraryPageState extends State<BookedItineraryPage> {
+class _BookedItineraryPageState extends State<BookedItineraryPage>
+    with RouteAware {
   final DateFormat _fromDateFormat = DateFormat('dd/MM/yyyy');
 
   BookedItineraryBloc _bookedItineraryBloc;
@@ -47,8 +49,25 @@ class _BookedItineraryPageState extends State<BookedItineraryPage> {
   void dispose() {
     _bookedItineraryBloc.close();
     _bookedItineraryBloc = null;
+    routeObserver.unsubscribe(this);
 
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    /// Observer to listen to route navigation events
+    routeObserver.unsubscribe(this);
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void didPopNext() {
+    super.didPopNext();
+
+    _fetchBookings();
   }
 
   @override

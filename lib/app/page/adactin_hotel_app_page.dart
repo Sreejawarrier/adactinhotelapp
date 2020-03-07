@@ -1,3 +1,4 @@
+import 'package:adactin_hotel_app/api/models/booked_itinerary.dart';
 import 'package:adactin_hotel_app/api/models/booking_details.dart';
 import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
@@ -11,6 +12,8 @@ import 'package:adactin_hotel_app/hotels_search_list/page/hotels_search_list_pag
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 class AdactinHotelAppPage extends StatefulWidget {
   final AppBloc appBloc;
@@ -48,6 +51,7 @@ class _AdactinHotelAppPageState extends State<AdactinHotelAppPage> {
           cursorColor: Palette.primaryColor,
         ),
         home: AppContainerWidget(),
+        navigatorObservers: [routeObserver],
         onGenerateRoute: (RouteSettings settings) {
           Widget screen;
           dynamic args = settings.arguments;
@@ -59,7 +63,7 @@ class _AdactinHotelAppPageState extends State<AdactinHotelAppPage> {
               }
               break;
             case AppRoutes.HOTEL_DETAIL:
-              if (args is HotelSearchResult) {
+              if (args is HotelSearchResult || args is BookedItinerary) {
                 screen = _getHotelDetail(hotel: args);
               }
               break;
@@ -91,8 +95,8 @@ class _AdactinHotelAppPageState extends State<AdactinHotelAppPage> {
     return HotelsSearchListPage(hotels: hotels);
   }
 
-  Widget _getHotelDetail({HotelSearchResult hotel}) {
-    return HotelDetailPage(hotel: hotel);
+  Widget _getHotelDetail<T>({T hotel}) {
+    return HotelDetailPage(appBloc: widget.appBloc, hotel: hotel);
   }
 
   Widget _getBookHotel({HotelSearchResult hotel}) {
