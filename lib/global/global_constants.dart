@@ -9,6 +9,7 @@ class GlobalConstants {
       "Please try again.";
 
   static const int sessionTimeout = 60; // Session timeout
+  static const int spinnerTimeout = 60;
 
   BaseOptions getDioOptions() {
     return BaseOptions(
