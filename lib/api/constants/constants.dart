@@ -84,5 +84,8 @@ class Constants {
   static const String bookingDetailsKey = "Booking Details";
 
   /// -------------- Booked itinerary
-  static const String bookingsURL = "getBookings&userToken=$userTokenKey";
+  static const String bookedItinerariesURL =
+      "getBookings&userToken=$userTokenKey";
+  static const String bookedItinerarySearchSuccessKey = "SearchResults";
+  static const String bookedItineraryResultValueKey = "Booking";
 }

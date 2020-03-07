@@ -1,9 +1,4 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
-
-BookingDetails bookingDetailsFromJson(String str) =>
-    BookingDetails.fromJson(json.decode(str));
 
 class BookingDetails extends Equatable {
   final String hotelName;

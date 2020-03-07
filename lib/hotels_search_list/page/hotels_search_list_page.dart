@@ -4,6 +4,7 @@ import 'package:adactin_hotel_app/base/hotel_overview/model/hotel_overview_data.
 import 'package:adactin_hotel_app/hotels_search_list/constants/hotels_search_list_page_content.dart';
 import 'package:adactin_hotel_app/hotels_search_list/constants/hotels_search_list_page_semantics.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class HotelsSearchListPage extends StatefulWidget {
   final List<HotelSearchResult> hotels;
@@ -15,6 +16,8 @@ class HotelsSearchListPage extends StatefulWidget {
 }
 
 class _HotelsSearchListPageState extends State<HotelsSearchListPage> {
+  final DateFormat _fromDateFormat = DateFormat('dd-MM-yyyy');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +46,7 @@ class _HotelsSearchListPageState extends State<HotelsSearchListPage> {
                       '${HotelsSearchListPageSemantics.list_container}$index',
                   child: HotelOverviewContainer(
                     hotelData: HotelOverviewData(
-                      hotelSearchResult: widget.hotels[index],
+                      hotelData: widget.hotels[index],
                       name: widget.hotels[index].hotelName,
                       location: widget.hotels[index].location,
                       fromDate: widget.hotels[index].arrivalDate,
@@ -52,6 +55,7 @@ class _HotelsSearchListPageState extends State<HotelsSearchListPage> {
                     ),
                     isInitialItem: index == 0,
                     isLastItem: index == (widget.hotels.length - 1),
+                    fromDateFormat: _fromDateFormat,
                   ),
                 );
               },

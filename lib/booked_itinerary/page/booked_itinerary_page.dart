@@ -1,11 +1,17 @@
+import 'package:adactin_hotel_app/api/models/booked_itinerary.dart';
 import 'package:adactin_hotel_app/api/repo/booked_itinerary_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
+import 'package:adactin_hotel_app/base/hotel_overview/container/hotel_overview_container.dart';
+import 'package:adactin_hotel_app/base/hotel_overview/model/hotel_overview_data.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
 import 'package:adactin_hotel_app/booked_itinerary/bloc/booked_itinerary_bloc.dart';
 import 'package:adactin_hotel_app/booked_itinerary/content/booked_itinerary_content.dart';
 import 'package:adactin_hotel_app/booked_itinerary/content/booked_itinerary_semantic_keys.dart';
+import 'package:adactin_hotel_app/global/global_constants.dart'
+    as globalConstants;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class BookedItineraryPage extends StatefulWidget {
   final AppBloc appBloc;
@@ -19,21 +25,43 @@ class BookedItineraryPage extends StatefulWidget {
 }
 
 class _BookedItineraryPageState extends State<BookedItineraryPage> {
+  final DateFormat _fromDateFormat = DateFormat('dd/MM/yyyy');
+
+  BookedItineraryBloc _bookedItineraryBloc;
+  List<BookedItinerary> _bookedItineraryList = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _bookedItineraryBloc = BookedItineraryBloc(
+      bookedItineraryRepository: BookedItineraryRepository(),
+    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchBookings();
+    });
+  }
+
+  @override
+  void dispose() {
+    _bookedItineraryBloc.close();
+    _bookedItineraryBloc = null;
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
         create: (context) {
-          return BookedItineraryBloc(
-            bookedItineraryRepository: BookedItineraryRepository(),
-          );
+          return _bookedItineraryBloc;
         },
         child: SafeArea(
           child: BlocListener<BookedItineraryBloc, BookedItineraryState>(
             listener: (context, state) {
-              if (state is BookedItineraryInitial) {
-                _fetchBookings(context);
-              } else if (state is BookedItineraryFailure) {
+              if (state is BookedItineraryFailure) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -58,6 +86,8 @@ class _BookedItineraryPageState extends State<BookedItineraryPage> {
                   },
                   barrierDismissible: false,
                 );
+              } else if (state is BookedItinerarySuccess) {
+                _bookedItineraryList = state.bookedItineraryList ?? [];
               }
             },
             child: BlocBuilder<BookedItineraryBloc, BookedItineraryState>(
@@ -66,7 +96,49 @@ class _BookedItineraryPageState extends State<BookedItineraryPage> {
                   children: <Widget>[
                     Container(
                       color: Colors.grey.withOpacity(0.2),
-                      child: Text('Test 1'),
+                      child: Semantics(
+                        enabled: true,
+                        label: BookedItinerarySemanticKeys.view_container,
+                        child: Container(
+                          color: Colors.transparent,
+                          padding: const EdgeInsets.only(
+                            left: 20,
+                            right: 20,
+                          ),
+                          child: ListView.separated(
+                            itemBuilder: (context, index) {
+                              return Semantics(
+                                enabled: true,
+                                label:
+                                    '${BookedItinerarySemanticKeys.list_container}$index',
+                                child: HotelOverviewContainer(
+                                  hotelData: HotelOverviewData(
+                                    hotelData: _bookedItineraryList[index],
+                                    name: _bookedItineraryList[index].hotelName,
+                                    location:
+                                        _bookedItineraryList[index].location,
+                                    fromDate:
+                                        _bookedItineraryList[index].arrivalDate,
+                                    toDate: _bookedItineraryList[index]
+                                        .departureDate,
+                                    totalPrice:
+                                        '${globalConstants.GlobalConstants.audPriceFormat}'
+                                        '${_bookedItineraryList[index].finalPrice}',
+                                  ),
+                                  isInitialItem: index == 0,
+                                  isLastItem: index ==
+                                      (_bookedItineraryList.length - 1),
+                                  fromDateFormat: _fromDateFormat,
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return const SizedBox(height: 10);
+                            },
+                            itemCount: _bookedItineraryList.length,
+                          ),
+                        ),
+                      ),
                     ),
                     state is SearchInProcess
                         ? Spinner()
@@ -81,8 +153,8 @@ class _BookedItineraryPageState extends State<BookedItineraryPage> {
     );
   }
 
-  void _fetchBookings(BuildContext context) {
-    BlocProvider.of<BookedItineraryBloc>(context).add(
+  void _fetchBookings() {
+    _bookedItineraryBloc?.add(
       FetchBookingsAction(appBloc: widget.appBloc),
     );
   }

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:adactin_hotel_app/global/global_constants.dart'
+    as globalConstants;
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 
@@ -11,8 +13,6 @@ HotelSearchResult hotelSearchResultFromJson(
     HotelSearchResult.fromJson(json.decode(str), adultNos, childNos);
 
 class HotelSearchResult extends Equatable {
-  static const String audPriceFormat = "AUD \$";
-
   final DateFormat _displayDateFormat = DateFormat('dd/MM/yyyy');
   final DateFormat _responseDateFormat = DateFormat('dd-MM-yyyy');
 
@@ -103,21 +103,26 @@ class HotelSearchResult extends Equatable {
   }
 
   String getGSTPrice() {
-    final String totalPriceForGST = totalPrice.replaceAll(audPriceFormat, '');
+    final String totalPriceForGST = totalPrice.replaceAll(
+      globalConstants.GlobalConstants.audPriceFormat,
+      '',
+    );
     final int convertedTotalPrice = int.parse(totalPriceForGST);
     final String gstCharged = (convertedTotalPrice * 0.1).toString();
     final List<String> gstValueSplit = gstCharged.split('.');
     final int change = int.parse(gstValueSplit.last);
 
     if (change > 0) {
-      return audPriceFormat + gstCharged;
+      return globalConstants.GlobalConstants.audPriceFormat + gstCharged;
     } else {
-      return audPriceFormat + gstValueSplit.first;
+      return globalConstants.GlobalConstants.audPriceFormat +
+          gstValueSplit.first;
     }
   }
 
   String getBillingPrice() {
-    final String totalPriceForGST = totalPrice.replaceAll(audPriceFormat, '');
+    final String totalPriceForGST = totalPrice.replaceAll(
+        globalConstants.GlobalConstants.audPriceFormat, '');
     final int convertedTotalPrice = int.parse(totalPriceForGST);
     final double gstValue = (convertedTotalPrice * 0.1);
     final String billingPrice =
@@ -126,9 +131,10 @@ class HotelSearchResult extends Equatable {
     final int change = int.parse(billingValueSplit.last);
 
     if (change > 0) {
-      return audPriceFormat + billingPrice;
+      return globalConstants.GlobalConstants.audPriceFormat + billingPrice;
     } else {
-      return audPriceFormat + billingValueSplit.first;
+      return globalConstants.GlobalConstants.audPriceFormat +
+          billingValueSplit.first;
     }
   }
 }

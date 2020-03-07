@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:adactin_hotel_app/api/constants/constants.dart';
 import 'package:adactin_hotel_app/api/models/book_hotel.dart';
 import 'package:adactin_hotel_app/api/models/booking_details.dart';
-import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
 import 'package:adactin_hotel_app/base/connectivity/connectivity.dart';
 import 'package:adactin_hotel_app/book_hotel/constants/book_hotel_constants.dart';
 import 'package:adactin_hotel_app/global/global_constants.dart'
@@ -53,12 +52,12 @@ class BookHotelRepository {
         }
         bookHotelUrl = bookHotelUrl.replaceAll(
             Constants.priceNightKey,
-            bookHotel.hotelSearchResult.pricePerNight
-                .replaceAll(HotelSearchResult.audPriceFormat, ''));
+            bookHotel.hotelSearchResult.pricePerNight.replaceAll(
+                globalConstants.GlobalConstants.audPriceFormat, ''));
         bookHotelUrl = bookHotelUrl.replaceAll(
             Constants.totalPriceKey,
-            bookHotel.hotelSearchResult.totalPrice
-                .replaceAll(HotelSearchResult.audPriceFormat, ''));
+            bookHotel.hotelSearchResult.totalPrice.replaceAll(
+                globalConstants.GlobalConstants.audPriceFormat, ''));
         bookHotelUrl = bookHotelUrl.replaceAll(
             Constants.firstNameKey, bookHotel.firstName);
         bookHotelUrl =

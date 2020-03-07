@@ -3,15 +3,18 @@ import 'package:adactin_hotel_app/base/hotel_overview/constants/hotel_overview_s
 import 'package:adactin_hotel_app/base/hotel_overview/model/hotel_overview_data.dart';
 import 'package:adactin_hotel_app/hotels_search_list/constants/hotels_search_list_page_semantics.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class HotelOverviewContainer extends StatefulWidget {
   final HotelOverviewData hotelData;
+  final DateFormat fromDateFormat;
   final bool isInitialItem;
   final bool isLastItem;
 
   HotelOverviewContainer({
     Key key,
     @required this.hotelData,
+    @required this.fromDateFormat,
     @required this.isInitialItem,
     @required this.isLastItem,
   }) : super(key: key);
@@ -45,7 +48,7 @@ class _HotelOverviewContainerState extends State<HotelOverviewContainer> {
             onTap: () {
               Navigator.of(context).pushNamed(
                 AppRoutes.HOTEL_DETAIL,
-                arguments: widget.hotelData.hotelSearchResult,
+                arguments: widget.hotelData.hotelData,
               );
             },
             child: Container(
@@ -74,7 +77,7 @@ class _HotelOverviewContainerState extends State<HotelOverviewContainer> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          widget.hotelData.getStayDates(),
+                          widget.hotelData.getStayDates(widget.fromDateFormat),
                           style: TextStyle(fontSize: 12),
                           semanticsLabel:
                               HotelOverviewSemantics.hotel_stay_dates,

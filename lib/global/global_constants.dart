@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 
 class GlobalConstants {
+  static const String audPriceFormat = "AUD \$";
+
   static const String unknown_error =
       "Server error has occurred. Please try again later.";
   static const String network_unavailable = "No Internet connection. "
@@ -13,7 +15,7 @@ class GlobalConstants {
 
   BaseOptions getDioOptions() {
     return BaseOptions(
-      connectTimeout: sessionTimeout,
+      receiveTimeout: sessionTimeout,
     );
   }
 }
