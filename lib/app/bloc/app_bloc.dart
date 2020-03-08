@@ -60,6 +60,15 @@ class CheckSessionExpiry extends AppEvent {
   List<Object> get props => [sessionStartTime];
 }
 
+class BookingCancelled extends AppEvent {
+  final DateTime cancellationTime;
+
+  const BookingCancelled({@required this.cancellationTime});
+
+  @override
+  List<Object> get props => [cancellationTime];
+}
+
 /// ------------ State
 
 abstract class AppState extends Equatable {
@@ -108,6 +117,15 @@ class AppSessionCheckProcessed extends AppState {
   String toString() {
     return 'AppSessionCheckProcessed { $remainingDuration }';
   }
+}
+
+class BookedItineraryRefresh extends AppState {
+  final DateTime refreshTime;
+
+  BookedItineraryRefresh({@required this.refreshTime});
+
+  @override
+  List<Object> get props => [refreshTime];
 }
 
 /// ------------ Bloc
@@ -173,6 +191,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
               (userSessionTimerMaxInSeconds - timeDifference.inSeconds),
         );
       }
+    } else if (event is BookingCancelled) {
+      yield BookedItineraryRefresh(refreshTime: event.cancellationTime);
     }
   }
 

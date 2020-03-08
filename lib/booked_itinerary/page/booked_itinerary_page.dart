@@ -1,7 +1,6 @@
 import 'package:adactin_hotel_app/api/models/booked_itinerary.dart';
 import 'package:adactin_hotel_app/api/repo/booked_itinerary_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
-import 'package:adactin_hotel_app/app/page/adactin_hotel_app_page.dart';
 import 'package:adactin_hotel_app/base/hotel_overview/container/hotel_overview_container.dart';
 import 'package:adactin_hotel_app/base/hotel_overview/model/hotel_overview_data.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
@@ -49,122 +48,115 @@ class _BookedItineraryPageState extends State<BookedItineraryPage>
   void dispose() {
     _bookedItineraryBloc.close();
     _bookedItineraryBloc = null;
-    routeObserver.unsubscribe(this);
 
     super.dispose();
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    /// Observer to listen to route navigation events
-    routeObserver.unsubscribe(this);
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void didPopNext() {
-    super.didPopNext();
-
-    _fetchBookings();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocProvider(
-        create: (context) {
-          return _bookedItineraryBloc;
+      body: BlocListener(
+        bloc: widget.appBloc,
+        condition: (previous, current) {
+          return (current is BookedItineraryRefresh);
         },
-        child: SafeArea(
-          child: BlocListener<BookedItineraryBloc, BookedItineraryState>(
-            listener: (context, state) {
-              if (state is BookedItineraryFailure) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      semanticLabel: BookedItinerarySemanticKeys.failureAlert,
-                      title: Text(BookedItineraryContent.alertFailureTitle),
-                      content: Text(state.error),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Semantics(
-                            enabled: true,
-                            label:
-                                BookedItinerarySemanticKeys.failureAlertButton,
-                            child: Text(BookedItineraryContent.alertButtonOk),
+        listener: (context, state) {
+          _fetchBookings();
+        },
+        child: BlocProvider(
+          create: (context) {
+            return _bookedItineraryBloc;
+          },
+          child: SafeArea(
+            child: BlocListener<BookedItineraryBloc, BookedItineraryState>(
+              listener: (context, state) {
+                if (state is BookedItineraryFailure) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        semanticLabel: BookedItinerarySemanticKeys.failureAlert,
+                        title: Text(BookedItineraryContent.alertFailureTitle),
+                        content: Text(state.error),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Semantics(
+                              enabled: true,
+                              label: BookedItinerarySemanticKeys
+                                  .failureAlertButton,
+                              child: Text(BookedItineraryContent.alertButtonOk),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
                           ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                  barrierDismissible: false,
-                );
-              } else if (state is BookedItinerarySuccess) {
-                _bookedItineraryList = state.bookedItineraryList ?? [];
-              }
-            },
-            child: BlocBuilder<BookedItineraryBloc, BookedItineraryState>(
-              builder: (context, state) {
-                return Stack(
-                  children: <Widget>[
-                    Container(
-                      color: Colors.grey.withOpacity(0.2),
-                      child: Semantics(
-                        enabled: true,
-                        label: BookedItinerarySemanticKeys.view_container,
-                        child: Container(
-                          color: Colors.transparent,
-                          padding: const EdgeInsets.only(
-                            left: 20,
-                            right: 20,
-                          ),
-                          child: ListView.separated(
-                            itemBuilder: (context, index) {
-                              return Semantics(
-                                enabled: true,
-                                label:
-                                    '${BookedItinerarySemanticKeys.list_container}$index',
-                                child: HotelOverviewContainer(
-                                  hotelData: HotelOverviewData(
-                                    hotelData: _bookedItineraryList[index],
-                                    name: _bookedItineraryList[index].hotelName,
-                                    location:
-                                        _bookedItineraryList[index].location,
-                                    fromDate:
-                                        _bookedItineraryList[index].arrivalDate,
-                                    toDate: _bookedItineraryList[index]
-                                        .departureDate,
-                                    totalPrice:
-                                        '${globalConstants.GlobalConstants.audPriceFormat}'
-                                        '${_bookedItineraryList[index].finalPrice}',
+                        ],
+                      );
+                    },
+                    barrierDismissible: false,
+                  );
+                } else if (state is BookedItinerarySuccess) {
+                  _bookedItineraryList = state.bookedItineraryList ?? [];
+                }
+              },
+              child: BlocBuilder<BookedItineraryBloc, BookedItineraryState>(
+                builder: (context, state) {
+                  return Stack(
+                    children: <Widget>[
+                      Container(
+                        color: Colors.grey.withOpacity(0.2),
+                        child: Semantics(
+                          enabled: true,
+                          label: BookedItinerarySemanticKeys.view_container,
+                          child: Container(
+                            color: Colors.transparent,
+                            padding: const EdgeInsets.only(
+                              left: 20,
+                              right: 20,
+                            ),
+                            child: ListView.separated(
+                              itemBuilder: (context, index) {
+                                return Semantics(
+                                  enabled: true,
+                                  label:
+                                      '${BookedItinerarySemanticKeys.list_container}$index',
+                                  child: HotelOverviewContainer(
+                                    hotelData: HotelOverviewData(
+                                      hotelData: _bookedItineraryList[index],
+                                      name:
+                                          _bookedItineraryList[index].hotelName,
+                                      location:
+                                          _bookedItineraryList[index].location,
+                                      fromDate: _bookedItineraryList[index]
+                                          .arrivalDate,
+                                      toDate: _bookedItineraryList[index]
+                                          .departureDate,
+                                      totalPrice:
+                                          '${globalConstants.GlobalConstants.audPriceFormat}'
+                                          '${_bookedItineraryList[index].finalPrice}',
+                                    ),
+                                    isInitialItem: index == 0,
+                                    isLastItem: index ==
+                                        (_bookedItineraryList.length - 1),
+                                    fromDateFormat: _fromDateFormat,
                                   ),
-                                  isInitialItem: index == 0,
-                                  isLastItem: index ==
-                                      (_bookedItineraryList.length - 1),
-                                  fromDateFormat: _fromDateFormat,
-                                ),
-                              );
-                            },
-                            separatorBuilder: (context, index) {
-                              return const SizedBox(height: 10);
-                            },
-                            itemCount: _bookedItineraryList.length,
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return const SizedBox(height: 10);
+                              },
+                              itemCount: _bookedItineraryList.length,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    state is SearchInProcess
-                        ? Spinner()
-                        : const SizedBox.shrink(),
-                  ],
-                );
-              },
+                      state is SearchInProcess
+                          ? Spinner()
+                          : const SizedBox.shrink(),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         ),

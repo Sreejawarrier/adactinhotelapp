@@ -49,6 +49,11 @@ class _HotelDetailPage extends State<HotelDetailPage> {
             listener: (context, state) {
               if (state is HotelCancellationSuccessful && state.success) {
                 _checkStatusColor();
+                widget.appBloc.add(
+                  BookingCancelled(
+                    cancellationTime: DateTime.now(),
+                  ),
+                );
                 Navigator.of(context).popUntil((route) {
                   return (route.settings.name == Navigator.defaultRouteName);
                 });
