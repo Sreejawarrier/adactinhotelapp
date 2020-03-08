@@ -89,33 +89,56 @@ class AppUserChangeProcessing extends AppState {}
 class AppUserChanged extends AppState {
   final UserDetails userDetails;
   final bool sessionExpired;
+  final DateTime changedTime;
 
-  AppUserChanged({this.userDetails, this.sessionExpired = false});
+  AppUserChanged({
+    this.userDetails,
+    this.sessionExpired = false,
+    @required this.changedTime,
+  });
 
   @override
-  List<Object> get props => [userDetails, sessionExpired];
+  List<Object> get props => [userDetails, sessionExpired, changedTime];
 
   @override
   String toString() {
-    return 'AppUserChanged { $userDetails, $sessionExpired }';
+    return 'AppUserChanged { $userDetails, $sessionExpired, $changedTime }';
   }
 }
 
-class AppUserChangeFailed extends AppState {}
+class AppUserChangeFailed extends AppState {
+  final DateTime failureTime;
 
-class AppSessionCheckProcessing extends AppState {}
+  AppUserChangeFailed({@required this.failureTime});
+
+  @override
+  List<Object> get props => [failureTime];
+}
+
+class AppSessionCheckProcessing extends AppState {
+  final DateTime processingTime;
+
+  AppSessionCheckProcessing({@required this.processingTime});
+
+  @override
+  List<Object> get props => [processingTime];
+}
 
 class AppSessionCheckProcessed extends AppState {
   final int remainingDuration;
+  final DateTime processedTime;
 
-  AppSessionCheckProcessed({@required this.remainingDuration});
+  AppSessionCheckProcessed({
+    @required this.remainingDuration,
+    @required this.processedTime,
+  });
 
   @override
-  List<Object> get props => [remainingDuration];
+  List<Object> get props => [remainingDuration, processedTime];
 
   @override
   String toString() {
-    return 'AppSessionCheckProcessed { $remainingDuration }';
+    return 'AppSessionCheckProcessed { $remainingDuration, $processedTime }';
   }
 }
 
@@ -165,11 +188,12 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       yield AppUserChanged(
         userDetails: event.userDetails,
         sessionExpired: event.isSessionExpired,
+        changedTime: DateTime.now(),
       );
     } else if (event is AppUserChangeInProcess) {
       yield AppUserChangeProcessing();
     } else if (event is AppUserChangeError) {
-      yield AppUserChangeFailed();
+      yield AppUserChangeFailed(failureTime: DateTime.now());
     } else if (event is AppSessionExpired) {
       if (userDetails != null) {
         yield AppUserChangeProcessing();
@@ -178,7 +202,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         add(AppUserChange(isSessionExpired: true));
       }
     } else if (event is CheckSessionExpiry) {
-      yield AppSessionCheckProcessing();
+      yield AppSessionCheckProcessing(processingTime: DateTime.now());
 
       final Duration timeDifference =
           DateTime.now().difference(event.sessionStartTime);
@@ -189,6 +213,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         yield AppSessionCheckProcessed(
           remainingDuration:
               (userSessionTimerMaxInSeconds - timeDifference.inSeconds),
+          processedTime: DateTime.now(),
         );
       }
     } else if (event is BookingCancelled) {
