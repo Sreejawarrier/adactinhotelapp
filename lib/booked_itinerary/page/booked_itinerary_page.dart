@@ -110,35 +110,38 @@ class _BookedItineraryPageState extends State<BookedItineraryPage>
                           label: BookedItinerarySemanticKeys.view_container,
                           child: Container(
                             color: Colors.transparent,
-                            padding: const EdgeInsets.only(
-                              left: 20,
-                              right: 20,
-                            ),
                             child: ListView.separated(
                               itemBuilder: (context, index) {
                                 return Semantics(
                                   enabled: true,
                                   label:
                                       '${BookedItinerarySemanticKeys.list_container}$index',
-                                  child: HotelOverviewContainer(
-                                    hotelData: HotelOverviewData(
-                                      hotelData: _bookedItineraryList[index],
-                                      name:
-                                          _bookedItineraryList[index].hotelName,
-                                      location:
-                                          _bookedItineraryList[index].location,
-                                      fromDate: _bookedItineraryList[index]
-                                          .arrivalDate,
-                                      toDate: _bookedItineraryList[index]
-                                          .departureDate,
-                                      totalPrice:
-                                          '${globalConstants.GlobalConstants.audPriceFormat}'
-                                          '${_bookedItineraryList[index].finalPrice}',
+                                  child: Container(
+                                    color: Colors.transparent,
+                                    padding: const EdgeInsets.only(
+                                      left: 20,
+                                      right: 20,
                                     ),
-                                    isInitialItem: index == 0,
-                                    isLastItem: index ==
-                                        (_bookedItineraryList.length - 1),
-                                    fromDateFormat: _fromDateFormat,
+                                    child: HotelOverviewContainer(
+                                      hotelData: HotelOverviewData(
+                                        hotelData: _bookedItineraryList[index],
+                                        name: _bookedItineraryList[index]
+                                            .hotelName,
+                                        location: _bookedItineraryList[index]
+                                            .location,
+                                        fromDate: _bookedItineraryList[index]
+                                            .arrivalDate,
+                                        toDate: _bookedItineraryList[index]
+                                            .departureDate,
+                                        totalPrice:
+                                            '${globalConstants.GlobalConstants.audPriceFormat}'
+                                            '${_bookedItineraryList[index].finalPrice}',
+                                      ),
+                                      isInitialItem: index == 0,
+                                      isLastItem: index ==
+                                          (_bookedItineraryList.length - 1),
+                                      fromDateFormat: _fromDateFormat,
+                                    ),
                                   ),
                                 );
                               },

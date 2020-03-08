@@ -92,6 +92,10 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
                   .add(AppTabSelect(tab: AppTab.home));
             }
           } else {
+            Navigator.of(context).popUntil((route) {
+              return (route.settings.name == Navigator.defaultRouteName);
+            });
+
             _sessionTimerListener?.cancel();
             _userSessionTimer?.cancel();
             _sessionTimerListener = null;
