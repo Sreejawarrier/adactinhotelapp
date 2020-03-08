@@ -17,4 +17,12 @@ class HotelDetailContent {
   static const String totalPriceInclGST = 'Total Price (incl. GST)';
   static const String alertFailureTitle = 'Failure';
   static const String alertButtonOk = 'OK';
+  static const String alertButtonCancel = 'Cancel';
+  static const String alertSuccessTitle = 'Success';
+  static const String bookingCancellationSuccess =
+      'The booking has been cancelled';
+  static const String alertConfirmTitle = 'Confirm';
+  static const String orderIdKey = "{order_id}";
+  static const String alertCancellationConfirmMessage = "Are you sure, "
+      "you want to cancel the booking with Order no. $orderIdKey?";
 }

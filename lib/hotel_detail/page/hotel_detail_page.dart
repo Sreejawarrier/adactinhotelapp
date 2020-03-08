@@ -48,15 +48,7 @@ class _HotelDetailPage extends State<HotelDetailPage> {
           child: BlocListener<HotelDetailBloc, HotelDetailState>(
             listener: (context, state) {
               if (state is HotelCancellationSuccessful && state.success) {
-                _checkStatusColor();
-                widget.appBloc.add(
-                  BookingCancelled(
-                    cancellationTime: DateTime.now(),
-                  ),
-                );
-                Navigator.of(context).popUntil((route) {
-                  return (route.settings.name == Navigator.defaultRouteName);
-                });
+                _hotelBookingCancellationSuccessAlert(context);
               } else if (state is HotelDetailFailure) {
                 showDialog(
                   context: context,
@@ -417,11 +409,9 @@ class _HotelDetailPage extends State<HotelDetailPage> {
               arguments: widget.hotel,
             );
           } else {
-            BlocProvider.of<HotelDetailBloc>(context).add(
-              CancelHotelAction(
-                appBloc: widget.appBloc,
-                bookedItinerary: (widget.hotel as BookedItinerary),
-              ),
+            _hotelBookingCancellationConfirmationAlert(
+              context,
+              BlocProvider.of<HotelDetailBloc>(context),
             );
           }
         },
@@ -440,6 +430,87 @@ class _HotelDetailPage extends State<HotelDetailPage> {
           borderRadius: BorderRadius.circular(12),
         ),
       ),
+    );
+  }
+
+  void _hotelBookingCancellationConfirmationAlert(
+    BuildContext context,
+    HotelDetailBloc hotelDetailBloc,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          semanticLabel: HotelDetailSemantics.confirmationAlert,
+          title: Text(HotelDetailContent.alertConfirmTitle),
+          content: Text(HotelDetailContent.alertCancellationConfirmMessage
+              .replaceAll(HotelDetailContent.orderIdKey,
+                  (widget.hotel as BookedItinerary).orderId)),
+          actions: <Widget>[
+            FlatButton(
+              child: Semantics(
+                enabled: true,
+                label: HotelDetailSemantics.confirmCancelButton,
+                child: Text(HotelDetailContent.alertButtonCancel),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Semantics(
+                enabled: true,
+                label: HotelDetailSemantics.cancelBookingOkButton,
+                child: Text(HotelDetailContent.alertButtonOk),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                hotelDetailBloc.add(
+                  CancelHotelAction(
+                    appBloc: widget.appBloc,
+                    bookedItinerary: (widget.hotel as BookedItinerary),
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
+      barrierDismissible: false,
+    );
+  }
+
+  void _hotelBookingCancellationSuccessAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          semanticLabel: HotelDetailSemantics.successAlert,
+          title: Text(HotelDetailContent.alertSuccessTitle),
+          content: Text(HotelDetailContent.bookingCancellationSuccess),
+          actions: <Widget>[
+            FlatButton(
+              child: Semantics(
+                enabled: true,
+                label: HotelDetailSemantics.successAlertButton,
+                child: Text(HotelDetailContent.alertButtonOk),
+              ),
+              onPressed: () {
+                _checkStatusColor();
+                widget.appBloc.add(
+                  BookingCancelled(
+                    cancellationTime: DateTime.now(),
+                  ),
+                );
+                Navigator.of(context).popUntil((route) {
+                  return (route.settings.name == Navigator.defaultRouteName);
+                });
+              },
+            ),
+          ],
+        );
+      },
+      barrierDismissible: false,
     );
   }
 }

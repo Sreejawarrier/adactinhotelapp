@@ -110,46 +110,69 @@ class _BookedItineraryPageState extends State<BookedItineraryPage>
                           label: BookedItinerarySemanticKeys.view_container,
                           child: Container(
                             color: Colors.transparent,
-                            child: ListView.separated(
-                              itemBuilder: (context, index) {
-                                return Semantics(
-                                  enabled: true,
-                                  label:
-                                      '${BookedItinerarySemanticKeys.list_container}$index',
-                                  child: Container(
-                                    color: Colors.transparent,
-                                    padding: const EdgeInsets.only(
-                                      left: 20,
-                                      right: 20,
-                                    ),
-                                    child: HotelOverviewContainer(
-                                      hotelData: HotelOverviewData(
-                                        hotelData: _bookedItineraryList[index],
-                                        name: _bookedItineraryList[index]
-                                            .hotelName,
-                                        location: _bookedItineraryList[index]
-                                            .location,
-                                        fromDate: _bookedItineraryList[index]
-                                            .arrivalDate,
-                                        toDate: _bookedItineraryList[index]
-                                            .departureDate,
-                                        totalPrice:
-                                            '${globalConstants.GlobalConstants.audPriceFormat}'
-                                            '${_bookedItineraryList[index].finalPrice}',
+                            child: (_bookedItineraryList?.isNotEmpty == true)
+                                ? ListView.separated(
+                                    itemBuilder: (context, index) {
+                                      return Semantics(
+                                        enabled: true,
+                                        label:
+                                            '${BookedItinerarySemanticKeys.list_container}$index',
+                                        child: Container(
+                                          color: Colors.transparent,
+                                          padding: const EdgeInsets.only(
+                                            left: 20,
+                                            right: 20,
+                                          ),
+                                          child: HotelOverviewContainer(
+                                            hotelData: HotelOverviewData(
+                                              hotelData:
+                                                  _bookedItineraryList[index],
+                                              name: _bookedItineraryList[index]
+                                                  .hotelName,
+                                              location:
+                                                  _bookedItineraryList[index]
+                                                      .location,
+                                              fromDate:
+                                                  _bookedItineraryList[index]
+                                                      .arrivalDate,
+                                              toDate:
+                                                  _bookedItineraryList[index]
+                                                      .departureDate,
+                                              totalPrice:
+                                                  '${globalConstants.GlobalConstants.audPriceFormat}'
+                                                  '${_bookedItineraryList[index].finalPrice}',
+                                            ),
+                                            isInitialItem: index == 0,
+                                            isLastItem: index ==
+                                                (_bookedItineraryList.length -
+                                                    1),
+                                            fromDateFormat: _fromDateFormat,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) {
+                                      return const SizedBox(height: 10);
+                                    },
+                                    itemCount: _bookedItineraryList.length,
+                                  )
+                                : Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Center(
+                                      child: Text(
+                                        BookedItineraryContent
+                                            .emptyBookingMessage,
+                                        semanticsLabel:
+                                            BookedItinerarySemanticKeys
+                                                .empty_booking_message,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                      isInitialItem: index == 0,
-                                      isLastItem: index ==
-                                          (_bookedItineraryList.length - 1),
-                                      fromDateFormat: _fromDateFormat,
                                     ),
                                   ),
-                                );
-                              },
-                              separatorBuilder: (context, index) {
-                                return const SizedBox(height: 10);
-                              },
-                              itemCount: _bookedItineraryList.length,
-                            ),
                           ),
                         ),
                       ),
