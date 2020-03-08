@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:adactin_hotel_app/api/constants/constants.dart';
 import 'package:adactin_hotel_app/api/models/user_details.dart';
@@ -43,7 +44,24 @@ class UserRepository {
         throw globalConstants.GlobalConstants.network_unavailable;
       }
     } catch (error) {
-      throw error;
+      if (error is DioError && error.error is SocketException) {
+        if (((error.error as SocketException).osError.errorCode == 51) ||
+            ((error.error as SocketException).osError.errorCode == 8) ||
+            ((error.error as SocketException).osError.message ==
+                globalConstants.GlobalConstants.dio_error_not_known) ||
+            ((error.error as SocketException).osError.message ==
+                globalConstants.GlobalConstants.dio_error_no_internet)) {
+          throw globalConstants.GlobalConstants.network_unavailable;
+        } else if (error.type == DioErrorType.CONNECT_TIMEOUT ||
+            error.type == DioErrorType.SEND_TIMEOUT ||
+            error.type == DioErrorType.RECEIVE_TIMEOUT) {
+          throw globalConstants.GlobalConstants.sessionTimeout;
+        } else {
+          throw globalConstants.GlobalConstants.unknown_error;
+        }
+      } else {
+        throw globalConstants.GlobalConstants.unknown_error;
+      }
     }
   }
 
@@ -64,7 +82,24 @@ class UserRepository {
               Constants.logOutSuccessResponse) ||
           (data[Constants.errorResponseKey] == Constants.logOutSessionExpired));
     } catch (error) {
-      throw error;
+      if (error is DioError && error.error is SocketException) {
+        if (((error.error as SocketException).osError.errorCode == 51) ||
+            ((error.error as SocketException).osError.errorCode == 8) ||
+            ((error.error as SocketException).osError.message ==
+                globalConstants.GlobalConstants.dio_error_not_known) ||
+            ((error.error as SocketException).osError.message ==
+                globalConstants.GlobalConstants.dio_error_no_internet)) {
+          throw globalConstants.GlobalConstants.network_unavailable;
+        } else if (error.type == DioErrorType.CONNECT_TIMEOUT ||
+            error.type == DioErrorType.SEND_TIMEOUT ||
+            error.type == DioErrorType.RECEIVE_TIMEOUT) {
+          throw globalConstants.GlobalConstants.sessionTimeout;
+        } else {
+          throw globalConstants.GlobalConstants.unknown_error;
+        }
+      } else {
+        throw globalConstants.GlobalConstants.unknown_error;
+      }
     }
   }
 }

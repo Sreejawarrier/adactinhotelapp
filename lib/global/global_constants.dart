@@ -10,6 +10,10 @@ class GlobalConstants {
   static const String timeout_error = "Response has timed out. "
       "Please try again.";
 
+  static const String dio_error_not_known =
+      "nodename nor servname provided, or not known";
+  static const String dio_error_no_internet = "Network is unreachable";
+
   static const int sessionTimeout = 60; // Session timeout
   static const int spinnerTimeout = 60;
 
