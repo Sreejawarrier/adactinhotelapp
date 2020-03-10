@@ -17,6 +17,11 @@ import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:quiver/async.dart';
 
 class AppContainerWidget extends StatefulWidget {
+  final AppBloc appBloc;
+  final AppTabBloc appTabBloc;
+
+  AppContainerWidget({@required this.appBloc, @required this.appTabBloc});
+
   @override
   State<StatefulWidget> createState() => _AppContainerWidgetState();
 }
@@ -58,8 +63,8 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
 
     _appLifecycleState = state;
     if (state == AppLifecycleState.resumed &&
-        BlocProvider.of<AppBloc>(context)?.userDetails != null) {
-      BlocProvider.of<AppBloc>(context).add(
+        widget.appBloc.userDetails != null) {
+      widget.appBloc.add(
         CheckSessionExpiry(sessionStartTime: _userSessionStartTime),
       );
     } else if (_userSessionTimer?.isRunning == true) {
@@ -73,7 +78,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
     _ffNavBarItemList = _getFFNavBarItems();
 
     return BlocListener(
-      bloc: BlocProvider.of<AppBloc>(context),
+      bloc: widget.appBloc,
       listener: (BuildContext context, AppState state) {
         if (state is AppUserChanged) {
           if (state.userDetails != null) {
@@ -84,12 +89,11 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
               /// Creation of session timer
               _createSessionCountdown(
                 context,
-                BlocProvider.of<AppBloc>(context).userSessionTimerMaxInSeconds,
+                widget.appBloc.userSessionTimerMaxInSeconds,
               );
 
               _setStatusBarColor(0);
-              BlocProvider.of<AppTabBloc>(context)
-                  .add(AppTabSelect(tab: AppTab.home));
+              widget.appTabBloc.add(AppTabSelect(tab: AppTab.home));
             }
           } else {
             Navigator.of(context).popUntil((route) {
@@ -102,13 +106,11 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
             _userSessionTimer = null;
 
             _setStatusBarColor(2);
-            BlocProvider.of<AppTabBloc>(context)
-                .add(AppTabSelect(tab: AppTab.account));
+            widget.appTabBloc.add(AppTabSelect(tab: AppTab.account));
           }
         } else if (state is AppStarted) {
           _setStatusBarColor(2);
-          BlocProvider.of<AppTabBloc>(context)
-              .add(AppTabSelect(tab: AppTab.account));
+          widget.appTabBloc.add(AppTabSelect(tab: AppTab.account));
         } else if (state is AppSessionCheckProcessed) {
           /// Creation of session timer
           _createSessionCountdown(
@@ -118,19 +120,19 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
         }
       },
       child: BlocBuilder(
-        bloc: BlocProvider.of<AppBloc>(context),
+        bloc: widget.appBloc,
         builder: (BuildContext context, AppState appState) {
           if (appState is AppLoading) {
             return _appLoadingWidget();
           }
 
           return BlocBuilder(
-            bloc: BlocProvider.of<AppTabBloc>(context),
+            bloc: widget.appTabBloc,
             builder: (BuildContext context, AppTabState appTabState) {
               _selectedTabIndex = _getAppTabIndex(appTabState);
               _appBottomNavTabBloc.add(
                 BottomNavTabDisplay(
-                  appBloc: BlocProvider.of<AppBloc>(context),
+                  appBloc: widget.appBloc,
                   currentTab: _getAppTab(_selectedTabIndex),
                 ),
               );
@@ -225,9 +227,8 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
       Navigator.of(context).popUntil((route) {
         return (route.settings.name == Navigator.defaultRouteName);
       });
-      BlocProvider.of<AppTabBloc>(context)
-          .add(AppTabSelect(tab: AppTab.account));
-      BlocProvider.of<AppBloc>(context).add(AppSessionExpired());
+      widget.appTabBloc.add(AppTabSelect(tab: AppTab.account));
+      widget.appBloc.add(AppSessionExpired());
     });
   }
 
@@ -281,9 +282,9 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
   /// Returns the list of widgets which we will be showing for a tab bar
   List<Widget> _getTabViews(BuildContext context) {
     return [
-      HomePage(appBloc: BlocProvider.of<AppBloc>(context)),
-      BookedItineraryPage(appBloc: BlocProvider.of<AppBloc>(context)),
-      LoginPage(appBloc: BlocProvider.of<AppBloc>(context)),
+      HomePage(appBloc: widget.appBloc),
+      BookedItineraryPage(appBloc: widget.appBloc),
+      LoginPage(appBloc: widget.appBloc),
     ];
   }
 
@@ -324,10 +325,9 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
         selectedIndex: _selectedTabIndex,
         items: _ffNavBarItemList,
         onSelectTab: (index) {
-          if (BlocProvider.of<AppBloc>(context).userDetails != null) {
+          if (widget.appBloc.userDetails != null) {
             DefaultTabController.of(context).index = index;
-            BlocProvider.of<AppTabBloc>(context)
-                .add(AppTabSelect(tab: _getAppTab(index)));
+            widget.appTabBloc.add(AppTabSelect(tab: _getAppTab(index)));
           } else if (index != 2) {
             _displaySnackBar(
               context,

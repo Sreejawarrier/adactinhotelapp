@@ -50,7 +50,10 @@ class _AdactinHotelAppPageState extends State<AdactinHotelAppPage> {
           primaryColorBrightness: Brightness.dark,
           cursorColor: Palette.primaryColor,
         ),
-        home: AppContainerWidget(),
+        home: AppContainerWidget(
+          appBloc: widget.appBloc,
+          appTabBloc: widget.appTabBloc,
+        ),
         navigatorObservers: [routeObserver],
         onGenerateRoute: (RouteSettings settings) {
           Widget screen;

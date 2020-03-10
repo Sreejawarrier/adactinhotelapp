@@ -77,7 +77,8 @@ class _BookHotelPageState extends State<BookHotelPage> {
     _creditCardTypeTextFieldFocusNode.removeListener(_ccTypeFieldInputDisplay);
     _creditCardTypeTextFieldFocusNode.dispose();
     _expiryDateTextFieldController.dispose();
-    _expiryDateTextFieldFocusNode.removeListener(_expiryDateTypeFieldInputDisplay);
+    _expiryDateTextFieldFocusNode
+        .removeListener(_expiryDateTypeFieldInputDisplay);
     _expiryDateTextFieldFocusNode.dispose();
     _cvvTextFieldController.dispose();
     _cvvTextFieldFocusNode.dispose();
