@@ -10,11 +10,9 @@ class Spinner extends StatefulWidget {
   final Color spinnerColor;
   final Color backgroundColor;
   final double backgroundOpacity;
-  final String title;
 
   Spinner({
     Key key,
-    this.title = '',
     this.spinnerColor = Palette.primaryColor,
     this.backgroundColor = Colors.grey,
     this.backgroundOpacity = 0.5,
@@ -66,22 +64,9 @@ class _SpinnerState extends State<Spinner> {
                   height: MediaQuery.of(context).size.height,
                   color: widget.backgroundColor
                       .withOpacity(widget.backgroundOpacity),
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: SpinKitWanderingCubes(
-                          color: widget.spinnerColor,
-                          size: 60,
-                        ),
-                      ),
-                      Text(
-                        widget.title,
-                        style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      )
-                    ],
+                  child: SpinKitWanderingCubes(
+                    color: widget.spinnerColor,
+                    size: 60,
                   ),
                 ),
               ),

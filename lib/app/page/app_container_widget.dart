@@ -200,7 +200,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
                   ),
                   (appState is AppUserChangeProcessing ||
                           appState is AppSessionCheckProcessing)
-                      ? Spinner(title: 'AppContainerWidget - $appState')
+                      ? Spinner()
                       : const SizedBox.shrink(),
                 ],
               );
@@ -237,7 +237,6 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
     return Stack(
       children: <Widget>[
         Spinner(
-          title: 'AppLoading Spinner',
           spinnerColor: Colors.white,
           backgroundColor: Palette.primaryColor,
           backgroundOpacity: 1,

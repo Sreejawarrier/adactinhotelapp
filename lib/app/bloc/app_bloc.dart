@@ -205,7 +205,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       yield AppSessionCheckProcessing(processingTime: DateTime.now());
 
       if (event.sessionStartTime == null) {
-        add(AppUserChange(isSessionExpired: true));
+        add(AppUserChange());
       } else {
         final Duration timeDifference =
             DateTime.now().difference(event.sessionStartTime);
