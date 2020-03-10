@@ -147,7 +147,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
                     ),
                   ),
                   state is BookingInProcess
-                      ? Spinner()
+                      ? Spinner(title: 'Book hotel page')
                       : const SizedBox.shrink(),
                 ],
               );

@@ -177,7 +177,7 @@ class _BookedItineraryPageState extends State<BookedItineraryPage>
                         ),
                       ),
                       state is SearchInProcess
-                          ? Spinner()
+                          ? Spinner(title: 'Booked itinerary page')
                           : const SizedBox.shrink(),
                     ],
                   );

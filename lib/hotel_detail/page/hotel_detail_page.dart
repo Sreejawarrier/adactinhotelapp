@@ -89,7 +89,7 @@ class _HotelDetailPage extends State<HotelDetailPage> {
                       ),
                     ),
                     state is CallInProgress
-                        ? Spinner()
+                        ? Spinner(title: 'Hotel detail page')
                         : const SizedBox.shrink(),
                   ],
                 );
