@@ -116,6 +116,8 @@ class HotelSearchRepository {
         } else {
           throw globalConstants.GlobalConstants.unknown_error;
         }
+      } else if (error is String) {
+        throw error;
       } else {
         throw globalConstants.GlobalConstants.unknown_error;
       }
