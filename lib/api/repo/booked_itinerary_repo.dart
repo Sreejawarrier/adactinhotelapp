@@ -34,24 +34,29 @@ class BookedItineraryRepository {
 
         final Map<String, dynamic> data = json.decode(response.toString());
 
-        if (data != null && data.isNotEmpty) {
-          Map<String, dynamic> bookedItinerariesResponseMap =
+        if (data != null &&
+            data.isNotEmpty &&
+            data.containsKey(Constants.bookedItinerarySearchSuccessKey)) {
+          dynamic bookedItinerariesResponse =
               data[Constants.bookedItinerarySearchSuccessKey];
-          if (bookedItinerariesResponseMap?.isNotEmpty == true) {
-            List<BookedItinerary> resultDataList = [];
-            for (int i = 1; i <= bookedItinerariesResponseMap.length; i++) {
+          List<BookedItinerary> resultDataList = [];
+
+          if (bookedItinerariesResponse is Map<String, dynamic> &&
+              bookedItinerariesResponse.isNotEmpty) {
+            for (int i = 1; i <= bookedItinerariesResponse.length; i++) {
               final String mapKey =
                   "${Constants.bookedItineraryResultValueKey}$i";
-              if (bookedItinerariesResponseMap.containsKey(mapKey)) {
+              if (bookedItinerariesResponse.containsKey(mapKey)) {
                 resultDataList.add(
                   BookedItinerary.fromJson(
-                    bookedItinerariesResponseMap[mapKey],
+                    bookedItinerariesResponse[mapKey],
                   ),
                 );
               }
             }
-            return resultDataList;
           }
+
+          return resultDataList;
         }
 
         if (data.containsKey(Constants.errorFieldValidationsKey)) {

@@ -14,8 +14,10 @@ class UserRepository {
       final bool isConnected = await AppConnectivity.isConnected();
       if (isConnected) {
         String logInUrl = Constants.baseURL + Constants.loginURL;
-        logInUrl = logInUrl.replaceAll(Constants.usernameKey, username);
-        logInUrl = logInUrl.replaceAll(Constants.passwordKey, password);
+        final String encodedUserName = base64.encode(utf8.encode('$username'));
+        final String encodedPassword = base64.encode(utf8.encode('$password'));
+        logInUrl = logInUrl.replaceAll(Constants.usernameKey, encodedUserName);
+        logInUrl = logInUrl.replaceAll(Constants.passwordKey, encodedPassword);
 
         final String encodedUrl = Uri.encodeFull(logInUrl);
         print('UserRepository - authenticate - url - $encodedUrl');

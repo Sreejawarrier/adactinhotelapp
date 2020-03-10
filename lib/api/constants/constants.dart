@@ -14,8 +14,8 @@ class Constants {
   static const String usernameKey = "{username}";
   static const String passwordKey = "{password}";
 
-  static const String loginURL = "checkLogin&username=$usernameKey&"
-      "password=$passwordKey";
+  static const String loginURL =
+      "checkSecureLogin&secureUsername=$usernameKey&securePassword=$passwordKey";
 
   static const String loginSuccessTokenKey = "Token";
   static const String errorFieldValidationDescription =
