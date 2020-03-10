@@ -200,9 +200,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
                   ),
                   (appState is AppUserChangeProcessing ||
                           appState is AppSessionCheckProcessing)
-                      ? Spinner(
-                          title:
-                              'AppContainerWidget - AppUserChangeProcessing Or AppSessionCheckProcessing')
+                      ? Spinner(title: 'AppContainerWidget - $appState')
                       : const SizedBox.shrink(),
                 ],
               );

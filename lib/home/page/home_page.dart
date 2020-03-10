@@ -173,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     state is SearchInProcess
-                        ? Spinner(title: 'Home page')
+                        ? Spinner()
                         : const SizedBox.shrink(),
                   ],
                 );

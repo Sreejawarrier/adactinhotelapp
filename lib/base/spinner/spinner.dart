@@ -14,7 +14,7 @@ class Spinner extends StatefulWidget {
 
   Spinner({
     Key key,
-    @required this.title,
+    this.title = '',
     this.spinnerColor = Palette.primaryColor,
     this.backgroundColor = Colors.grey,
     this.backgroundOpacity = 0.5,
