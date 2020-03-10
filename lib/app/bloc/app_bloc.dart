@@ -204,17 +204,21 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     } else if (event is CheckSessionExpiry) {
       yield AppSessionCheckProcessing(processingTime: DateTime.now());
 
-      final Duration timeDifference =
-          DateTime.now().difference(event.sessionStartTime);
-      if (timeDifference.inSeconds > userSessionTimerMaxInSeconds) {
-        await _logOutUser();
+      if (event.sessionStartTime == null) {
         add(AppUserChange(isSessionExpired: true));
       } else {
-        yield AppSessionCheckProcessed(
-          remainingDuration:
-              (userSessionTimerMaxInSeconds - timeDifference.inSeconds),
-          processedTime: DateTime.now(),
-        );
+        final Duration timeDifference =
+            DateTime.now().difference(event.sessionStartTime);
+        if (timeDifference.inSeconds > userSessionTimerMaxInSeconds) {
+          await _logOutUser();
+          add(AppUserChange(isSessionExpired: true));
+        } else {
+          yield AppSessionCheckProcessed(
+            remainingDuration:
+                (userSessionTimerMaxInSeconds - timeDifference.inSeconds),
+            processedTime: DateTime.now(),
+          );
+        }
       }
     } else if (event is BookingCancelled) {
       yield BookedItineraryRefresh(refreshTime: event.cancellationTime);
