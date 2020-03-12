@@ -1,6 +1,7 @@
 import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
 import 'package:adactin_hotel_app/base/hotel_overview/container/hotel_overview_container.dart';
 import 'package:adactin_hotel_app/base/hotel_overview/model/hotel_overview_data.dart';
+import 'package:adactin_hotel_app/global/global_constants.dart';
 import 'package:adactin_hotel_app/hotels_search_list/constants/hotels_search_list_page_content.dart';
 import 'package:adactin_hotel_app/hotels_search_list/constants/hotels_search_list_page_semantics.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,8 @@ class HotelsSearchListPage extends StatefulWidget {
 }
 
 class _HotelsSearchListPageState extends State<HotelsSearchListPage> {
-  final DateFormat _fromDateFormat = DateFormat('dd-MM-yyyy');
+  final DateFormat _fromDateFormat =
+      DateFormat(GlobalConstants.dateFormat_ddMMyyyy);
 
   @override
   Widget build(BuildContext context) {

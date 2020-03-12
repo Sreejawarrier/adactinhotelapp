@@ -426,6 +426,7 @@ class _HotelDetailPage extends State<HotelDetailPage> {
           vertical: 22,
         ),
         color: Palette.primaryColor,
+        highlightColor: Colors.blueGrey,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),

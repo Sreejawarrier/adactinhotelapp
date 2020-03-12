@@ -4,6 +4,7 @@ import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/routes/app_routes.dart';
 import 'package:adactin_hotel_app/base/ensure_visible_when_focused/ensure_visible_when_focused.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
+import 'package:adactin_hotel_app/global/global_constants.dart';
 import 'package:adactin_hotel_app/home/bloc/home_bloc.dart';
 import 'package:adactin_hotel_app/home/constants/home_content.dart';
 import 'package:adactin_hotel_app/home/constants/home_semantic_keys.dart';
@@ -209,6 +210,60 @@ class _HomePageState extends State<HomePage> {
   /// --- --- --- Search Form --- --- ---
 
   Widget _getHotelSearchForm(BuildContext context) {
+    final List<Widget> formWidgetItems = [];
+    if (widget.appBloc?.userDetails?.username?.isNotEmpty == true) {
+      formWidgetItems.addAll([
+        const SizedBox(height: 2),
+        _getWelcomeMessage(),
+        const SizedBox(height: 18),
+      ]);
+    } else {
+      formWidgetItems.addAll([
+        const SizedBox(height: 20),
+      ]);
+    }
+
+    formWidgetItems.addAll([
+      _getFormTitle(),
+      const SizedBox(height: 20),
+      _getLocationLabel(context),
+      const SizedBox(height: 6),
+      _getLocationFormField(context),
+      const SizedBox(height: 20),
+      _getHotelsLabel(context),
+      const SizedBox(height: 6),
+      _getHotelsFormField(context),
+      const SizedBox(height: 20),
+      _getRoomTypeLabel(context),
+      const SizedBox(height: 6),
+      _getRoomTypeFormField(context),
+      const SizedBox(height: 18),
+      _getNumberOfRoomsLabel(context),
+      const SizedBox(height: 6),
+      _getNumberOfRoomsFormField(context),
+      const SizedBox(height: 18),
+      _getCheckInDateLabel(context),
+      const SizedBox(height: 6),
+      _getCheckInDateFormField(context),
+      const SizedBox(height: 18),
+      _getCheckOutDateLabel(context),
+      const SizedBox(height: 6),
+      _getCheckOutDateFormField(context),
+      const SizedBox(height: 18),
+      _getAdultsPerRoomLabel(context),
+      const SizedBox(height: 6),
+      _getAdultsPerRoomFormField(context),
+      const SizedBox(height: 20),
+      _getChildrenPerRoomLabel(context),
+      const SizedBox(height: 6),
+      _getChildrenPerRoomFormField(context),
+      const SizedBox(height: 20),
+      _getButtons(context),
+      const SizedBox(height: 10),
+      _getMandatoryMessage(context),
+      const SizedBox(height: 40),
+    ]);
+
     return Form(
       key: _formKey,
       autovalidate: false,
@@ -216,49 +271,7 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            const SizedBox(height: 2),
-            _getWelcomeMessage(),
-            const SizedBox(height: 18),
-            _getFormTitle(),
-            const SizedBox(height: 20),
-            _getLocationLabel(context),
-            const SizedBox(height: 6),
-            _getLocationFormField(context),
-            const SizedBox(height: 20),
-            _getHotelsLabel(context),
-            const SizedBox(height: 6),
-            _getHotelsFormField(context),
-            const SizedBox(height: 20),
-            _getRoomTypeLabel(context),
-            const SizedBox(height: 6),
-            _getRoomTypeFormField(context),
-            const SizedBox(height: 18),
-            _getNumberOfRoomsLabel(context),
-            const SizedBox(height: 6),
-            _getNumberOfRoomsFormField(context),
-            const SizedBox(height: 18),
-            _getCheckInDateLabel(context),
-            const SizedBox(height: 6),
-            _getCheckInDateFormField(context),
-            const SizedBox(height: 18),
-            _getCheckOutDateLabel(context),
-            const SizedBox(height: 6),
-            _getCheckOutDateFormField(context),
-            const SizedBox(height: 18),
-            _getAdultsPerRoomLabel(context),
-            const SizedBox(height: 6),
-            _getAdultsPerRoomFormField(context),
-            const SizedBox(height: 20),
-            _getChildrenPerRoomLabel(context),
-            const SizedBox(height: 6),
-            _getChildrenPerRoomFormField(context),
-            const SizedBox(height: 20),
-            _getButtons(context),
-            const SizedBox(height: 10),
-            _getMandatoryMessage(context),
-            const SizedBox(height: 40),
-          ],
+          children: formWidgetItems,
         ),
       ),
     );
@@ -751,6 +764,7 @@ class _HomePageState extends State<HomePage> {
               borderRadius: BorderRadius.circular(12),
             ),
             color: Palette.primaryColor,
+            highlightColor: Colors.blueGrey,
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               HomeContent.cancel,
@@ -774,7 +788,7 @@ class _HomePageState extends State<HomePage> {
       context,
       minDateTime: minDate,
       maxDateTime: maxDate,
-      dateFormat: 'dd-MM-yyyy',
+      dateFormat: GlobalConstants.dateFormat_ddMMyyyy,
       initialDateTime: (textEditingController.text?.isEmpty == true)
           ? DateTime.now()
           : _dateFormat.parse(textEditingController.text),
@@ -847,6 +861,7 @@ class _HomePageState extends State<HomePage> {
           vertical: 22,
         ),
         color: color,
+        highlightColor: Colors.blueGrey,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );

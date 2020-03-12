@@ -5,7 +5,8 @@ import 'package:intl/intl.dart';
 
 class HotelSearchResult extends Equatable {
   final DateFormat _displayDateFormat = DateFormat('dd/MM/yyyy');
-  final DateFormat _responseDateFormat = DateFormat('dd-MM-yyyy');
+  final DateFormat _responseDateFormat =
+      DateFormat(globalConstants.GlobalConstants.dateFormat_ddMMyyyy);
 
   final String hotelName;
   final String location;

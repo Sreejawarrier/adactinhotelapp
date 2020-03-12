@@ -289,6 +289,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
           vertical: 22,
         ),
         color: Palette.primaryColor,
+        highlightColor: Colors.blueGrey,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),

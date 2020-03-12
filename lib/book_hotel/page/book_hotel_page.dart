@@ -473,6 +473,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
           vertical: 22,
         ),
         color: color,
+        highlightColor: Colors.blueGrey,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
@@ -788,6 +789,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
               borderRadius: BorderRadius.circular(12),
             ),
             color: Palette.primaryColor,
+            highlightColor: Colors.blueGrey,
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               BookHotelContent.cancel,

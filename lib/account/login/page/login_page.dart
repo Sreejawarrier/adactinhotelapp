@@ -266,6 +266,7 @@ class _LoginPageState extends State<LoginPage> {
           vertical: 22,
         ),
         color: Palette.primaryColor,
+        highlightColor: Colors.blueGrey,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -374,6 +375,7 @@ class _LoginPageState extends State<LoginPage> {
           vertical: 22,
         ),
         color: Palette.primaryColor,
+        highlightColor: Colors.blueGrey,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
