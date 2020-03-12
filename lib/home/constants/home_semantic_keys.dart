@@ -1,4 +1,5 @@
 class HomeSemanticKeys {
+  static const String welcome_user = 'welcome_user';
   static const String logo = 'home_screen_logo';
   static const String searchHotel = 'search_hotel';
   static const String location = 'location_key';

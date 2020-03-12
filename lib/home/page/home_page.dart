@@ -217,8 +217,11 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            _getFormTitle(),
+            const SizedBox(height: 2),
+            _getWelcomeMessage(),
             const SizedBox(height: 18),
+            _getFormTitle(),
+            const SizedBox(height: 20),
             _getLocationLabel(context),
             const SizedBox(height: 6),
             _getLocationFormField(context),
@@ -261,11 +264,30 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  /// --- --- --- Welcome message --- --- ---
+
+  Widget _getWelcomeMessage() {
+    return Text(
+      HomeContent.welcomeMessage.replaceAll(
+        HomeContent.welcomeUserNameKey,
+        widget.appBloc.userDetails.username,
+      ),
+      textAlign: TextAlign.left,
+      semanticsLabel: HomeSemanticKeys.welcome_user,
+      style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Palette.primaryColor,
+      ),
+    );
+  }
+
   /// --- --- --- Form title --- --- ---
 
   Widget _getFormTitle() {
     return Text(
       HomeContent.searchHotel,
+      semanticsLabel: HomeSemanticKeys.searchHotel,
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 18,

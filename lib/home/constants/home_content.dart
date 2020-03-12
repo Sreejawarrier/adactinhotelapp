@@ -1,4 +1,6 @@
 class HomeContent {
+  static const String welcomeUserNameKey = "{{user_name}}";
+  static const String welcomeMessage = 'Welcome, $welcomeUserNameKey';
   static const String searchHotel = 'Search Hotel';
   static const String location = 'Location';
   static const String locationHint = 'Select Location';
