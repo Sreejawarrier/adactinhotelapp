@@ -12,10 +12,10 @@ class BookHotelContent {
   static const String firstName = 'First Name';
   static const String lastName = 'Last Name';
   static const String billingAddress = 'Billing Address';
-  static const String creditCardNo = 'Credit Card No.';
-  static const String creditCardType = 'Credit Card Type';
+  static const String creditCardNo = 'Dummy CC Number';
+  static const String creditCardType = 'Dummy CC Type';
   static const String expiryDate = 'Expiry Date';
-  static const String cvvNumber = 'CVV Number';
+  static const String cvvNumber = 'Dummy CVV Number';
   static const String bookNow = 'Book Now';
   static const String firstNameHint = 'Enter First Name';
   static const String lastNameHint = 'Enter Last Name';
