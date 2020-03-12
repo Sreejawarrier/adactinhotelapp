@@ -313,6 +313,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
   Widget _getBottomNavBar(BuildContext context) {
     return Semantics(
       enabled: true,
+      explicitChildNodes: true,
       label: AppSemanticKeys.bottomNavigationBar,
       child: FFNavigationBar(
         theme: FFNavigationBarTheme(
@@ -372,6 +373,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
       content: Semantics(
         label: semanticKey,
         enabled: true,
+        explicitChildNodes: true,
         child: Text(info),
       ),
     );

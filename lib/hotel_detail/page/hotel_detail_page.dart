@@ -61,6 +61,7 @@ class _HotelDetailPage extends State<HotelDetailPage> {
                         FlatButton(
                           child: Semantics(
                             enabled: true,
+                            explicitChildNodes: true,
                             label: HotelDetailSemantics.failureAlertButton,
                             child: Text(HotelDetailContent.alertButtonOk),
                           ),
@@ -144,6 +145,7 @@ class _HotelDetailPage extends State<HotelDetailPage> {
 
     return Semantics(
       enabled: true,
+      explicitChildNodes: true,
       child: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 24, right: 24),
         child: Column(
@@ -344,6 +346,7 @@ class _HotelDetailPage extends State<HotelDetailPage> {
   Widget _getLabel(BuildContext context, String label) {
     return Semantics(
       enabled: true,
+      explicitChildNodes: true,
       label: label,
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -369,6 +372,7 @@ class _HotelDetailPage extends State<HotelDetailPage> {
     return Semantics(
       label: semanticLabel,
       enabled: true,
+      explicitChildNodes: true,
       child: Container(
         width: MediaQuery.of(context).size.width,
         child: Text(
@@ -401,6 +405,7 @@ class _HotelDetailPage extends State<HotelDetailPage> {
           ? HotelDetailSemantics.continueButton
           : HotelDetailSemantics.cancelButton,
       enabled: true,
+      explicitChildNodes: true,
       child: RaisedButton(
         onPressed: () {
           if (widget.hotel is HotelSearchResult) {
@@ -451,6 +456,7 @@ class _HotelDetailPage extends State<HotelDetailPage> {
             FlatButton(
               child: Semantics(
                 enabled: true,
+                explicitChildNodes: true,
                 label: HotelDetailSemantics.confirmCancelButton,
                 child: Text(HotelDetailContent.alertButtonCancel),
               ),
@@ -461,6 +467,7 @@ class _HotelDetailPage extends State<HotelDetailPage> {
             FlatButton(
               child: Semantics(
                 enabled: true,
+                explicitChildNodes: true,
                 label: HotelDetailSemantics.cancelBookingOkButton,
                 child: Text(HotelDetailContent.alertButtonOk),
               ),
@@ -493,6 +500,7 @@ class _HotelDetailPage extends State<HotelDetailPage> {
             FlatButton(
               child: Semantics(
                 enabled: true,
+                explicitChildNodes: true,
                 label: HotelDetailSemantics.successAlertButton,
                 child: Text(HotelDetailContent.alertButtonOk),
               ),

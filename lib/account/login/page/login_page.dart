@@ -82,6 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                         FlatButton(
                           child: Semantics(
                             enabled: true,
+                            explicitChildNodes: true,
                             label: LoginSemanticKeys.failureAlertButton,
                             child: Text(LoginContent.alertButtonOk),
                           ),
@@ -160,6 +161,7 @@ class _LoginPageState extends State<LoginPage> {
     return Semantics(
       label: LoginSemanticKeys.logo,
       enabled: true,
+      explicitChildNodes: true,
       child: SvgPicture.asset(
         Images.logoSVG,
         width: 180,
@@ -172,6 +174,7 @@ class _LoginPageState extends State<LoginPage> {
     return Semantics(
       label: LoginSemanticKeys.userName,
       enabled: true,
+      explicitChildNodes: true,
       child: TextFormField(
         controller: _usernameTextFieldController,
         focusNode: _usernameTextFieldFocusNode,
@@ -207,6 +210,7 @@ class _LoginPageState extends State<LoginPage> {
     return Semantics(
       label: LoginSemanticKeys.password,
       enabled: true,
+      explicitChildNodes: true,
       child: TextFormField(
         controller: _passwordTextFieldController,
         focusNode: _passwordTextFieldFocusNode,
@@ -242,6 +246,7 @@ class _LoginPageState extends State<LoginPage> {
     return Semantics(
       label: LoginSemanticKeys.loginButton,
       enabled: true,
+      explicitChildNodes: true,
       child: RaisedButton(
         onPressed: () {
           _removeFocus();
@@ -278,6 +283,7 @@ class _LoginPageState extends State<LoginPage> {
     return Semantics(
       label: LoginSemanticKeys.forgotPassword,
       enabled: true,
+      explicitChildNodes: true,
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
@@ -300,6 +306,7 @@ class _LoginPageState extends State<LoginPage> {
     return Semantics(
       label: LoginSemanticKeys.signUp,
       enabled: true,
+      explicitChildNodes: true,
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
@@ -334,6 +341,7 @@ class _LoginPageState extends State<LoginPage> {
     return Semantics(
       label: LoginSemanticKeys.user,
       enabled: true,
+      explicitChildNodes: true,
       child: TextField(
         enabled: false,
         controller: _userTextFieldController,
@@ -359,6 +367,7 @@ class _LoginPageState extends State<LoginPage> {
     return Semantics(
       label: LoginSemanticKeys.logoutButton,
       enabled: true,
+      explicitChildNodes: true,
       child: RaisedButton(
         onPressed: () {
           widget.appBloc.add(AppUserChangeInProcess());
@@ -401,6 +410,7 @@ class _LoginPageState extends State<LoginPage> {
               FlatButton(
                 child: Semantics(
                   enabled: true,
+                  explicitChildNodes: true,
                   label: LoginSemanticKeys.failureAlertButton,
                   child: Text(LoginContent.alertButtonOk),
                 ),

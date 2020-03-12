@@ -82,6 +82,7 @@ class _BookedItineraryPageState extends State<BookedItineraryPage>
                           FlatButton(
                             child: Semantics(
                               enabled: true,
+                              explicitChildNodes: true,
                               label: BookedItinerarySemanticKeys
                                   .failureAlertButton,
                               child: Text(BookedItineraryContent.alertButtonOk),
@@ -107,6 +108,7 @@ class _BookedItineraryPageState extends State<BookedItineraryPage>
                         color: Colors.grey.withOpacity(0.2),
                         child: Semantics(
                           enabled: true,
+                          explicitChildNodes: true,
                           label: BookedItinerarySemanticKeys.view_container,
                           child: Container(
                             color: Colors.transparent,
@@ -115,6 +117,7 @@ class _BookedItineraryPageState extends State<BookedItineraryPage>
                                     itemBuilder: (context, index) {
                                       return Semantics(
                                         enabled: true,
+                                        explicitChildNodes: true,
                                         label:
                                             '${BookedItinerarySemanticKeys.list_container}$index',
                                         child: Container(

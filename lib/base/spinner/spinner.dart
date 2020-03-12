@@ -58,6 +58,7 @@ class _SpinnerState extends State<Spinner> {
             child: Semantics(
               label: spinner_semantics,
               enabled: true,
+              explicitChildNodes: true,
               child: Center(
                 child: Container(
                   width: MediaQuery.of(context).size.width,

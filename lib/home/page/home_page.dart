@@ -147,6 +147,7 @@ class _HomePageState extends State<HomePage> {
                         FlatButton(
                           child: Semantics(
                             enabled: true,
+                            explicitChildNodes: true,
                             label: HomeSemanticKeys.failureAlertButton,
                             child: Text(HomeContent.alertButtonOk),
                           ),
@@ -196,6 +197,7 @@ class _HomePageState extends State<HomePage> {
         flexibleSpace: Semantics(
           label: HomeSemanticKeys.logo,
           enabled: true,
+          explicitChildNodes: true,
           child: SvgPicture.asset(
             Images.logoSVGWhite,
             width: appBarContentHeight,
@@ -570,6 +572,7 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.only(left: 10),
       child: Semantics(
         enabled: true,
+        explicitChildNodes: true,
         label: label,
         child: RichText(
           text: TextSpan(
@@ -610,6 +613,7 @@ class _HomePageState extends State<HomePage> {
     return Semantics(
       label: semanticLabel,
       enabled: true,
+      explicitChildNodes: true,
       child: EnsureVisibleWhenFocused(
         focusNode: textFocusNode,
         child: TextFormField(
@@ -652,6 +656,7 @@ class _HomePageState extends State<HomePage> {
       builder: (context) {
         return Semantics(
           enabled: true,
+          explicitChildNodes: true,
           label: HomeSemanticKeys.bottomSheet,
           child: Container(
             color: Color(0xFF737373),
@@ -682,6 +687,7 @@ class _HomePageState extends State<HomePage> {
   ) {
     return Semantics(
       enabled: true,
+      explicitChildNodes: true,
       label: HomeSemanticKeys.bottomSheetOptionsColumn,
       child: Column(
         children: <Widget>[
@@ -722,6 +728,7 @@ class _HomePageState extends State<HomePage> {
           .map(
             (value) => Semantics(
               enabled: true,
+              explicitChildNodes: true,
               label: '${HomeSemanticKeys.bottomOption}$value',
               child: ListTile(
                 title: Text(
@@ -755,6 +762,7 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.all(20),
       child: Semantics(
         enabled: true,
+        explicitChildNodes: true,
         label: HomeSemanticKeys.bottomSheetCancel,
         child: Container(
           width: double.infinity,
@@ -850,6 +858,7 @@ class _HomePageState extends State<HomePage> {
     return Semantics(
       label: semanticKey,
       enabled: true,
+      explicitChildNodes: true,
       child: RaisedButton(
         onPressed: onTap,
         child: Text(
@@ -931,6 +940,7 @@ class _HomePageState extends State<HomePage> {
               FlatButton(
                 child: Semantics(
                   enabled: true,
+                  explicitChildNodes: true,
                   label: HomeSemanticKeys.failureAlertButton,
                   child: Text(HomeContent.alertButtonOk),
                 ),
@@ -969,6 +979,7 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.only(left: 10),
       child: Semantics(
         enabled: true,
+        explicitChildNodes: true,
         label: HomeSemanticKeys.mandatoryFieldsMessage,
         child: RichText(
           text: TextSpan(

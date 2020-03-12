@@ -120,6 +120,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
                       FlatButton(
                         child: Semantics(
                           enabled: true,
+                          explicitChildNodes: true,
                           label: BookHotelSemanticKeys.failureAlertButton,
                           child: Text(BookHotelContent.alertButtonOk),
                         ),
@@ -418,6 +419,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
         padding: const EdgeInsets.only(left: 10),
         child: Semantics(
           enabled: true,
+          explicitChildNodes: true,
           label: BookHotelSemanticKeys.mandatoryFieldsMessage,
           child: RichText(
             text: TextSpan(
@@ -462,6 +464,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
     return Semantics(
       label: semanticKey,
       enabled: true,
+      explicitChildNodes: true,
       child: RaisedButton(
         onPressed: onTap,
         child: Text(
@@ -490,6 +493,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
       padding: const EdgeInsets.only(left: 10),
       child: Semantics(
         enabled: true,
+        explicitChildNodes: true,
         label: label,
         child: RichText(
           text: TextSpan(
@@ -535,6 +539,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
     return Semantics(
       label: semanticLabel,
       enabled: true,
+      explicitChildNodes: true,
       child: textFocusNode != null
           ? EnsureVisibleWhenFocused(
               focusNode: textFocusNode,
@@ -677,6 +682,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
       builder: (context) {
         return Semantics(
           enabled: true,
+          explicitChildNodes: true,
           label: BookHotelSemanticKeys.bottomSheet,
           child: Container(
             color: Color(0xFF737373),
@@ -707,6 +713,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
   ) {
     return Semantics(
       enabled: true,
+      explicitChildNodes: true,
       label: BookHotelSemanticKeys.bottomSheetOptionsColumn,
       child: Column(
         children: <Widget>[
@@ -747,6 +754,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
           .map(
             (value) => Semantics(
               enabled: true,
+              explicitChildNodes: true,
               label: '${BookHotelSemanticKeys.bottomOption}$value',
               child: ListTile(
                 title: Text(
@@ -780,6 +788,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
       padding: const EdgeInsets.all(20),
       child: Semantics(
         enabled: true,
+        explicitChildNodes: true,
         label: BookHotelSemanticKeys.bottomSheetCancel,
         child: Container(
           width: double.infinity,
@@ -906,6 +915,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
               FlatButton(
                 child: Semantics(
                   enabled: true,
+                  explicitChildNodes: true,
                   label: BookHotelSemanticKeys.failureAlertButton,
                   child: Text(BookHotelContent.alertButtonOk),
                 ),

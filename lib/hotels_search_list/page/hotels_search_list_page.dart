@@ -33,6 +33,7 @@ class _HotelsSearchListPageState extends State<HotelsSearchListPage> {
         color: Colors.grey.withOpacity(0.2),
         child: Semantics(
           enabled: true,
+          explicitChildNodes: true,
           label: HotelsSearchListPageSemantics.view_container,
           child: Container(
             color: Colors.transparent,
@@ -44,6 +45,7 @@ class _HotelsSearchListPageState extends State<HotelsSearchListPage> {
               itemBuilder: (context, index) {
                 return Semantics(
                   enabled: true,
+                  explicitChildNodes: true,
                   label:
                       '${HotelsSearchListPageSemantics.list_container}$index',
                   child: HotelOverviewContainer(

@@ -42,6 +42,7 @@ class _HotelOverviewContainerState extends State<HotelOverviewContainer> {
         ),
         child: Semantics(
           enabled: true,
+          explicitChildNodes: true,
           label: HotelsSearchListPageSemantics.hotel_list_item,
           child: GestureDetector(
             behavior: HitTestBehavior.translucent,

@@ -41,6 +41,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
       actions: <Widget>[
         Semantics(
           enabled: true,
+          explicitChildNodes: true,
           label: BookingDetailsSemanticKeys.appBarCloseButton,
           child: IconButton(
             icon: Icon(Icons.close),
@@ -66,6 +67,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
 
     return Semantics(
       enabled: true,
+      explicitChildNodes: true,
       child: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 24, right: 24),
         child: Column(
@@ -224,6 +226,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
   Widget _getLabel(BuildContext context, String label) {
     return Semantics(
       enabled: true,
+      explicitChildNodes: true,
       label: label,
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -249,6 +252,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
     return Semantics(
       label: semanticLabel,
       enabled: true,
+      explicitChildNodes: true,
       child: Container(
         width: MediaQuery.of(context).size.width,
         child: Text(
@@ -276,6 +280,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
     return Semantics(
       label: BookingDetailsSemanticKeys.doneButton,
       enabled: true,
+      explicitChildNodes: true,
       child: RaisedButton(
         onPressed: () {
           _navigateToRoot(context);
