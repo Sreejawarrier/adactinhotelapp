@@ -88,3 +88,10 @@ via Xcode-> Open project in Android Studio>Right Click on the ios module within 
 7. For running the project through Appium, set android_home in bash_profile, install pre-requisites for Appium: (Homebrew, node.js, carthage through terminal) and install appium on terminal
 
 Imp Note: The path of the flutter should be set properly so that flutter commands can run. If macOS is less than Catalina then export PATH="$PATH:~//flutter/bin" If macOS is Catalina then if the bash_profile has the path set into it source ~/.bash_profile Like in your bash_profile you should have export PATH="$PATH:/Users//flutter/bin": export LC_ALL="en_US.UTF-8" export LANG="en_US.UTF-8"
+
+## Steps for reducing response timeout are
+1. Once you open the project via Android Studio Or VSCode,
+2. Goto file under lib/global/global_constants.dart
+3. In that you can a variable called `sessionTimeout` currently set at 60, this can be reduced to required number of seconds and run the project.
+4. `spinnerTimeout` is for handling the spinner timeout which will be equal to sessionTimeout.
+5. If you want to reduce the user app session timeout field is `userSessionTimerMaxInSeconds` which is currently set at 1800 seconds.
