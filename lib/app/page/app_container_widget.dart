@@ -8,6 +8,7 @@ import 'package:adactin_hotel_app/app/constants/app_content.dart';
 import 'package:adactin_hotel_app/app/constants/app_semantic_keys.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
 import 'package:adactin_hotel_app/booked_itinerary/page/booked_itinerary_page.dart';
+import 'package:adactin_hotel_app/global/global_constants.dart';
 import 'package:adactin_hotel_app/home/page/home_page.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
@@ -89,7 +90,7 @@ class _AppContainerWidgetState extends State<AppContainerWidget>
               /// Creation of session timer
               _createSessionCountdown(
                 context,
-                widget.appBloc.userSessionTimerMaxInSeconds,
+                GlobalConstants.userSessionTimerMaxInSeconds,
               );
 
               _setStatusBarColor(0);

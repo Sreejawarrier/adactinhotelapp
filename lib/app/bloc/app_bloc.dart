@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:adactin_hotel_app/api/models/user_details.dart';
 import 'package:adactin_hotel_app/api/repo/user_repo.dart';
+import 'package:adactin_hotel_app/global/global_constants.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -155,7 +156,6 @@ class BookedItineraryRefresh extends AppState {
 
 class AppBloc extends Bloc<AppEvent, AppState> {
   final SharedPreferences preferences;
-  final int userSessionTimerMaxInSeconds = 1800;
 
   UserDetails userDetails;
 
@@ -209,13 +209,14 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       } else {
         final Duration timeDifference =
             DateTime.now().difference(event.sessionStartTime);
-        if (timeDifference.inSeconds > userSessionTimerMaxInSeconds) {
+        if (timeDifference.inSeconds >
+            GlobalConstants.userSessionTimerMaxInSeconds) {
           await _logOutUser();
           add(AppUserChange(isSessionExpired: true));
         } else {
           yield AppSessionCheckProcessed(
-            remainingDuration:
-                (userSessionTimerMaxInSeconds - timeDifference.inSeconds),
+            remainingDuration: (GlobalConstants.userSessionTimerMaxInSeconds -
+                timeDifference.inSeconds),
             processedTime: DateTime.now(),
           );
         }

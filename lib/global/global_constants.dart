@@ -14,6 +14,7 @@ class GlobalConstants {
       "nodename nor servname provided, or not known";
   static const String dio_error_no_internet = "Network is unreachable";
 
+  static const int userSessionTimerMaxInSeconds = 1800;
   static const int sessionTimeout = 60; // Session timeout
   static const int spinnerTimeout = 60;
 
