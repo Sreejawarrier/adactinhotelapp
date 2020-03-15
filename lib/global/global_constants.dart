@@ -18,7 +18,10 @@ class GlobalConstants {
   static const int sessionTimeout = 60; // Session timeout
   static const int spinnerTimeout = 60;
 
-  static const String dateFormat_ddMMyyyy = 'dd-MM-yyyy';
+  static const String dateFormatWithDash_ddMMyyyy = 'dd-MM-yyyy';
+  static const String dateFormatWithForwardSlash_ddMMyyyy = 'dd/MM/yyyy';
+  static const String dateFormatWithDot_ddMMyyyy = 'dd.MM.yyyy';
+  static const String dateFormat_ddMMM = 'dd MMM';
 
   BaseOptions getDioOptions() {
     return BaseOptions(

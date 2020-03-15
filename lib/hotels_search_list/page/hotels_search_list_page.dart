@@ -18,7 +18,7 @@ class HotelsSearchListPage extends StatefulWidget {
 
 class _HotelsSearchListPageState extends State<HotelsSearchListPage> {
   final DateFormat _fromDateFormat =
-      DateFormat(GlobalConstants.dateFormat_ddMMyyyy);
+      DateFormat(GlobalConstants.dateFormatWithDash_ddMMyyyy);
 
   @override
   Widget build(BuildContext context) {

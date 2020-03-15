@@ -1,9 +1,9 @@
 import 'package:adactin_hotel_app/api/models/booking_details.dart';
+import 'package:adactin_hotel_app/base/adactin_button/widget/adactin_button.dart';
 import 'package:adactin_hotel_app/base/adactin_label/widget/adactin_label.dart';
 import 'package:adactin_hotel_app/base/adactin_text/widget/adactin_text.dart';
 import 'package:adactin_hotel_app/booking_details/constants/booking_details_content.dart';
 import 'package:adactin_hotel_app/booking_details/constants/booking_details_semantic_keys.dart';
-import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:flutter/material.dart';
 
 class BookingDetailsPage extends StatefulWidget {
@@ -211,10 +211,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
 
   Widget _getLabel(String label) {
     return AdactinLabel(
-      labelData: label,
-      isRequiredField: false,
-      leftPadding: 0,
-    );
+        labelData: label, isRequiredField: false, leftPadding: 0);
   }
 
   /// --- --- --- Text field --- --- ---
@@ -240,28 +237,12 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
   }
 
   Widget _getDoneButton(BuildContext context) {
-    return Semantics(
-      label: BookingDetailsSemanticKeys.doneButton,
-      enabled: true,
-      explicitChildNodes: true,
-      child: RaisedButton(
-        onPressed: () {
-          _navigateToRoot(context);
-        },
-        child: Text(
-          BookingDetailsContent.doneButton,
-          style: TextStyle(fontSize: 18, color: Colors.white),
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 22,
-        ),
-        color: Palette.primaryColor,
-        highlightColor: Colors.blueGrey,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
+    return AdactinButton(
+      semanticKey: BookingDetailsSemanticKeys.doneButton,
+      title: BookingDetailsContent.doneButton,
+      onPressed: () {
+        _navigateToRoot(context);
+      },
     );
   }
 

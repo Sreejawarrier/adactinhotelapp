@@ -2,6 +2,7 @@ import 'package:adactin_hotel_app/api/models/hotel_search.dart';
 import 'package:adactin_hotel_app/api/repo/hotel_search_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/routes/app_routes.dart';
+import 'package:adactin_hotel_app/base/adactin_button/widget/adactin_button.dart';
 import 'package:adactin_hotel_app/base/adactin_label/widget/adactin_label.dart';
 import 'package:adactin_hotel_app/base/ensure_visible_when_focused/ensure_visible_when_focused.dart';
 import 'package:adactin_hotel_app/base/mandatory_message/widget/mandatory_message.dart';
@@ -34,7 +35,8 @@ class _HomePageState extends State<HomePage> {
 
   static const double appBarContentHeight = 140;
 
-  final DateFormat _dateFormat = DateFormat('dd/MM/yyyy');
+  final DateFormat _dateFormat =
+      DateFormat(GlobalConstants.dateFormatWithForwardSlash_ddMMyyyy);
   final TextEditingController _locationTextFieldController =
       TextEditingController();
   final FocusNode _locationTextFieldFocusNode = FocusNode();
@@ -759,7 +761,7 @@ class _HomePageState extends State<HomePage> {
       context,
       minDateTime: minDate,
       maxDateTime: maxDate,
-      dateFormat: GlobalConstants.dateFormat_ddMMyyyy,
+      dateFormat: GlobalConstants.dateFormatWithDash_ddMMyyyy,
       initialDateTime: (textEditingController.text?.isEmpty == true)
           ? DateTime.now()
           : _dateFormat.parse(textEditingController.text),
@@ -818,24 +820,11 @@ class _HomePageState extends State<HomePage> {
     Color color,
     VoidCallback onTap,
   ) {
-    return Semantics(
-      label: semanticKey,
-      enabled: true,
-      explicitChildNodes: true,
-      child: RaisedButton(
-        onPressed: onTap,
-        child: Text(
-          title,
-          style: TextStyle(fontSize: 18, color: Colors.white),
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 22,
-        ),
-        color: color,
-        highlightColor: Colors.blueGrey,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
+    return AdactinButton(
+      semanticKey: semanticKey,
+      title: title,
+      onPressed: onTap,
+      btnColor: color,
     );
   }
 

@@ -1,3 +1,4 @@
+import 'package:adactin_hotel_app/global/global_constants.dart';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 
@@ -9,7 +10,7 @@ class HotelOverviewData<T> extends Equatable {
   final String toDate;
   final String totalPrice;
 
-  final DateFormat _toDateFormat = DateFormat('dd MMM');
+  final DateFormat _toDateFormat = DateFormat(GlobalConstants.dateFormat_ddMMM);
 
   HotelOverviewData({
     this.hotelData,

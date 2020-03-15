@@ -3,9 +3,10 @@ import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 
 class HotelSearchResult extends Equatable {
-  final DateFormat _displayDateFormat = DateFormat('dd/MM/yyyy');
+  final DateFormat _displayDateFormat =
+      DateFormat(GlobalConstants.dateFormatWithForwardSlash_ddMMyyyy);
   final DateFormat _responseDateFormat =
-      DateFormat(GlobalConstants.dateFormat_ddMMyyyy);
+      DateFormat(GlobalConstants.dateFormatWithDash_ddMMyyyy);
 
   final String hotelName;
   final String location;

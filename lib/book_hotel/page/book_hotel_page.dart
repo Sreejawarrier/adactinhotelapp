@@ -3,6 +3,7 @@ import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
 import 'package:adactin_hotel_app/api/repo/book_hotel_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/routes/app_routes.dart';
+import 'package:adactin_hotel_app/base/adactin_button/widget/adactin_button.dart';
 import 'package:adactin_hotel_app/base/adactin_label/widget/adactin_label.dart';
 import 'package:adactin_hotel_app/base/ensure_visible_when_focused/ensure_visible_when_focused.dart';
 import 'package:adactin_hotel_app/base/mandatory_message/widget/mandatory_message.dart';
@@ -426,24 +427,10 @@ class _BookHotelPageState extends State<BookHotelPage> {
     Color color,
     VoidCallback onTap,
   ) {
-    return Semantics(
-      label: semanticKey,
-      enabled: true,
-      explicitChildNodes: true,
-      child: RaisedButton(
-        onPressed: onTap,
-        child: Text(
-          title,
-          style: TextStyle(fontSize: 18, color: Colors.white),
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 22,
-        ),
-        color: color,
-        highlightColor: Colors.blueGrey,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
+    return AdactinButton(
+      semanticKey: semanticKey,
+      title: title,
+      onPressed: onTap,
     );
   }
 

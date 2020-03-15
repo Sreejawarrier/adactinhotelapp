@@ -3,6 +3,7 @@ import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
 import 'package:adactin_hotel_app/api/repo/cancel_booking_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/routes/app_routes.dart';
+import 'package:adactin_hotel_app/base/adactin_button/widget/adactin_button.dart';
 import 'package:adactin_hotel_app/base/adactin_label/widget/adactin_label.dart';
 import 'package:adactin_hotel_app/base/adactin_text/widget/adactin_text.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
@@ -364,42 +365,26 @@ class _HotelDetailPage extends State<HotelDetailPage> {
   }
 
   Widget _getContinueOrCancelButton(BuildContext context) {
-    return Semantics(
-      label: (widget.hotel is HotelSearchResult)
+    return AdactinButton(
+      semanticKey: (widget.hotel is HotelSearchResult)
           ? HotelDetailSemantics.continueButton
           : HotelDetailSemantics.cancelButton,
-      enabled: true,
-      explicitChildNodes: true,
-      child: RaisedButton(
-        onPressed: () {
-          if (widget.hotel is HotelSearchResult) {
-            Navigator.of(context).pushNamed(
-              AppRoutes.BOOK_HOTEL,
-              arguments: widget.hotel,
-            );
-          } else {
-            _hotelBookingCancellationConfirmationAlert(
-              context,
-              BlocProvider.of<HotelDetailBloc>(context),
-            );
-          }
-        },
-        child: Text(
-          (widget.hotel is HotelSearchResult)
-              ? HotelDetailContent.selectTxt
-              : HotelDetailContent.cancelTxt,
-          style: TextStyle(fontSize: 18, color: Colors.white),
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 22,
-        ),
-        color: Palette.primaryColor,
-        highlightColor: Colors.blueGrey,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
+      title: (widget.hotel is HotelSearchResult)
+          ? HotelDetailContent.selectTxt
+          : HotelDetailContent.cancelTxt,
+      onPressed: () {
+        if (widget.hotel is HotelSearchResult) {
+          Navigator.of(context).pushNamed(
+            AppRoutes.BOOK_HOTEL,
+            arguments: widget.hotel,
+          );
+        } else {
+          _hotelBookingCancellationConfirmationAlert(
+            context,
+            BlocProvider.of<HotelDetailBloc>(context),
+          );
+        }
+      },
     );
   }
 

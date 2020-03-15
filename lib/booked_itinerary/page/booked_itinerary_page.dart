@@ -25,7 +25,10 @@ class BookedItineraryPage extends StatefulWidget {
 
 class _BookedItineraryPageState extends State<BookedItineraryPage>
     with RouteAware {
-  final DateFormat _fromDateFormat = DateFormat('dd/MM/yyyy');
+  final DateFormat _forwardSlashDateFormat =
+      DateFormat(GlobalConstants.dateFormatWithForwardSlash_ddMMyyyy);
+  final DateFormat _dotDateFormat =
+      DateFormat(GlobalConstants.dateFormatWithDot_ddMMyyyy);
 
   BookedItineraryBloc _bookedItineraryBloc;
   List<BookedItinerary> _bookedItineraryList = [];
@@ -148,7 +151,14 @@ class _BookedItineraryPageState extends State<BookedItineraryPage>
                                             isLastItem: index ==
                                                 (_bookedItineraryList.length -
                                                     1),
-                                            fromDateFormat: _fromDateFormat,
+                                            fromDateFormat:
+                                                _bookedItineraryList[index]
+                                                            .arrivalDate
+                                                            .split('.')
+                                                            .length >
+                                                        1
+                                                    ? _dotDateFormat
+                                                    : _forwardSlashDateFormat,
                                           ),
                                         ),
                                       );

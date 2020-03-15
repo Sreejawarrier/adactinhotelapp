@@ -3,8 +3,8 @@ import 'package:adactin_hotel_app/account/login/constants/login_content.dart';
 import 'package:adactin_hotel_app/account/login/constants/login_semantic_keys.dart';
 import 'package:adactin_hotel_app/api/repo/user_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
+import 'package:adactin_hotel_app/base/adactin_button/widget/adactin_button.dart';
 import 'package:adactin_hotel_app/theme/images.dart';
-import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -183,19 +183,8 @@ class _LoginPageState extends State<LoginPage> {
         onFieldSubmitted: (value) {
           FocusScope.of(context).requestFocus(_passwordTextFieldFocusNode);
         },
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 22,
-          ),
-          labelText: LoginContent.userNameHint,
-          labelStyle: TextStyle(fontSize: 18),
-          hintText: LoginContent.userNameHint,
-          hintStyle: TextStyle(fontSize: 18),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.grey),
-          ),
+        decoration: _getFormFieldInputDecoration(
+          hint: LoginContent.userNameHint,
         ),
         validator: (String value) {
           return (value == null || value.isEmpty)
@@ -219,19 +208,8 @@ class _LoginPageState extends State<LoginPage> {
         onFieldSubmitted: (value) {
           FocusScope.of(context).requestFocus(FocusNode());
         },
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 22,
-          ),
-          labelText: LoginContent.passwordHint,
-          labelStyle: TextStyle(fontSize: 18),
-          hintText: LoginContent.passwordHint,
-          hintStyle: TextStyle(fontSize: 18),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.grey),
-          ),
+        decoration: _getFormFieldInputDecoration(
+          hint: LoginContent.passwordHint,
         ),
         validator: (String value) {
           return (value == null || value.isEmpty)
@@ -242,40 +220,46 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _getLoginButton(BuildContext context) {
-    return Semantics(
-      label: LoginSemanticKeys.loginButton,
-      enabled: true,
-      explicitChildNodes: true,
-      child: RaisedButton(
-        onPressed: () {
-          _removeFocus();
-          _formKey.currentState.validate();
-          if (_usernameTextFieldController.text.isNotEmpty &&
-              _passwordTextFieldController.text.isNotEmpty) {
-            widget.appBloc.add(AppUserChangeInProcess());
-            BlocProvider.of<LoginBloc>(context).add(
-              LoginAction(
-                username: _usernameTextFieldController.text,
-                password: _passwordTextFieldController.text,
-              ),
-            );
-          }
-        },
-        child: Text(
-          LoginContent.login,
-          style: TextStyle(fontSize: 18, color: Colors.white),
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 22,
-        ),
-        color: Palette.primaryColor,
-        highlightColor: Colors.blueGrey,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+  InputDecoration _getFormFieldInputDecoration({
+    @required String hint,
+    Color fillColor,
+  }) {
+    return InputDecoration(
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 22,
       ),
+      labelText: hint,
+      labelStyle: TextStyle(fontSize: 18),
+      hintText: hint,
+      hintStyle: TextStyle(fontSize: 18),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey),
+      ),
+      fillColor: fillColor,
+      filled: fillColor != null,
+    );
+  }
+
+  Widget _getLoginButton(BuildContext context) {
+    return AdactinButton(
+      semanticKey: LoginSemanticKeys.loginButton,
+      title: LoginContent.login,
+      onPressed: () {
+        _removeFocus();
+        _formKey.currentState.validate();
+        if (_usernameTextFieldController.text.isNotEmpty &&
+            _passwordTextFieldController.text.isNotEmpty) {
+          widget.appBloc.add(AppUserChangeInProcess());
+          BlocProvider.of<LoginBloc>(context).add(
+            LoginAction(
+              username: _usernameTextFieldController.text,
+              password: _passwordTextFieldController.text,
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -345,48 +329,24 @@ class _LoginPageState extends State<LoginPage> {
       child: TextField(
         enabled: false,
         controller: _userTextFieldController,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 22,
-          ),
-          labelText: LoginContent.userNameHint,
-          labelStyle: TextStyle(fontSize: 18),
+        decoration: _getFormFieldInputDecoration(
+          hint: LoginContent.userNameHint,
           fillColor: Colors.grey.withOpacity(0.1),
-          filled: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.grey),
-          ),
         ),
       ),
     );
   }
 
   Widget _getLogOutButton(BuildContext context) {
-    return Semantics(
-      label: LoginSemanticKeys.logoutButton,
-      enabled: true,
-      explicitChildNodes: true,
-      child: RaisedButton(
-        onPressed: () {
-          widget.appBloc.add(AppUserChangeInProcess());
-          BlocProvider.of<LoginBloc>(context).add(
-            LogoutAction(token: widget.appBloc.userDetails.token),
-          );
-        },
-        child: Text(
-          LoginContent.logout,
-          style: TextStyle(fontSize: 18, color: Colors.white),
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 22,
-        ),
-        color: Palette.primaryColor,
-        highlightColor: Colors.blueGrey,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
+    return AdactinButton(
+      semanticKey: LoginSemanticKeys.logoutButton,
+      title: LoginContent.logout,
+      onPressed: () {
+        widget.appBloc.add(AppUserChangeInProcess());
+        BlocProvider.of<LoginBloc>(context).add(
+          LogoutAction(token: widget.appBloc.userDetails.token),
+        );
+      },
     );
   }
 
