@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:adactin_hotel_app/api/constants/constants.dart';
 import 'package:adactin_hotel_app/api/models/user_details.dart';
+import 'package:adactin_hotel_app/api/repo/error_checks.dart';
 import 'package:adactin_hotel_app/base/connectivity/connectivity.dart';
-import 'package:adactin_hotel_app/global/global_constants.dart'
-    as globalConstants;
+import 'package:adactin_hotel_app/global/global_constants.dart';
 import 'package:dio/dio.dart';
 
 class UserRepository {
@@ -32,40 +31,13 @@ class UserRepository {
             token: data[Constants.loginSuccessTokenKey],
           );
         } else {
-          if (data.containsKey(Constants.errorFieldValidationsKey)) {
-            throw Constants.errorFieldValidationDescription;
-          } else if (data.containsKey(Constants.errorStatusKey)) {
-            throw data[Constants.errorStatusKey];
-          } else if (data.containsKey(Constants.errorResponseKey)) {
-            throw data[Constants.errorResponseKey];
-          } else {
-            throw globalConstants.GlobalConstants.unknown_error;
-          }
+          throw ErrorChecks.serviceResponseErrorCheck(data);
         }
       } else {
-        throw globalConstants.GlobalConstants.network_unavailable;
+        throw GlobalConstants.network_unavailable;
       }
     } catch (error) {
-      if (error is DioError && error.error is SocketException) {
-        if (((error.error as SocketException).osError.errorCode == 51) ||
-            ((error.error as SocketException).osError.errorCode == 8) ||
-            ((error.error as SocketException).osError.message ==
-                globalConstants.GlobalConstants.dio_error_not_known) ||
-            ((error.error as SocketException).osError.message ==
-                globalConstants.GlobalConstants.dio_error_no_internet)) {
-          throw globalConstants.GlobalConstants.network_unavailable;
-        } else if (error.type == DioErrorType.CONNECT_TIMEOUT ||
-            error.type == DioErrorType.SEND_TIMEOUT ||
-            error.type == DioErrorType.RECEIVE_TIMEOUT) {
-          throw globalConstants.GlobalConstants.sessionTimeout;
-        } else {
-          throw globalConstants.GlobalConstants.unknown_error;
-        }
-      } else if (error is String) {
-        throw error;
-      } else {
-        throw globalConstants.GlobalConstants.unknown_error;
-      }
+      throw ErrorChecks.checkError(error);
     }
   }
 
@@ -77,8 +49,7 @@ class UserRepository {
       final String encodedUrl = Uri.encodeFull(logoutUrl);
       print('UserRepository - logout - url - $encodedUrl');
       final Response response =
-          await Dio(globalConstants.GlobalConstants().getDioOptions())
-              .get(encodedUrl);
+          await Dio(GlobalConstants().getDioOptions()).get(encodedUrl);
       print('UserRepository - logout - response - $response');
       final Map<String, dynamic> data = json.decode(response.toString());
 
@@ -86,26 +57,7 @@ class UserRepository {
               Constants.logOutSuccessResponse) ||
           (data[Constants.errorResponseKey] == Constants.logOutSessionExpired));
     } catch (error) {
-      if (error is DioError && error.error is SocketException) {
-        if (((error.error as SocketException).osError.errorCode == 51) ||
-            ((error.error as SocketException).osError.errorCode == 8) ||
-            ((error.error as SocketException).osError.message ==
-                globalConstants.GlobalConstants.dio_error_not_known) ||
-            ((error.error as SocketException).osError.message ==
-                globalConstants.GlobalConstants.dio_error_no_internet)) {
-          throw globalConstants.GlobalConstants.network_unavailable;
-        } else if (error.type == DioErrorType.CONNECT_TIMEOUT ||
-            error.type == DioErrorType.SEND_TIMEOUT ||
-            error.type == DioErrorType.RECEIVE_TIMEOUT) {
-          throw globalConstants.GlobalConstants.sessionTimeout;
-        } else {
-          throw globalConstants.GlobalConstants.unknown_error;
-        }
-      } else if (error is String) {
-        throw error;
-      } else {
-        throw globalConstants.GlobalConstants.unknown_error;
-      }
+      throw ErrorChecks.checkError(error);
     }
   }
 }

@@ -1,7 +1,6 @@
 import 'package:adactin_hotel_app/api/models/user_details.dart';
 import 'package:adactin_hotel_app/api/repo/user_repo.dart';
-import 'package:adactin_hotel_app/global/global_constants.dart'
-    as globalConstants;
+import 'package:adactin_hotel_app/global/global_constants.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -49,8 +48,6 @@ abstract class LoginState extends Equatable {
 }
 
 class LoginInitial extends LoginState {}
-
-class LoggedInInitial extends LoginState {}
 
 class LoginLoading extends LoginState {}
 
@@ -123,8 +120,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         if (success) {
           yield LogoutSuccess();
         } else {
-          yield LoginFailure(
-              error: globalConstants.GlobalConstants.unknown_error);
+          yield LoginFailure(error: GlobalConstants.unknown_error);
         }
       } catch (error) {
         yield LoginFailure(error: error.toString());
