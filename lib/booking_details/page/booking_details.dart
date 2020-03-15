@@ -1,4 +1,6 @@
 import 'package:adactin_hotel_app/api/models/booking_details.dart';
+import 'package:adactin_hotel_app/base/adactin_label/widget/adactin_label.dart';
+import 'package:adactin_hotel_app/base/adactin_text/widget/adactin_text.dart';
 import 'package:adactin_hotel_app/booking_details/constants/booking_details_content.dart';
 import 'package:adactin_hotel_app/booking_details/constants/booking_details_semantic_keys.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
@@ -80,58 +82,51 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
   List<Widget> _getInitialDetails(BuildContext context) {
     return [
       const SizedBox(height: 20),
-      _getLabel(context, BookingDetailsContent.hotelName),
+      _getLabel(BookingDetailsContent.hotelName),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         BookingDetailsSemanticKeys.hotelName,
         widget.details.hotelName,
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookingDetailsContent.location),
+      _getLabel(BookingDetailsContent.location),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         BookingDetailsSemanticKeys.location,
         widget.details.location,
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookingDetailsContent.roomType),
+      _getLabel(BookingDetailsContent.roomType),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         BookingDetailsSemanticKeys.roomType,
         widget.details.roomType,
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookingDetailsContent.arrivalDate),
+      _getLabel(BookingDetailsContent.arrivalDate),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         BookingDetailsSemanticKeys.arrivalDate,
         widget.details.arrivalDate,
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookingDetailsContent.departureDate),
+      _getLabel(BookingDetailsContent.departureDate),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         BookingDetailsSemanticKeys.departureDate,
         widget.details.departureDate,
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookingDetailsContent.totalRooms),
+      _getLabel(BookingDetailsContent.totalRooms),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         BookingDetailsSemanticKeys.totalRooms,
         widget.details.getTotalRooms(),
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookingDetailsContent.adultsPerRoom),
+      _getLabel(BookingDetailsContent.adultsPerRoom),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         BookingDetailsSemanticKeys.adultsPerRoom,
         widget.details.getPersonsPerRoom(widget.details.adultsPerRoom),
       ),
@@ -141,10 +136,9 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
   List<Widget> _getChildrenDetails(BuildContext context) {
     return [
       const SizedBox(height: 20),
-      _getLabel(context, BookingDetailsContent.childrenPerRoom),
+      _getLabel(BookingDetailsContent.childrenPerRoom),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         BookingDetailsSemanticKeys.childrenPerRoom,
         widget.details.getPersonsPerRoom(widget.details.childrenPerRoom),
       ),
@@ -154,66 +148,58 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
   List<Widget> _getRestOfTheDetails(BuildContext context) {
     return [
       const SizedBox(height: 20),
-      _getLabel(context, BookingDetailsContent.pricePerNight),
+      _getLabel(BookingDetailsContent.pricePerNight),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         BookingDetailsSemanticKeys.pricePerNight,
         widget.details.pricePerNight,
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookingDetailsContent.totalPrice),
+      _getLabel(BookingDetailsContent.totalPrice),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         BookingDetailsSemanticKeys.totalPrice,
         widget.details.totalPrice,
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookingDetailsContent.gst),
+      _getLabel(BookingDetailsContent.gst),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         BookingDetailsSemanticKeys.gst,
         widget.details.gst,
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookingDetailsContent.finalBilledPrice),
+      _getLabel(BookingDetailsContent.finalBilledPrice),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         BookingDetailsSemanticKeys.finalBilledPrice,
         widget.details.finalBilledPrice,
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookingDetailsContent.firstName),
+      _getLabel(BookingDetailsContent.firstName),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         BookingDetailsSemanticKeys.firstName,
         widget.details.firstName,
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookingDetailsContent.lastName),
+      _getLabel(BookingDetailsContent.lastName),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         BookingDetailsSemanticKeys.lastName,
         widget.details.lastName,
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookingDetailsContent.billingAddress),
+      _getLabel(BookingDetailsContent.billingAddress),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         BookingDetailsSemanticKeys.billingAddress,
         widget.details.billingAddress,
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookingDetailsContent.orderNo),
+      _getLabel(BookingDetailsContent.orderNo),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         BookingDetailsSemanticKeys.orderNo,
         widget.details.orderID,
       ),
@@ -223,44 +209,21 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
 
   /// --- --- --- Label --- --- ---
 
-  Widget _getLabel(BuildContext context, String label) {
-    return Semantics(
-      enabled: true,
-      explicitChildNodes: true,
-      label: label,
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: Palette.primaryColor,
-          ),
-        ),
-      ),
+  Widget _getLabel(String label) {
+    return AdactinLabel(
+      labelData: label,
+      isRequiredField: false,
+      leftPadding: 0,
     );
   }
 
   /// --- --- --- Text field --- --- ---
 
   Widget _getTextField(
-    BuildContext context,
     String semanticLabel,
     String text,
   ) {
-    return Semantics(
-      label: semanticLabel,
-      enabled: true,
-      explicitChildNodes: true,
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        child: Text(
-          text,
-          style: TextStyle(fontSize: 22),
-        ),
-      ),
-    );
+    return AdactinText(semanticLabel: semanticLabel, text: text);
   }
 
   /// --- --- --- Done button --- --- ---

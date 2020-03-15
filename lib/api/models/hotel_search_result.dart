@@ -1,12 +1,11 @@
-import 'package:adactin_hotel_app/global/global_constants.dart'
-    as globalConstants;
+import 'package:adactin_hotel_app/global/global_constants.dart';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 
 class HotelSearchResult extends Equatable {
   final DateFormat _displayDateFormat = DateFormat('dd/MM/yyyy');
   final DateFormat _responseDateFormat =
-      DateFormat(globalConstants.GlobalConstants.dateFormat_ddMMyyyy);
+      DateFormat(GlobalConstants.dateFormat_ddMMyyyy);
 
   final String hotelName;
   final String location;
@@ -96,7 +95,7 @@ class HotelSearchResult extends Equatable {
 
   String getGSTPrice() {
     final String totalPriceForGST = totalPrice.replaceAll(
-      globalConstants.GlobalConstants.audPriceFormat,
+      GlobalConstants.audPriceFormat,
       '',
     );
     final int convertedTotalPrice = int.parse(totalPriceForGST);
@@ -105,16 +104,15 @@ class HotelSearchResult extends Equatable {
     final int change = int.parse(gstValueSplit.last);
 
     if (change > 0) {
-      return globalConstants.GlobalConstants.audPriceFormat + gstCharged;
+      return GlobalConstants.audPriceFormat + gstCharged;
     } else {
-      return globalConstants.GlobalConstants.audPriceFormat +
-          gstValueSplit.first;
+      return GlobalConstants.audPriceFormat + gstValueSplit.first;
     }
   }
 
   String getBillingPrice() {
-    final String totalPriceForGST = totalPrice.replaceAll(
-        globalConstants.GlobalConstants.audPriceFormat, '');
+    final String totalPriceForGST =
+        totalPrice.replaceAll(GlobalConstants.audPriceFormat, '');
     final int convertedTotalPrice = int.parse(totalPriceForGST);
     final double gstValue = (convertedTotalPrice * 0.1);
     final String billingPrice =
@@ -123,10 +121,9 @@ class HotelSearchResult extends Equatable {
     final int change = int.parse(billingValueSplit.last);
 
     if (change > 0) {
-      return globalConstants.GlobalConstants.audPriceFormat + billingPrice;
+      return GlobalConstants.audPriceFormat + billingPrice;
     } else {
-      return globalConstants.GlobalConstants.audPriceFormat +
-          billingValueSplit.first;
+      return GlobalConstants.audPriceFormat + billingValueSplit.first;
     }
   }
 }

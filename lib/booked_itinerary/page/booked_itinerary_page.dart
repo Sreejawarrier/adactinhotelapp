@@ -7,8 +7,7 @@ import 'package:adactin_hotel_app/base/spinner/spinner.dart';
 import 'package:adactin_hotel_app/booked_itinerary/bloc/booked_itinerary_bloc.dart';
 import 'package:adactin_hotel_app/booked_itinerary/content/booked_itinerary_content.dart';
 import 'package:adactin_hotel_app/booked_itinerary/content/booked_itinerary_semantic_keys.dart';
-import 'package:adactin_hotel_app/global/global_constants.dart'
-    as globalConstants;
+import 'package:adactin_hotel_app/global/global_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -142,7 +141,7 @@ class _BookedItineraryPageState extends State<BookedItineraryPage>
                                                   _bookedItineraryList[index]
                                                       .departureDate,
                                               totalPrice:
-                                                  '${globalConstants.GlobalConstants.audPriceFormat}'
+                                                  '${GlobalConstants.audPriceFormat}'
                                                   '${_bookedItineraryList[index].finalPrice}',
                                             ),
                                             isInitialItem: index == 0,

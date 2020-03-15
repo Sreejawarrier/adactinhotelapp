@@ -3,7 +3,9 @@ import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
 import 'package:adactin_hotel_app/api/repo/book_hotel_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/routes/app_routes.dart';
+import 'package:adactin_hotel_app/base/adactin_label/widget/adactin_label.dart';
 import 'package:adactin_hotel_app/base/ensure_visible_when_focused/ensure_visible_when_focused.dart';
+import 'package:adactin_hotel_app/base/mandatory_message/widget/mandatory_message.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
 import 'package:adactin_hotel_app/book_hotel/bloc/book_hotel_bloc.dart';
 import 'package:adactin_hotel_app/book_hotel/constants/book_hotel_constants.dart';
@@ -185,7 +187,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
 
   List<Widget> _disabledFormFields(BuildContext context) {
     return [
-      _getLabel(context, BookHotelContent.hotelName),
+      _getLabel(BookHotelContent.hotelName),
       const SizedBox(height: 6),
       _getTextFormField(
         context: context,
@@ -195,7 +197,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
             TextEditingController(text: widget.hotelSearchResult.hotelName),
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookHotelContent.location),
+      _getLabel(BookHotelContent.location),
       const SizedBox(height: 6),
       _getTextFormField(
         context: context,
@@ -205,7 +207,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
             TextEditingController(text: widget.hotelSearchResult.location),
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookHotelContent.roomType),
+      _getLabel(BookHotelContent.roomType),
       const SizedBox(height: 6),
       _getTextFormField(
         context: context,
@@ -215,7 +217,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
             TextEditingController(text: widget.hotelSearchResult.roomsType),
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookHotelContent.numberOfRooms),
+      _getLabel(BookHotelContent.numberOfRooms),
       const SizedBox(height: 6),
       _getTextFormField(
         context: context,
@@ -225,7 +227,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
             text: widget.hotelSearchResult.getNoOfRooms()),
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookHotelContent.totalDays),
+      _getLabel(BookHotelContent.totalDays),
       const SizedBox(height: 6),
       _getTextFormField(
         context: context,
@@ -235,7 +237,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
             text: widget.hotelSearchResult.noOfDays.toString()),
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookHotelContent.pricePerNight),
+      _getLabel(BookHotelContent.pricePerNight),
       const SizedBox(height: 6),
       _getTextFormField(
         context: context,
@@ -245,7 +247,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
             TextEditingController(text: widget.hotelSearchResult.pricePerNight),
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookHotelContent.totalPrice),
+      _getLabel(BookHotelContent.totalPrice),
       const SizedBox(height: 6),
       _getTextFormField(
         context: context,
@@ -255,7 +257,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
             TextEditingController(text: widget.hotelSearchResult.totalPrice),
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookHotelContent.gst),
+      _getLabel(BookHotelContent.gst),
       const SizedBox(height: 6),
       _getTextFormField(
         context: context,
@@ -265,7 +267,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
             TextEditingController(text: widget.hotelSearchResult.getGSTPrice()),
       ),
       const SizedBox(height: 20),
-      _getLabel(context, BookHotelContent.finalBilledPrice),
+      _getLabel(BookHotelContent.finalBilledPrice),
       const SizedBox(height: 6),
       _getTextFormField(
         context: context,
@@ -282,7 +284,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
 
   List<Widget> _billingFormFields(BuildContext context) {
     return [
-      _getLabel(context, BookHotelContent.firstName, isRequiredField: true),
+      _getLabel(BookHotelContent.firstName, isRequiredField: true),
       const SizedBox(height: 6),
       _getTextFormField(
         context: context,
@@ -298,7 +300,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
         nextFocusNode: _lastNameTextFieldFocusNode,
       ),
       const SizedBox(height: 18),
-      _getLabel(context, BookHotelContent.lastName, isRequiredField: true),
+      _getLabel(BookHotelContent.lastName, isRequiredField: true),
       const SizedBox(height: 6),
       _getTextFormField(
         context: context,
@@ -314,8 +316,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
         nextFocusNode: _billingAddressTextFieldFocusNode,
       ),
       const SizedBox(height: 18),
-      _getLabel(context, BookHotelContent.billingAddress,
-          isRequiredField: true),
+      _getLabel(BookHotelContent.billingAddress, isRequiredField: true),
       const SizedBox(height: 6),
       _getTextFormField(
         context: context,
@@ -331,7 +332,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
         maxLines: 6,
       ),
       const SizedBox(height: 18),
-      _getLabel(context, BookHotelContent.creditCardNo, isRequiredField: true),
+      _getLabel(BookHotelContent.creditCardNo, isRequiredField: true),
       const SizedBox(height: 6),
       _getTextFormField(
         context: context,
@@ -351,8 +352,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
         helperText: BookHotelContent.creditCardNoHelper,
       ),
       const SizedBox(height: 18),
-      _getLabel(context, BookHotelContent.creditCardType,
-          isRequiredField: true),
+      _getLabel(BookHotelContent.creditCardType, isRequiredField: true),
       const SizedBox(height: 6),
       _getTextFormField(
         context: context,
@@ -367,7 +367,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
         },
       ),
       const SizedBox(height: 18),
-      _getLabel(context, BookHotelContent.expiryDate, isRequiredField: true),
+      _getLabel(BookHotelContent.expiryDate, isRequiredField: true),
       const SizedBox(height: 6),
       _getTextFormField(
         context: context,
@@ -382,7 +382,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
         },
       ),
       const SizedBox(height: 18),
-      _getLabel(context, BookHotelContent.cvvNumber, isRequiredField: true),
+      _getLabel(BookHotelContent.cvvNumber, isRequiredField: true),
       const SizedBox(height: 6),
       _getTextFormField(
         context: context,
@@ -415,42 +415,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
         },
       ),
       const SizedBox(height: 10),
-      Padding(
-        padding: const EdgeInsets.only(left: 10),
-        child: Semantics(
-          enabled: true,
-          explicitChildNodes: true,
-          label: BookHotelSemanticKeys.mandatoryFieldsMessage,
-          child: RichText(
-            text: TextSpan(
-              text: BookHotelContent.allFields,
-              style: TextStyle(
-                color: Colors.black54,
-                fontWeight: FontWeight.normal,
-                fontSize: 12,
-              ),
-              children: [
-                TextSpan(
-                  text: BookHotelContent.asterisk,
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-                TextSpan(
-                  text: BookHotelContent.mandatory,
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.normal,
-                    fontSize: 12,
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
+      MandatoryMessage(),
     ];
   }
 
@@ -485,40 +450,10 @@ class _BookHotelPageState extends State<BookHotelPage> {
   /// --- --- --- Label --- --- ---
 
   Widget _getLabel(
-    BuildContext context,
     String label, {
     bool isRequiredField = false,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10),
-      child: Semantics(
-        enabled: true,
-        explicitChildNodes: true,
-        label: label,
-        child: RichText(
-          text: TextSpan(
-            text: label,
-            style: TextStyle(
-              color: Palette.primaryColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-            children: isRequiredField
-                ? [
-                    TextSpan(
-                      text: BookHotelContent.asterisk,
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    )
-                  ]
-                : [],
-          ),
-        ),
-      ),
-    );
+    return AdactinLabel(labelData: label, isRequiredField: isRequiredField);
   }
 
   /// --- --- --- Text form field --- --- ---

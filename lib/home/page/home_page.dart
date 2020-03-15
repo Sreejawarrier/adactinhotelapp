@@ -2,7 +2,9 @@ import 'package:adactin_hotel_app/api/models/hotel_search.dart';
 import 'package:adactin_hotel_app/api/repo/hotel_search_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/routes/app_routes.dart';
+import 'package:adactin_hotel_app/base/adactin_label/widget/adactin_label.dart';
 import 'package:adactin_hotel_app/base/ensure_visible_when_focused/ensure_visible_when_focused.dart';
+import 'package:adactin_hotel_app/base/mandatory_message/widget/mandatory_message.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
 import 'package:adactin_hotel_app/global/global_constants.dart';
 import 'package:adactin_hotel_app/home/bloc/home_bloc.dart';
@@ -314,7 +316,7 @@ class _HomePageState extends State<HomePage> {
   /// --- --- --- Location --- --- ---
 
   Widget _getLocationLabel(BuildContext context) {
-    return _getLabel(context, HomeContent.location, isRequiredField: true);
+    return _getLabel(HomeContent.location, isRequiredField: true);
   }
 
   Widget _getLocationFormField(BuildContext context) {
@@ -344,10 +346,7 @@ class _HomePageState extends State<HomePage> {
   /// --- --- --- Hotels --- --- ---
 
   Widget _getHotelsLabel(BuildContext context) {
-    return _getLabel(
-      context,
-      HomeContent.hotels,
-    );
+    return _getLabel(HomeContent.hotels);
   }
 
   Widget _getHotelsFormField(BuildContext context) {
@@ -372,10 +371,7 @@ class _HomePageState extends State<HomePage> {
   /// --- --- --- Room Type --- --- ---
 
   Widget _getRoomTypeLabel(BuildContext context) {
-    return _getLabel(
-      context,
-      HomeContent.roomType,
-    );
+    return _getLabel(HomeContent.roomType);
   }
 
   Widget _getRoomTypeFormField(BuildContext context) {
@@ -400,7 +396,7 @@ class _HomePageState extends State<HomePage> {
   /// --- --- --- Number of Rooms --- --- ---
 
   Widget _getNumberOfRoomsLabel(BuildContext context) {
-    return _getLabel(context, HomeContent.numberOfRooms, isRequiredField: true);
+    return _getLabel(HomeContent.numberOfRooms, isRequiredField: true);
   }
 
   Widget _getNumberOfRoomsFormField(BuildContext context) {
@@ -430,7 +426,7 @@ class _HomePageState extends State<HomePage> {
   /// --- --- --- Check-in Date --- --- ---
 
   Widget _getCheckInDateLabel(BuildContext context) {
-    return _getLabel(context, HomeContent.checkInDate, isRequiredField: true);
+    return _getLabel(HomeContent.checkInDate, isRequiredField: true);
   }
 
   Widget _getCheckInDateFormField(BuildContext context) {
@@ -472,7 +468,7 @@ class _HomePageState extends State<HomePage> {
   /// --- --- --- Check-out Date --- --- ---
 
   Widget _getCheckOutDateLabel(BuildContext context) {
-    return _getLabel(context, HomeContent.checkOutDate, isRequiredField: true);
+    return _getLabel(HomeContent.checkOutDate, isRequiredField: true);
   }
 
   Widget _getCheckOutDateFormField(BuildContext context) {
@@ -506,7 +502,7 @@ class _HomePageState extends State<HomePage> {
   /// --- --- --- Adults per Room --- --- ---
 
   Widget _getAdultsPerRoomLabel(BuildContext context) {
-    return _getLabel(context, HomeContent.adultsPerRoom, isRequiredField: true);
+    return _getLabel(HomeContent.adultsPerRoom, isRequiredField: true);
   }
 
   Widget _getAdultsPerRoomFormField(BuildContext context) {
@@ -536,10 +532,7 @@ class _HomePageState extends State<HomePage> {
   /// --- --- --- Children per Room --- --- ---
 
   Widget _getChildrenPerRoomLabel(BuildContext context) {
-    return _getLabel(
-      context,
-      HomeContent.childrenPerRoom,
-    );
+    return _getLabel(HomeContent.childrenPerRoom);
   }
 
   Widget _getChildrenPerRoomFormField(BuildContext context) {
@@ -564,40 +557,10 @@ class _HomePageState extends State<HomePage> {
   /// --- --- --- Label --- --- ---
 
   Widget _getLabel(
-    BuildContext context,
     String label, {
     bool isRequiredField = false,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10),
-      child: Semantics(
-        enabled: true,
-        explicitChildNodes: true,
-        label: label,
-        child: RichText(
-          text: TextSpan(
-            text: label,
-            style: TextStyle(
-              color: Palette.primaryColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-            children: isRequiredField
-                ? [
-                    TextSpan(
-                      text: HomeContent.asterisk,
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    )
-                  ]
-                : [],
-          ),
-        ),
-      ),
-    );
+    return AdactinLabel(labelData: label, isRequiredField: isRequiredField);
   }
 
   /// --- --- --- Text form field --- --- ---
@@ -975,41 +938,6 @@ class _HomePageState extends State<HomePage> {
   /// --- --- --- Mandatory message --- --- ---
 
   Widget _getMandatoryMessage(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10),
-      child: Semantics(
-        enabled: true,
-        explicitChildNodes: true,
-        label: HomeSemanticKeys.mandatoryFieldsMessage,
-        child: RichText(
-          text: TextSpan(
-            text: HomeContent.allFields,
-            style: TextStyle(
-              color: Colors.black54,
-              fontWeight: FontWeight.normal,
-              fontSize: 12,
-            ),
-            children: [
-              TextSpan(
-                text: HomeContent.asterisk,
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-              TextSpan(
-                text: HomeContent.mandatory,
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 12,
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+    return MandatoryMessage();
   }
 }

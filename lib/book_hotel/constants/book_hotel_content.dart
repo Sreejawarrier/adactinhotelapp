@@ -38,9 +38,6 @@ class BookHotelContent {
   static const String errorCVVLength =
       'CVV Number should be less than 5 digits !!!';
   static const String cancel = 'Cancel';
-  static const String allFields = 'All (';
-  static const String asterisk = '*';
-  static const String mandatory = ') are mandatory fields.';
   static const String errorMissingData = 'Missing Data';
   static const String errorRequireData =
       'Please provide data for following fields -';

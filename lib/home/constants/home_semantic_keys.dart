@@ -19,5 +19,4 @@ class HomeSemanticKeys {
   static const String bottomSheetOptionsColumn = 'bottom_sheet_options_column';
   static const String failureAlert = 'failure_alert';
   static const String failureAlertButton = 'failure_alert_button';
-  static const String mandatoryFieldsMessage = 'mandatory_fields_message';
 }

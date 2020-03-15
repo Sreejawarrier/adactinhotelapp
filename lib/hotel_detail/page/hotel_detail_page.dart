@@ -3,9 +3,10 @@ import 'package:adactin_hotel_app/api/models/hotel_search_result.dart';
 import 'package:adactin_hotel_app/api/repo/cancel_booking_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/routes/app_routes.dart';
+import 'package:adactin_hotel_app/base/adactin_label/widget/adactin_label.dart';
+import 'package:adactin_hotel_app/base/adactin_text/widget/adactin_text.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
-import 'package:adactin_hotel_app/global/global_constants.dart'
-    as globalConstants;
+import 'package:adactin_hotel_app/global/global_constants.dart';
 import 'package:adactin_hotel_app/hotel_detail/bloc/hotel_detail_bloc.dart';
 import 'package:adactin_hotel_app/hotel_detail/constants/hotel_detail_content.dart';
 import 'package:adactin_hotel_app/hotel_detail/constants/hotel_detail_semantics.dart';
@@ -158,10 +159,9 @@ class _HotelDetailPage extends State<HotelDetailPage> {
   List<Widget> _getOrderIdDetails(BuildContext context) {
     return [
       const SizedBox(height: 20),
-      _getLabel(context, HotelDetailContent.orderId),
+      _getLabel(HotelDetailContent.orderId),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         HotelDetailSemantics.orderId,
         (widget.hotel as BookedItinerary)?.orderId ?? '',
       ),
@@ -171,10 +171,9 @@ class _HotelDetailPage extends State<HotelDetailPage> {
   List<Widget> _getHotelNameDetails(BuildContext context) {
     return [
       const SizedBox(height: 20),
-      _getLabel(context, HotelDetailContent.hotelName),
+      _getLabel(HotelDetailContent.hotelName),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         HotelDetailSemantics.hotelName,
         (widget.hotel is HotelSearchResult)
             ? widget.hotel.hotelName
@@ -186,10 +185,9 @@ class _HotelDetailPage extends State<HotelDetailPage> {
   List<Widget> _getLocationDetails(BuildContext context) {
     return [
       const SizedBox(height: 20),
-      _getLabel(context, HotelDetailContent.location),
+      _getLabel(HotelDetailContent.location),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         HotelDetailSemantics.hotelLocation,
         (widget.hotel is HotelSearchResult)
             ? widget.hotel.location
@@ -201,10 +199,9 @@ class _HotelDetailPage extends State<HotelDetailPage> {
   List<Widget> _getRoomsDetails(BuildContext context) {
     return [
       const SizedBox(height: 20),
-      _getLabel(context, HotelDetailContent.rooms),
+      _getLabel(HotelDetailContent.rooms),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         HotelDetailSemantics.hotelRooms,
         (widget.hotel is HotelSearchResult)
             ? widget.hotel.getNoOfRooms()
@@ -216,10 +213,9 @@ class _HotelDetailPage extends State<HotelDetailPage> {
   List<Widget> _getFirstNameDetails(BuildContext context) {
     return [
       const SizedBox(height: 20),
-      _getLabel(context, HotelDetailContent.firstName),
+      _getLabel(HotelDetailContent.firstName),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         HotelDetailSemantics.fistName,
         (widget.hotel as BookedItinerary)?.firstName ?? '',
       ),
@@ -229,10 +225,9 @@ class _HotelDetailPage extends State<HotelDetailPage> {
   List<Widget> _getLastNameDetails(BuildContext context) {
     return [
       const SizedBox(height: 20),
-      _getLabel(context, HotelDetailContent.lastName),
+      _getLabel(HotelDetailContent.lastName),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         HotelDetailSemantics.lastName,
         (widget.hotel as BookedItinerary)?.lastName ?? '',
       ),
@@ -242,10 +237,9 @@ class _HotelDetailPage extends State<HotelDetailPage> {
   List<Widget> _getArrivalDateDetails(BuildContext context) {
     return [
       const SizedBox(height: 20),
-      _getLabel(context, HotelDetailContent.arrivalDate),
+      _getLabel(HotelDetailContent.arrivalDate),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         HotelDetailSemantics.hotelArrivalDate,
         (widget.hotel is HotelSearchResult)
             ? widget.hotel.getFormattedArrivalDate()
@@ -257,10 +251,9 @@ class _HotelDetailPage extends State<HotelDetailPage> {
   List<Widget> _getDepartureDateDetails(BuildContext context) {
     return [
       const SizedBox(height: 20),
-      _getLabel(context, HotelDetailContent.departureDate),
+      _getLabel(HotelDetailContent.departureDate),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         HotelDetailSemantics.hotelDepartureDate,
         (widget.hotel is HotelSearchResult)
             ? widget.hotel.getFormattedDepartureDate()
@@ -274,10 +267,9 @@ class _HotelDetailPage extends State<HotelDetailPage> {
   List<Widget> _getNoOfDaysDetails(BuildContext context) {
     return [
       const SizedBox(height: 20),
-      _getLabel(context, HotelDetailContent.noOfDays),
+      _getLabel(HotelDetailContent.noOfDays),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         HotelDetailSemantics.hotelNoOfDays,
         (widget.hotel is HotelSearchResult)
             ? widget.hotel.noOfDays.toString()
@@ -289,10 +281,9 @@ class _HotelDetailPage extends State<HotelDetailPage> {
   List<Widget> _getRoomsTypeDetails(BuildContext context) {
     return [
       const SizedBox(height: 20),
-      _getLabel(context, HotelDetailContent.roomsType),
+      _getLabel(HotelDetailContent.roomsType),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         HotelDetailSemantics.hotelRoomType,
         (widget.hotel is HotelSearchResult)
             ? widget.hotel.roomsType
@@ -304,15 +295,14 @@ class _HotelDetailPage extends State<HotelDetailPage> {
   List<Widget> _getPricePerNightDetails(BuildContext context) {
     return [
       const SizedBox(height: 20),
-      _getLabel(context, HotelDetailContent.pricePerNight),
+      _getLabel(HotelDetailContent.pricePerNight),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         HotelDetailSemantics.hotelPricePerNight,
         (widget.hotel is HotelSearchResult)
             ? widget.hotel.pricePerNight
             : (widget.hotel is BookedItinerary
-                ? '${globalConstants.GlobalConstants.audPriceFormat}'
+                ? '${GlobalConstants.audPriceFormat}'
                     '${(widget.hotel as BookedItinerary).pricePerNight}'
                 : ''),
       ),
@@ -322,19 +312,16 @@ class _HotelDetailPage extends State<HotelDetailPage> {
   List<Widget> _getTotalPriceDetails(BuildContext context) {
     return [
       const SizedBox(height: 20),
-      _getLabel(
-          context,
-          (widget.hotel is HotelSearchResult)
-              ? HotelDetailContent.totalPriceExclGST
-              : HotelDetailContent.totalPriceInclGST),
+      _getLabel((widget.hotel is HotelSearchResult)
+          ? HotelDetailContent.totalPriceExclGST
+          : HotelDetailContent.totalPriceInclGST),
       const SizedBox(height: 4),
       _getTextField(
-        context,
         HotelDetailSemantics.hotelTotalPrice,
         (widget.hotel is HotelSearchResult)
             ? widget.hotel.totalPrice
             : (widget.hotel is BookedItinerary
-                ? '${globalConstants.GlobalConstants.audPriceFormat}'
+                ? '${GlobalConstants.audPriceFormat}'
                     '${(widget.hotel as BookedItinerary).finalPrice}'
                 : ''),
       ),
@@ -343,44 +330,21 @@ class _HotelDetailPage extends State<HotelDetailPage> {
 
   /// --- --- --- Label --- --- ---
 
-  Widget _getLabel(BuildContext context, String label) {
-    return Semantics(
-      enabled: true,
-      explicitChildNodes: true,
-      label: label,
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: Palette.primaryColor,
-          ),
-        ),
-      ),
+  Widget _getLabel(String label) {
+    return AdactinLabel(
+      labelData: label,
+      isRequiredField: false,
+      leftPadding: 0,
     );
   }
 
   /// --- --- --- Text field --- --- ---
 
   Widget _getTextField(
-    BuildContext context,
     String semanticLabel,
     String text,
   ) {
-    return Semantics(
-      label: semanticLabel,
-      enabled: true,
-      explicitChildNodes: true,
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        child: Text(
-          text,
-          style: TextStyle(fontSize: 22),
-        ),
-      ),
-    );
+    return AdactinText(semanticLabel: semanticLabel, text: text);
   }
 
   /// --- --- --- Continue button --- --- ---

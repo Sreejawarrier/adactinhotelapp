@@ -28,9 +28,6 @@ class HomeContent {
   static const String cancel = 'Cancel';
   static const String alertFailureTitle = 'Failure';
   static const String alertButtonOk = 'OK';
-  static const String allFields = 'All (';
-  static const String asterisk = '*';
-  static const String mandatory = ') are mandatory fields.';
   static const String errorMissingData = 'Missing Data';
   static const String errorRequireData =
       'Please provide data for following fields -';

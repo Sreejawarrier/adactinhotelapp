@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:adactin_hotel_app/global/global_constants.dart'
-    as globalConstants;
+import 'package:adactin_hotel_app/global/global_constants.dart';
 import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -34,7 +33,7 @@ class _SpinnerState extends State<Spinner> {
 
     _showSpinner = true;
     _timer = Timer(
-      Duration(seconds: globalConstants.GlobalConstants.spinnerTimeout),
+      Duration(seconds: GlobalConstants.spinnerTimeout),
       () {
         _timer?.cancel();
         setState(() {
