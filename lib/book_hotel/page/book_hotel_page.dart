@@ -5,7 +5,7 @@ import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/routes/app_routes.dart';
 import 'package:adactin_hotel_app/base/adactin_button/widget/adactin_button.dart';
 import 'package:adactin_hotel_app/base/adactin_label/widget/adactin_label.dart';
-import 'package:adactin_hotel_app/base/ensure_visible_when_focused/ensure_visible_when_focused.dart';
+import 'package:adactin_hotel_app/base/adactin_textformfield/widget/adactin_textformfield.dart';
 import 'package:adactin_hotel_app/base/mandatory_message/widget/mandatory_message.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
 import 'package:adactin_hotel_app/book_hotel/bloc/book_hotel_bloc.dart';
@@ -458,95 +458,17 @@ class _BookHotelPageState extends State<BookHotelPage> {
     TextInputType keyboardType,
     String helperText,
   }) {
-    return Semantics(
-      label: semanticLabel,
-      enabled: true,
-      explicitChildNodes: true,
-      child: textFocusNode != null
-          ? EnsureVisibleWhenFocused(
-              focusNode: textFocusNode,
-              child: _getFormField(
-                context: context,
-                semanticLabel: semanticLabel,
-                textEditingController: textEditingController,
-                textFocusNode: textFocusNode,
-                hintText: hintText,
-                validator: validator,
-                enabled: enabled,
-                nextFocusNode: nextFocusNode,
-                maxLines: maxLines,
-                keyboardType: keyboardType,
-                helperText: helperText,
-              ))
-          : _getFormField(
-              context: context,
-              semanticLabel: semanticLabel,
-              textEditingController: textEditingController,
-              textFocusNode: textFocusNode,
-              hintText: hintText,
-              validator: validator,
-              enabled: enabled,
-              nextFocusNode: nextFocusNode,
-              maxLines: maxLines,
-              keyboardType: keyboardType,
-              helperText: helperText,
-            ),
-    );
-  }
-
-  Widget _getFormField({
-    BuildContext context,
-    String semanticLabel,
-    TextEditingController textEditingController,
-    FocusNode textFocusNode,
-    String hintText,
-    FormFieldValidator<String> validator,
-    bool enabled,
-    FocusNode nextFocusNode,
-    int maxLines,
-    TextInputType keyboardType,
-    String helperText,
-  }) {
-    return TextFormField(
+    return AdactinTextFormField(
+      semanticLabel: semanticLabel,
+      textEditingController: textEditingController,
+      textFocusNode: textFocusNode,
+      hintText: hintText,
+      validator: validator,
+      nextFocusNode: nextFocusNode,
+      keyboardType: keyboardType,
+      helperText: helperText,
       enabled: enabled,
       maxLines: maxLines,
-      controller: textEditingController,
-      focusNode: textFocusNode,
-      keyboardType: maxLines > 1 ? TextInputType.multiline : keyboardType,
-      textInputAction: maxLines > 1
-          ? TextInputAction.newline
-          : ((nextFocusNode != null)
-              ? TextInputAction.next
-              : TextInputAction.done),
-      decoration: InputDecoration(
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 22,
-        ),
-        hintText: hintText,
-        hintStyle: TextStyle(fontSize: 16),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey),
-        ),
-        fillColor: !enabled ? Colors.grey.withOpacity(0.1) : null,
-        filled: !enabled,
-        helperText: helperText,
-      ),
-      validator: validator,
-      onFieldSubmitted: (value) {
-        if (nextFocusNode != null)
-          FocusScope.of(context).requestFocus(nextFocusNode);
-      },
-      onChanged: (value) {
-        if (maxLines > 1) {
-          /// For multi line textFormField removing unnecessary spaces or new lines
-          /// for an empty text entered
-          final String singleLine = value.replaceAll("\n", "");
-          final String noSpaces = singleLine.replaceAll(" ", "");
-          if (noSpaces.isEmpty) textEditingController.text = "";
-        }
-      },
     );
   }
 

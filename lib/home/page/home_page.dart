@@ -4,7 +4,7 @@ import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/app/routes/app_routes.dart';
 import 'package:adactin_hotel_app/base/adactin_button/widget/adactin_button.dart';
 import 'package:adactin_hotel_app/base/adactin_label/widget/adactin_label.dart';
-import 'package:adactin_hotel_app/base/ensure_visible_when_focused/ensure_visible_when_focused.dart';
+import 'package:adactin_hotel_app/base/adactin_textformfield/widget/adactin_textformfield.dart';
 import 'package:adactin_hotel_app/base/mandatory_message/widget/mandatory_message.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
 import 'package:adactin_hotel_app/global/global_constants.dart';
@@ -575,30 +575,12 @@ class _HomePageState extends State<HomePage> {
     String hintText, {
     FormFieldValidator<String> validator,
   }) {
-    return Semantics(
-      label: semanticLabel,
-      enabled: true,
-      explicitChildNodes: true,
-      child: EnsureVisibleWhenFocused(
-        focusNode: textFocusNode,
-        child: TextFormField(
-          controller: textEditingController,
-          focusNode: textFocusNode,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 22,
-            ),
-            hintText: hintText,
-            hintStyle: TextStyle(fontSize: 16),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey),
-            ),
-          ),
-          validator: validator,
-        ),
-      ),
+    return AdactinTextFormField(
+      semanticLabel: semanticLabel,
+      textEditingController: textEditingController,
+      textFocusNode: textFocusNode,
+      hintText: hintText,
+      validator: validator,
     );
   }
 
