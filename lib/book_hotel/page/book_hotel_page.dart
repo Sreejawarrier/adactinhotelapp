@@ -6,6 +6,7 @@ import 'package:adactin_hotel_app/app/routes/app_routes.dart';
 import 'package:adactin_hotel_app/base/adactin_button/widget/adactin_button.dart';
 import 'package:adactin_hotel_app/base/adactin_label/widget/adactin_label.dart';
 import 'package:adactin_hotel_app/base/adactin_textformfield/widget/adactin_textformfield.dart';
+import 'package:adactin_hotel_app/base/custom_alert/custom_alert.dart';
 import 'package:adactin_hotel_app/base/mandatory_message/widget/mandatory_message.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
 import 'package:adactin_hotel_app/book_hotel/bloc/book_hotel_bloc.dart';
@@ -112,29 +113,23 @@ class _BookHotelPageState extends State<BookHotelPage> {
                 arguments: state.bookingDetails,
               );
             } else if (state is BookingFailure) {
-              showDialog(
+              CustomAlert.displayAlert(
                 context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    semanticLabel: BookHotelSemanticKeys.failureAlert,
-                    title: Text(BookHotelContent.alertFailureTitle),
-                    content: Text(state.error),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: Semantics(
-                          enabled: true,
-                          explicitChildNodes: true,
-                          label: BookHotelSemanticKeys.failureAlertButton,
-                          child: Text(BookHotelContent.alertButtonOk),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-                barrierDismissible: false,
+                title: BookHotelContent.alertFailureTitle,
+                message: state.error,
+                actions: <Widget>[
+                  FlatButton(
+                    child: Semantics(
+                      enabled: true,
+                      explicitChildNodes: true,
+                      label: BookHotelSemanticKeys.failureAlertButton,
+                      child: Text(BookHotelContent.alertButtonOk),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
               );
             }
           },
@@ -747,30 +742,23 @@ class _BookHotelPageState extends State<BookHotelPage> {
     }
 
     if (!isValid) {
-      showDialog(
+      CustomAlert.displayAlert(
         context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            semanticLabel: BookHotelSemanticKeys.failureAlert,
-            title: Text(BookHotelContent.errorMissingData),
-            content: Text(
-                '${BookHotelContent.errorRequireData} $fieldsRequiredData'),
-            actions: <Widget>[
-              FlatButton(
-                child: Semantics(
-                  enabled: true,
-                  explicitChildNodes: true,
-                  label: BookHotelSemanticKeys.failureAlertButton,
-                  child: Text(BookHotelContent.alertButtonOk),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-        barrierDismissible: false,
+        title: BookHotelContent.errorMissingData,
+        message: '${BookHotelContent.errorRequireData} $fieldsRequiredData',
+        actions: <Widget>[
+          FlatButton(
+            child: Semantics(
+              enabled: true,
+              explicitChildNodes: true,
+              label: BookHotelSemanticKeys.failureAlertButton,
+              child: Text(BookHotelContent.alertButtonOk),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
       );
     }
 

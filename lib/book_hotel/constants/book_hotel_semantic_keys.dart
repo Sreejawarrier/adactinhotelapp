@@ -22,6 +22,5 @@ class BookHotelSemanticKeys {
   static const String bottomOptionTitle = 'bottom_option_title_';
   static const String bottomSheetOptionsColumn = 'bottom_sheet_column';
   static const String bottomSheet = 'bottom_sheet';
-  static const String failureAlert = 'failure_alert';
   static const String failureAlertButton = 'failure_alert_button';
 }

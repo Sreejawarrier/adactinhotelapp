@@ -1,6 +1,7 @@
 import 'package:adactin_hotel_app/api/models/booked_itinerary.dart';
 import 'package:adactin_hotel_app/api/repo/booked_itinerary_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
+import 'package:adactin_hotel_app/base/custom_alert/custom_alert.dart';
 import 'package:adactin_hotel_app/base/hotel_overview/container/hotel_overview_container.dart';
 import 'package:adactin_hotel_app/base/hotel_overview/model/hotel_overview_data.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
@@ -73,30 +74,23 @@ class _BookedItineraryPageState extends State<BookedItineraryPage>
             child: BlocListener<BookedItineraryBloc, BookedItineraryState>(
               listener: (context, state) {
                 if (state is BookedItineraryFailure) {
-                  showDialog(
+                  CustomAlert.displayAlert(
                     context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        semanticLabel: BookedItinerarySemanticKeys.failureAlert,
-                        title: Text(BookedItineraryContent.alertFailureTitle),
-                        content: Text(state.error),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Semantics(
-                              enabled: true,
-                              explicitChildNodes: true,
-                              label: BookedItinerarySemanticKeys
-                                  .failureAlertButton,
-                              child: Text(BookedItineraryContent.alertButtonOk),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                    barrierDismissible: false,
+                    title: BookedItineraryContent.alertFailureTitle,
+                    message: state.error,
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Semantics(
+                          enabled: true,
+                          explicitChildNodes: true,
+                          label: BookedItinerarySemanticKeys.failureAlertButton,
+                          child: Text(BookedItineraryContent.alertButtonOk),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
                   );
                 } else if (state is BookedItinerarySuccess) {
                   _bookedItineraryList = state.bookedItineraryList ?? [];

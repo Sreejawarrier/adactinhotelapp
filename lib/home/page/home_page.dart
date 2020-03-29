@@ -5,6 +5,7 @@ import 'package:adactin_hotel_app/app/routes/app_routes.dart';
 import 'package:adactin_hotel_app/base/adactin_button/widget/adactin_button.dart';
 import 'package:adactin_hotel_app/base/adactin_label/widget/adactin_label.dart';
 import 'package:adactin_hotel_app/base/adactin_textformfield/widget/adactin_textformfield.dart';
+import 'package:adactin_hotel_app/base/custom_alert/custom_alert.dart';
 import 'package:adactin_hotel_app/base/mandatory_message/widget/mandatory_message.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
 import 'package:adactin_hotel_app/global/global_constants.dart';
@@ -140,29 +141,23 @@ class _HomePageState extends State<HomePage> {
                   arguments: state.hotelSearchResultList,
                 );
               } else if (state is HotelSearchFailure) {
-                showDialog(
+                CustomAlert.displayAlert(
                   context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      semanticLabel: HomeSemanticKeys.failureAlert,
-                      title: Text(HomeContent.alertFailureTitle),
-                      content: Text(state.error),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Semantics(
-                            enabled: true,
-                            explicitChildNodes: true,
-                            label: HomeSemanticKeys.failureAlertButton,
-                            child: Text(HomeContent.alertButtonOk),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                  barrierDismissible: false,
+                  title: HomeContent.alertFailureTitle,
+                  message: state.error,
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Semantics(
+                        enabled: true,
+                        explicitChildNodes: true,
+                        label: HomeSemanticKeys.failureAlertButton,
+                        child: Text(HomeContent.alertButtonOk),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 );
               }
             },
@@ -862,30 +857,23 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (!isValid) {
-      showDialog(
+      CustomAlert.displayAlert(
         context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            semanticLabel: HomeSemanticKeys.failureAlert,
-            title: Text(HomeContent.errorMissingData),
-            content:
-                Text('${HomeContent.errorRequireData} $fieldsRequiredData'),
-            actions: <Widget>[
-              FlatButton(
-                child: Semantics(
-                  enabled: true,
-                  explicitChildNodes: true,
-                  label: HomeSemanticKeys.failureAlertButton,
-                  child: Text(HomeContent.alertButtonOk),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-        barrierDismissible: false,
+        title: HomeContent.errorMissingData,
+        message: '${HomeContent.errorRequireData} $fieldsRequiredData',
+        actions: <Widget>[
+          FlatButton(
+            child: Semantics(
+              enabled: true,
+              explicitChildNodes: true,
+              label: HomeSemanticKeys.failureAlertButton,
+              child: Text(HomeContent.alertButtonOk),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
       );
     }
 

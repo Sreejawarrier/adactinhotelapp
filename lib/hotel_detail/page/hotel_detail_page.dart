@@ -6,6 +6,7 @@ import 'package:adactin_hotel_app/app/routes/app_routes.dart';
 import 'package:adactin_hotel_app/base/adactin_button/widget/adactin_button.dart';
 import 'package:adactin_hotel_app/base/adactin_label/widget/adactin_label.dart';
 import 'package:adactin_hotel_app/base/adactin_text/widget/adactin_text.dart';
+import 'package:adactin_hotel_app/base/custom_alert/custom_alert.dart';
 import 'package:adactin_hotel_app/base/spinner/spinner.dart';
 import 'package:adactin_hotel_app/global/global_constants.dart';
 import 'package:adactin_hotel_app/hotel_detail/bloc/hotel_detail_bloc.dart';
@@ -52,29 +53,23 @@ class _HotelDetailPage extends State<HotelDetailPage> {
               if (state is HotelCancellationSuccessful && state.success) {
                 _hotelBookingCancellationSuccessAlert(context);
               } else if (state is HotelDetailFailure) {
-                showDialog(
+                CustomAlert.displayAlert(
                   context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      semanticLabel: HotelDetailSemantics.failureAlert,
-                      title: Text(HotelDetailContent.alertFailureTitle),
-                      content: Text(state.error),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Semantics(
-                            enabled: true,
-                            explicitChildNodes: true,
-                            label: HotelDetailSemantics.failureAlertButton,
-                            child: Text(HotelDetailContent.alertButtonOk),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                  barrierDismissible: false,
+                  title: HotelDetailContent.alertFailureTitle,
+                  message: state.error,
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Semantics(
+                        enabled: true,
+                        explicitChildNodes: true,
+                        label: HotelDetailSemantics.failureAlertButton,
+                        child: Text(HotelDetailContent.alertButtonOk),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 );
               }
             },
@@ -392,83 +387,71 @@ class _HotelDetailPage extends State<HotelDetailPage> {
     BuildContext context,
     HotelDetailBloc hotelDetailBloc,
   ) {
-    showDialog(
+    CustomAlert.displayAlert(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          semanticLabel: HotelDetailSemantics.confirmationAlert,
-          title: Text(HotelDetailContent.alertConfirmTitle),
-          content: Text(HotelDetailContent.alertCancellationConfirmMessage
-              .replaceAll(HotelDetailContent.orderIdKey,
-                  (widget.hotel as BookedItinerary).orderId)),
-          actions: <Widget>[
-            FlatButton(
-              child: Semantics(
-                enabled: true,
-                explicitChildNodes: true,
-                label: HotelDetailSemantics.confirmCancelButton,
-                child: Text(HotelDetailContent.alertButtonCancel),
+      title: HotelDetailContent.alertConfirmTitle,
+      message: HotelDetailContent.alertCancellationConfirmMessage.replaceAll(
+          HotelDetailContent.orderIdKey,
+          (widget.hotel as BookedItinerary).orderId),
+      actions: <Widget>[
+        FlatButton(
+          child: Semantics(
+            enabled: true,
+            explicitChildNodes: true,
+            label: HotelDetailSemantics.confirmCancelButton,
+            child: Text(HotelDetailContent.alertButtonCancel),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        FlatButton(
+          child: Semantics(
+            enabled: true,
+            explicitChildNodes: true,
+            label: HotelDetailSemantics.cancelBookingOkButton,
+            child: Text(HotelDetailContent.alertButtonOk),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+            hotelDetailBloc.add(
+              CancelHotelAction(
+                appBloc: widget.appBloc,
+                bookedItinerary: (widget.hotel as BookedItinerary),
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Semantics(
-                enabled: true,
-                explicitChildNodes: true,
-                label: HotelDetailSemantics.cancelBookingOkButton,
-                child: Text(HotelDetailContent.alertButtonOk),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                hotelDetailBloc.add(
-                  CancelHotelAction(
-                    appBloc: widget.appBloc,
-                    bookedItinerary: (widget.hotel as BookedItinerary),
-                  ),
-                );
-              },
-            ),
-          ],
-        );
-      },
-      barrierDismissible: false,
+            );
+          },
+        ),
+      ],
     );
   }
 
   void _hotelBookingCancellationSuccessAlert(BuildContext context) {
-    showDialog(
+    CustomAlert.displayAlert(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          semanticLabel: HotelDetailSemantics.successAlert,
-          title: Text(HotelDetailContent.alertSuccessTitle),
-          content: Text(HotelDetailContent.bookingCancellationSuccess),
-          actions: <Widget>[
-            FlatButton(
-              child: Semantics(
-                enabled: true,
-                explicitChildNodes: true,
-                label: HotelDetailSemantics.successAlertButton,
-                child: Text(HotelDetailContent.alertButtonOk),
+      title: HotelDetailContent.alertSuccessTitle,
+      message: HotelDetailContent.bookingCancellationSuccess,
+      actions: <Widget>[
+        FlatButton(
+          child: Semantics(
+            enabled: true,
+            explicitChildNodes: true,
+            label: HotelDetailSemantics.successAlertButton,
+            child: Text(HotelDetailContent.alertButtonOk),
+          ),
+          onPressed: () {
+            _checkStatusColor();
+            widget.appBloc.add(
+              BookingCancelled(
+                cancellationTime: DateTime.now(),
               ),
-              onPressed: () {
-                _checkStatusColor();
-                widget.appBloc.add(
-                  BookingCancelled(
-                    cancellationTime: DateTime.now(),
-                  ),
-                );
-                Navigator.of(context).popUntil((route) {
-                  return (route.settings.name == Navigator.defaultRouteName);
-                });
-              },
-            ),
-          ],
-        );
-      },
-      barrierDismissible: false,
+            );
+            Navigator.of(context).popUntil((route) {
+              return (route.settings.name == Navigator.defaultRouteName);
+            });
+          },
+        ),
+      ],
     );
   }
 }

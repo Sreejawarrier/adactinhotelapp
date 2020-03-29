@@ -4,7 +4,9 @@ import 'package:adactin_hotel_app/account/login/constants/login_semantic_keys.da
 import 'package:adactin_hotel_app/api/repo/user_repo.dart';
 import 'package:adactin_hotel_app/app/bloc/app_bloc.dart';
 import 'package:adactin_hotel_app/base/adactin_button/widget/adactin_button.dart';
+import 'package:adactin_hotel_app/base/custom_alert/custom_alert.dart';
 import 'package:adactin_hotel_app/theme/images.dart';
+import 'package:adactin_hotel_app/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -61,54 +63,45 @@ class _LoginPageState extends State<LoginPage> {
             userRepository: UserRepository(),
           );
         },
-        child: SafeArea(
-          child: BlocListener<LoginBloc, LoginState>(
-            listener: (context, state) {
-              if (state is LoginSuccess) {
-                widget.appBloc
-                    .add(AppUserChange(userDetails: state.userDetails));
-              } else if (state is LogoutSuccess) {
-                widget.appBloc.add(AppUserChange());
-              } else if (state is LoginFailure) {
-                widget.appBloc.add(AppUserChangeError());
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      semanticLabel: LoginSemanticKeys.failureAlert,
-                      title: Text(LoginContent.alertFailureTitle),
-                      content: Text(state.error),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Semantics(
-                            enabled: true,
-                            explicitChildNodes: true,
-                            label: LoginSemanticKeys.failureAlertButton,
-                            child: Text(LoginContent.alertButtonOk),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                  barrierDismissible: false,
-                );
-              }
-            },
-            child: BlocBuilder<LoginBloc, LoginState>(
-              builder: (context, state) {
-                return Container(
-                  color: Colors.white,
-                  child: Center(
-                    child: (widget.appBloc.userDetails == null)
-                        ? _getLoginForm(context)
-                        : _getLoggedInForm(context),
+        child: BlocListener<LoginBloc, LoginState>(
+          listener: (context, state) {
+            if (state is LoginSuccess) {
+              widget.appBloc.add(AppUserChange(userDetails: state.userDetails));
+            } else if (state is LogoutSuccess) {
+              widget.appBloc.add(AppUserChange());
+            } else if (state is LoginFailure) {
+              widget.appBloc.add(AppUserChangeError());
+              CustomAlert.displayAlert(
+                context: context,
+                title: LoginContent.alertFailureTitle,
+                message: state.error,
+                actions: <Widget>[
+                  FlatButton(
+                    child: Semantics(
+                      enabled: true,
+                      explicitChildNodes: true,
+                      label: LoginSemanticKeys.failureAlertButton,
+                      child: Text(LoginContent.alertButtonOk),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
-                );
-              },
-            ),
+                ],
+              );
+            }
+          },
+          child: BlocBuilder<LoginBloc, LoginState>(
+            builder: (context, state) {
+              return Container(
+                color: Colors.white,
+                child: Center(
+                  child: (widget.appBloc.userDetails == null)
+                      ? _getLoginForm(context)
+                      : _getLoggedInForm(context),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -132,9 +125,9 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 20),
             _getLoginButton(context),
             const SizedBox(height: 16),
-            _getForgetPassword(context),
-            const SizedBox(height: 16),
-            _getSignUpText(context),
+            _getForgotPasswordAndSignUp(context),
+            const SizedBox(height: 20),
+            _getCopyright(context),
           ],
         ),
       ),
@@ -164,8 +157,8 @@ class _LoginPageState extends State<LoginPage> {
       explicitChildNodes: true,
       child: SvgPicture.asset(
         Images.logoSVG,
-        width: 180,
-        height: 180,
+        width: 160,
+        height: 160,
       ),
     );
   }
@@ -263,6 +256,16 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Widget _getForgotPasswordAndSignUp(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        _getSignUpText(context),
+        _getForgetPassword(context),
+      ],
+    );
+  }
+
   Widget _getForgetPassword(BuildContext context) {
     return Semantics(
       label: LoginSemanticKeys.forgotPassword,
@@ -272,10 +275,10 @@ class _LoginPageState extends State<LoginPage> {
         behavior: HitTestBehavior.translucent,
         onTap: () {
           _removeFocus();
-          _launchWebURL(LoginContent.forgotPasswordURL);
+          _launchWebURL(context, LoginContent.forgotPasswordURL);
         },
         child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 8, top: 8, bottom: 4),
+          padding: const EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 12),
           child: Text(
             LoginContent.forgotPassword,
             style: TextStyle(fontSize: 18, color: Colors.grey),
@@ -295,22 +298,51 @@ class _LoginPageState extends State<LoginPage> {
         behavior: HitTestBehavior.translucent,
         onTap: () {
           _removeFocus();
-          _launchWebURL(LoginContent.signUpURL);
+          _launchWebURL(context, LoginContent.signUpURL);
         },
         child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 8, bottom: 12),
+          padding: const EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 12),
           child: RichText(
             textAlign: TextAlign.right,
             text: TextSpan(
-              text: LoginContent.notAMember,
-              style: TextStyle(fontSize: 18, color: Colors.grey),
+              text: LoginContent.signUp,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _getCopyright(BuildContext context) {
+    return Semantics(
+      label: LoginSemanticKeys.copyright,
+      enabled: true,
+      explicitChildNodes: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          _removeFocus();
+          _launchWebURL(context, LoginContent.copyrightURL);
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(top: 4, bottom: 4),
+          child: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              text: LoginContent.copyrightMessage,
+              style: TextStyle(fontSize: 16, color: Colors.grey),
               children: [
                 TextSpan(
-                  text: LoginContent.signUp,
+                  text: LoginContent.copyrightClickHere,
                   style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.grey,
-                    decoration: TextDecoration.underline,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Palette.primaryColor,
                   ),
                 ),
               ],
@@ -355,33 +387,27 @@ class _LoginPageState extends State<LoginPage> {
     FocusScope.of(context).requestFocus(FocusNode());
   }
 
-  Future _launchWebURL(String url) async {
+  Future _launchWebURL(BuildContext context, String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      showDialog(
+      CustomAlert.displayAlert(
         context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            semanticLabel: LoginSemanticKeys.failureAlert,
-            title: Text(LoginContent.alertFailureTitle),
-            content: Text('${LoginContent.errorCouldNotLaunchURL} $url'),
-            actions: <Widget>[
-              FlatButton(
-                child: Semantics(
-                  enabled: true,
-                  explicitChildNodes: true,
-                  label: LoginSemanticKeys.failureAlertButton,
-                  child: Text(LoginContent.alertButtonOk),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-        barrierDismissible: false,
+        title: LoginContent.alertFailureTitle,
+        message: '${LoginContent.errorCouldNotLaunchURL} $url',
+        actions: <Widget>[
+          FlatButton(
+            child: Semantics(
+              enabled: true,
+              explicitChildNodes: true,
+              label: LoginSemanticKeys.failureAlertButton,
+              child: Text(LoginContent.alertButtonOk),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
       );
     }
   }
