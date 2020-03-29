@@ -74,7 +74,7 @@ class _BookedItineraryPageState extends State<BookedItineraryPage>
             child: BlocListener<BookedItineraryBloc, BookedItineraryState>(
               listener: (context, state) {
                 if (state is BookedItineraryFailure) {
-                  CustomAlert.displayAlert(
+                  CustomAlert.displayGeneralAlert(
                     context: context,
                     title: BookedItineraryContent.alertFailureTitle,
                     message: state.error,

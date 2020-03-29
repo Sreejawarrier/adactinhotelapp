@@ -53,7 +53,7 @@ class _HotelDetailPage extends State<HotelDetailPage> {
               if (state is HotelCancellationSuccessful && state.success) {
                 _hotelBookingCancellationSuccessAlert(context);
               } else if (state is HotelDetailFailure) {
-                CustomAlert.displayAlert(
+                CustomAlert.displayGeneralAlert(
                   context: context,
                   title: HotelDetailContent.alertFailureTitle,
                   message: state.error,
@@ -387,7 +387,7 @@ class _HotelDetailPage extends State<HotelDetailPage> {
     BuildContext context,
     HotelDetailBloc hotelDetailBloc,
   ) {
-    CustomAlert.displayAlert(
+    CustomAlert.displayGeneralAlert(
       context: context,
       title: HotelDetailContent.alertConfirmTitle,
       message: HotelDetailContent.alertCancellationConfirmMessage.replaceAll(
@@ -427,7 +427,7 @@ class _HotelDetailPage extends State<HotelDetailPage> {
   }
 
   void _hotelBookingCancellationSuccessAlert(BuildContext context) {
-    CustomAlert.displayAlert(
+    CustomAlert.displayGeneralAlert(
       context: context,
       title: HotelDetailContent.alertSuccessTitle,
       message: HotelDetailContent.bookingCancellationSuccess,

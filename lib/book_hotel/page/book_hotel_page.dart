@@ -113,7 +113,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
                 arguments: state.bookingDetails,
               );
             } else if (state is BookingFailure) {
-              CustomAlert.displayAlert(
+              CustomAlert.displayGeneralAlert(
                 context: context,
                 title: BookHotelContent.alertFailureTitle,
                 message: state.error,
@@ -742,7 +742,7 @@ class _BookHotelPageState extends State<BookHotelPage> {
     }
 
     if (!isValid) {
-      CustomAlert.displayAlert(
+      CustomAlert.displayGeneralAlert(
         context: context,
         title: BookHotelContent.errorMissingData,
         message: '${BookHotelContent.errorRequireData} $fieldsRequiredData',

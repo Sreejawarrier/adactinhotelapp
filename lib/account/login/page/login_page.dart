@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
               widget.appBloc.add(AppUserChange());
             } else if (state is LoginFailure) {
               widget.appBloc.add(AppUserChangeError());
-              CustomAlert.displayAlert(
+              CustomAlert.displayGeneralAlert(
                 context: context,
                 title: LoginContent.alertFailureTitle,
                 message: state.error,
@@ -391,7 +391,7 @@ class _LoginPageState extends State<LoginPage> {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      CustomAlert.displayAlert(
+      CustomAlert.displayGeneralAlert(
         context: context,
         title: LoginContent.alertFailureTitle,
         message: '${LoginContent.errorCouldNotLaunchURL} $url',

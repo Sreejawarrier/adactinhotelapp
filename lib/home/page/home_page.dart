@@ -141,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                   arguments: state.hotelSearchResultList,
                 );
               } else if (state is HotelSearchFailure) {
-                CustomAlert.displayAlert(
+                CustomAlert.displayGeneralAlert(
                   context: context,
                   title: HomeContent.alertFailureTitle,
                   message: state.error,
@@ -857,7 +857,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (!isValid) {
-      CustomAlert.displayAlert(
+      CustomAlert.displayGeneralAlert(
         context: context,
         title: HomeContent.errorMissingData,
         message: '${HomeContent.errorRequireData} $fieldsRequiredData',

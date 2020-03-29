@@ -5,7 +5,7 @@ class CustomAlert {
   static const String alertTitleSemanticKey = 'alert_title';
   static const String alertMessageSemanticKey = 'alert_message';
 
-  static void displayAlert({
+  static void displayGeneralAlert({
     @required BuildContext context,
     @required String title,
     @required String message,
